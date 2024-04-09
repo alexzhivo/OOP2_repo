@@ -13,18 +13,20 @@ AppManager::~AppManager()
 
 void AppManager::run()
 {
-	char buffer[BUFFSIZE];
+	std::string userInput;
 
 	while (true)
 	{
 		print();
 
-		std::cin >> buffer;
-		Command cmd = getCommandValue(buffer);
+		std::getline(std::cin, userInput);
+
+		Command cmd = getCommandValue(userInput);
+
 		switch (cmd)
 		{
 		case CREATE:
-			std::cout << "CREATE!\n";
+			create(userInput);
 			break;
 		case ENLARGE:
 			std::cout << "ENLARGE!\n";
@@ -44,49 +46,71 @@ void AppManager::run()
 		case DELETE:
 			std::cout << "DELETE!\n";
 			break;
-		case HELP:
-			help();	// prints the commands help screen
-			break;
+		case HELP: help(); break;
 		case OTHER:
 			std::cout << "not a valid command\n";
 			break;
 		case EXIT:
 			return;
 		}
-
-		// clear buffer
-		std::cin.clear();
-		std::cin.ignore(BUFFSIZE, '\n');
 	}
 }
 
-Command AppManager::getCommandValue(const char* cmd) const
+Command AppManager::getCommandValue(const std::string& userInput) const
 {
-	if (strcmp(cmd, "cre") == 0)
+	size_t endOfFirstString = userInput.find(' ');
+	std::string cmd = userInput.substr(0, endOfFirstString);
+
+	if (cmd == "cre")
 		return CREATE;
-	else if (strcmp(cmd, "en") == 0)
+	else if (cmd == "en")
 		return ENLARGE;
-	else if (strcmp(cmd, "red") == 0)
+	else if (cmd == "red")
 		return REDUCE;
-	else if (strcmp(cmd, "draw") == 0)
+	else if (cmd == "draw")
 		return DRAW;
-	else if (strcmp(cmd, "dup") == 0)
+	else if (cmd == "dup")
 		return DUPLICATE;
-	else if (strcmp(cmd, "stack") == 0)
+	else if (cmd == "stack")
 		return STACK;
-	else if (strcmp(cmd, "del") == 0)
+	else if (cmd == "del")
 		return DELETE;
-	else if (strcmp(cmd, "help") == 0)
+	else if (cmd == "help")
 		return HELP;
-	else if (strcmp(cmd, "exit") == 0)
+	else if (cmd == "exit")
 		return EXIT;
 	else
 		return OTHER;
 }
 
-void AppManager::insert(const int data)
+// seperates the string into vector of strings
+std::vector<std::string> AppManager::split(const std::string& str)
 {
-	this->m_data.push_back(data);
+	std::vector<std::string> sepString;
+	size_t start = 0, 
+		   end = 0;
+
+	while ((end = str.find(' ', start)) != std::string::npos)
+	{
+		sepString.push_back(str.substr(start, end - start));
+		start = end + 1;
+	}
+	sepString.push_back(str.substr(start));
+	return sepString;
+}
+
+// function for create command
+void AppManager::create(const std::string& userInput)
+{
+	std::vector<std::string> args = split(userInput);
+
+	if (args.size() != 2) {
+		std::cout << "correct usage : cre <number>\n";
+
+	}
+	else {
+		m_data.push_back(std::stoi(args[1]));
+	}
 }
 
 void AppManager::print() const
