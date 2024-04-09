@@ -1,0 +1,3 @@
+# Ignore ex01 directories
+ex01/.vs
+ex01/out
