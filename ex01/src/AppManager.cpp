@@ -44,7 +44,7 @@ void AppManager::run()
 			std::cout << "STACK!\n";
 			break;
 		case DELETE:
-			std::cout << "DELETE!\n";
+			deleteCmd(userInput);
 			break;
 		case HELP: help(); break;
 		case OTHER:
@@ -104,9 +104,8 @@ void AppManager::create(const std::string& userInput)
 {
 	std::vector<std::string> args = split(userInput);
 
-	if (args.size() != 2) {
+	if (args.size() != 2 || args[1].size() == 0) {
 		std::cout << "correct usage : cre <number>\n";
-
 	}
 	else {
 		m_data.push_back(std::stoi(args[1]));
@@ -129,21 +128,41 @@ void AppManager::print() const
 	std::cout << "Enter command ('help' for the list of available commands): ";
 }
 
+void AppManager::deleteCmd(const std::string& userInput)
+{
+	std::vector<std::string> args = split(userInput);
+
+	if (args.size() != 2 || args[1].size() == 0) {
+		std::cout << "correct usage : del <number>\n";
+	}
+	else {
+		int cell = std::stoi(args[1]);
+
+		if (m_data.empty()) {
+			std::cout << "list is empty, nothing to delete.\n";
+			return;
+		} 
+		if (m_data.size() < cell + 1 || cell < 0) {
+			std::cout << "number is not in range of the list!\n";
+			return;
+		}
+		m_data.erase(m_data.begin() + cell);
+	}
+}
+
 void AppManager::help() const
 {
 	std::cout << "The available commands are :\n"
 		<< "* cre(ate shape) < t - triangle | r - rectangle | s - square > x[y] -\n"
-		<< "create new shape according to the chosen letter, with the given\n "
-		<< "size(s) (y must be given only for a rectangle)\n"
-		<< "* en(large) num n - enlarge the size of the sides of shape #num by n\n"
-		<< "(1 - 10)\n"
-		<< "* red(uce) num n - reduce the size of the sides of shape #num by n\n"
-		<< "(1 - 10)\n"
+		<< "  create new shape according to the chosen letter, with the given\n "
+		<< "  size(s) (y must be given only for a rectangle)\n"
+		<< "* en(large) num n - enlarge the size of the sides of shape #num by n (1 - 10)\n"
+		<< "* red(uce) num n - reduce the size of the sides of shape #num by n (1 - 10)\n"
 		<< "* draw num - draw shape #num\n"
 		<< "* dup(licate) num n - create a new shape which is a n times\n"
-		<< "(vertical)duplication of shape #num\n"
+		<< "  (vertical)duplication of shape #num\n"
 		<< "* stack num1 num2 - create a new shape by stacking shape number #num1\n"
-		<< "over shape number #num2\n"
+		<< "  over shape number #num2\n"
 		<< "* del(ete) num - delete shape #num from the shape list\n"
 		<< "* help - print this command list\n"
 		<< "* exit - exit the program\n";

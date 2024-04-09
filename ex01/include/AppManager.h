@@ -16,10 +16,12 @@ public:
 	void run();
 
 private:
+	void print() const;
+
 	// user command functions
 	void create(const std::string& userInput);
-	void print() const;
 	void help() const;
+	void deleteCmd(const std::string& userInput);
 
 	// utility functions for getting input
 	Command getCommandValue(const std::string& userInput) const;
