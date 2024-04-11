@@ -38,3 +38,8 @@ void Triangle::reduce(const int n)
 {
 	m_width /= n;
 }
+
+void Triangle::printName() const
+{
+	std::cout << "Triangle(" << m_width << ")";
+}

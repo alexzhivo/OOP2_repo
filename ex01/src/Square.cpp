@@ -38,3 +38,8 @@ void Square::reduce(const int n)
 {
 	m_width /= n;
 }
+
+void Square::printName() const
+{
+	std::cout << "Square(" << m_width << ")";
+}

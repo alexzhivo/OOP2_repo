@@ -40,3 +40,8 @@ void Rectangle::reduce(const int n)
 	m_width /= n;
 	m_height /= n;
 }
+
+void Rectangle::printName() const
+{
+	std::cout << "Rectangle(" << m_width << "," << m_height << ")";
+}
