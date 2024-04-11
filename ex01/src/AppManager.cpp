@@ -51,6 +51,7 @@ void AppManager::run()
 			std::cout << "not a valid command\n";
 			break;
 		case EXIT:
+			std::cout << "Goodbye!\n";
 			return;
 		}
 	}
