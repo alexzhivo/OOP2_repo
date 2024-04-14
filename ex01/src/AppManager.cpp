@@ -54,6 +54,7 @@ void AppManager::run()
 	}
 }
 
+// activates the function the user asked for in the terminal
 Command AppManager::getCommandValue(const std::string& userInput) const
 {
 	size_t endOfFirstString = userInput.find(' ');
@@ -102,101 +103,146 @@ void AppManager::create(const std::string& userInput)
 {
 	std::vector<std::string> args = split(userInput);
 
-	if (args.size() != 3 && args.size() != 4) {
+	if (!emptyArgCheck(args)) {
 		std::cout << "correct usage : cre <type> <size>\n";
+		return;
 	}
-	else {
-		// check for valid input
-		for (int i = 0; i < args.size(); i++) {
-			if (args[i].size() == 0) {
-				std::cout << "correct usage : cre <type> <size>\n";
-				return;
-			}
+
+	if (args.size() == 3) {
+		int width = std::stoi(args[2]);
+		if (args[1] == "s" && width > 0) {	// create square
+			m_shapes.push_back(std::make_shared<Square>(width));
+			return;
 		}
-		if (args[1] == "s" && args.size() == 3) {			// square create
-			m_shapes.push_back(std::make_shared<Square>(std::stoi(args[2])));
-		}
-		else if (args[1] == "t" && args.size() == 3) {		// triangle create
-			m_shapes.push_back(std::make_shared<Triangle>(std::stoi(args[2])));
-		}
-		else if (args[1] == "r" && args.size() == 4) {		// rectangle create
-			m_shapes.push_back(std::make_shared<Rectangle>(std::stoi(args[2]), std::stoi(args[3])));
+		else if (args[1] == "t" && width > 0) {	// create triangle
+			m_shapes.push_back(std::make_shared<Triangle>(width));
+			return;
 		}
 		else {
-			std::cout << "not valid option\n";
+			std::cout << "correct usage : cre <type> <size>\n";
 		}
+	}
+	else if (args.size() == 4) {
+		int width = std::stoi(args[2]);
+		int height = std::stoi(args[3]);
+		if (args[1] == "r") {
+			m_shapes.push_back(std::make_shared<Rectangle>(width, height));
+			return;
+		}
+		else {
+			std::cout << "correct usage : cre <type> <size>\n";
+		}
+	}
+	else {
+		std::cout << "correct usage : cre <type> <size>\n";
 	}
 }
 
+// makes a chosen shape BIGGER by a given number
 void AppManager::enlarge(const std::string& userInput)
 {
 	std::vector<std::string> args = split(userInput);
 
-	if (args.size() != 3) {
+	if (args.size() != 3 || !emptyArgCheck(args)) {
 		std::cout << "correct usage : en <index> <size>\n";
 	}
 	else {
 		int index = stoi(args[1]);
 		int size = stoi(args[2]);
+		if (!checkIndexInRange(index)) {
+			std::cout << "index is not in range of the list!\n";	
+			return;
+		}
+		if (size < 1 || size > 10) {
+			std::cout << "size should be between 1 and 10!\n";
+			return;
+		}
 		m_shapes.at(index)->enlarge(size);
 	}
 }
 
+// makes a chosen shape SMALLER by a given number
 void AppManager::reduce(const std::string& userInput)
 {
 	std::vector<std::string> args = split(userInput);
 
-	if (args.size() != 3) {
+	if (args.size() != 3 || !emptyArgCheck(args)) {
 		std::cout << "correct usage : red <index> <size>\n";
 	}
 	else {
 		int index = stoi(args[1]);
 		int size = stoi(args[2]);
+		if (!checkIndexInRange(index)) {
+			std::cout << "index is not in range of the list!\n";
+			return;
+		}
+		if (size < 1 || size > 10) {
+			std::cout << "size should be between 1 and 10!\n";
+			return;
+		}
 		m_shapes.at(index)->reduce(size);
 	}
 }
 
+// draws the chosen shape in the terminal
 void AppManager::draw(const std::string& userInput)
 {
 	std::vector<std::string> args = split(userInput);
 
-	if (args.size() != 2) {
+	if (args.size() != 2 || !emptyArgCheck(args)) {
 		std::cout << "correct usage : draw <index>\n";
 	}
 	else {
 		int index = stoi(args[1]);
-		m_shapes.at(index)->draw();
+		if (checkIndexInRange(index))
+			m_shapes.at(index)->draw();
+		else 
+			std::cout << "index is not in range of the list!\n";
 	}
 }
 
+// stacks two chosen shapes on each other
 void AppManager::stack(const std::string& userInput)
 {
 	std::vector<std::string> args = split(userInput);
 
-	if (args.size() != 3) {
+	if (args.size() != 3 || !emptyArgCheck(args)) {
 		std::cout << "correct usage : stack <index> <index>\n";
 	}
 	else {
 		int index1 = stoi(args[1]);
 		int index2 = stoi(args[2]);
-		m_shapes.push_back(std::make_shared<Stack>(m_shapes.at(index1), m_shapes.at(index2)));
+		if (checkIndexInRange(index1) && checkIndexInRange(index2))
+			m_shapes.push_back(std::make_shared<Stack>(m_shapes.at(index1), m_shapes.at(index2)));
+		else
+			std::cout << "index is not in range of the list!\n";
 	}
 }
 
+// creates a chosen duplicated shape
 void AppManager::duplicate(const std::string& userInput)
 {
 	std::vector<std::string> args = split(userInput);
 
-	if (args.size() != 3) {
+	if (args.size() != 3 || !emptyArgCheck(args)) {
 		std::cout << "correct usage : dup <index> <number>\n";
 	}
 	else {
 		int index = stoi(args[1]);
 		int amount = stoi(args[2]);
+		if (!checkIndexInRange(index)) {
+			std::cout << "index is not in range of the list!\n";
+			return;
+		}
+		if (amount < 1) {
+			std::cout << "number should be whole and bigger than 0!\n";
+			return;
+		}
 		m_shapes.push_back(std::make_shared<Duplicate>(m_shapes.at(index),amount));
 	}
 }
 
+// prints the data and the shape list in the app
 void AppManager::print() const
 {
 	std::cout << std::endl;
@@ -217,6 +263,7 @@ void AppManager::print() const
 	std::cout << "Enter command ('help' for the list of available commands): ";
 }
 
+// deletes a chosen shape from the list
 void AppManager::deleteCmd(const std::string& userInput)
 {
 	std::vector<std::string> args = split(userInput);
@@ -226,20 +273,21 @@ void AppManager::deleteCmd(const std::string& userInput)
 		std::cout << "correct usage : del <index>\n";
 	}
 	else {
-		int cell = std::stoi(args[1]);
+		int index = std::stoi(args[1]);
 
 		if (m_shapes.empty()) {
 			std::cout << "list is empty, nothing to delete.\n";
 			return;
 		} 
-		if (m_shapes.size() < cell + 1 || cell < 0) {
+		if (!checkIndexInRange(index)) {
 			std::cout << "index is not in range of the list!\n";
 			return;
 		}
-		m_shapes.erase(m_shapes.begin() + cell);
+		m_shapes.erase(m_shapes.begin() + index);
 	}
 }
 
+// prints the help command
 void AppManager::help() const
 {
 	std::cout << "The available commands are :\n"
@@ -256,4 +304,24 @@ void AppManager::help() const
 		<< "* del(ete) num - delete shape #num from the shape list\n"
 		<< "* help - print this command list\n"
 		<< "* exit - exit the program\n";
+}
+
+// checks user input arguments for empty arguments
+bool AppManager::emptyArgCheck(const std::vector<std::string>& args) const
+{
+	for (int i = 0; i < args.size(); i++) {
+		if (args[i].size() == 0) {
+			return false;
+		}
+	}
+	return true;
+}
+
+// checks for index in range of list of shapes
+bool AppManager::checkIndexInRange(const int index) const
+{
+	if (index >= 0 && index < m_shapes.size()) {
+		return true;
+	}
+	return false;
 }

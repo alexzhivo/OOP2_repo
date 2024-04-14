@@ -1,14 +1,15 @@
 #pragma once
 
 #include <iostream>
-#include <memory>
 #include <string>
 #include <vector>
-#include "Stack.h"
-#include "Duplicate.h"
+#include <memory>
+
 #include "Square.h"
 #include "Triangle.h"
 #include "Rectangle.h"
+#include "Stack.h"
+#include "Duplicate.h"
 
 enum Command {
 	CREATE, ENLARGE, REDUCE, DRAW,
@@ -22,7 +23,7 @@ public:
 	void run();
 
 private:
-	void print() const;
+	void print() const;	// printing data list in app
 
 	// user command functions
 	void create(const std::string& userInput);
@@ -37,6 +38,10 @@ private:
 	// utility functions for getting input
 	Command getCommandValue(const std::string& userInput) const;
 	std::vector<std::string> split(const std::string& str);
+	
+	// input checks
+	bool emptyArgCheck(const std::vector<std::string>& args) const;
+	bool checkIndexInRange(const int index) const;
 
 	// members
 	std::vector<std::shared_ptr<Shape>> m_shapes;
