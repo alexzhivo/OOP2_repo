@@ -9,5 +9,4 @@ int main()
 {
 	AppManager app;
 	app.run();
-
 }

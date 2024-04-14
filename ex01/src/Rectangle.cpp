@@ -1,8 +1,7 @@
 #include "Rectangle.h"
 
-Rectangle::Rectangle(const int width, const int height)
-	: m_width(width) , m_height(height)
-{}
+Rectangle::Rectangle(const double width, const double height)
+	: m_width(width) , m_height(height) {}
 
 void Rectangle::draw() const
 {
@@ -41,7 +40,10 @@ void Rectangle::reduce(const int n)
 	m_height /= n;
 }
 
-void Rectangle::printName() const
+std::string Rectangle::getName() const
 {
-	std::cout << "Rectangle(" << m_width << "," << m_height << ")";
+	std::string name = "Rectangle(w: " + 
+		std::to_string((int)m_width) + ", h: " + 
+		std::to_string((int)m_height) + ")";
+	return name;
 }

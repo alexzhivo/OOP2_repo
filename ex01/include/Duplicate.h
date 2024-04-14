@@ -2,16 +2,15 @@
 
 #include "Shape.h"
 
-class Stack : public Shape {
+class Duplicate : public Shape {
 public:
-	Stack(const std::shared_ptr<Shape>& s1,
-		  const std::shared_ptr<Shape>& s2);
+	Duplicate(const std::shared_ptr<Shape>& shape,const int amount);
 
 	void draw() const override;
 	void enlarge(const int n) override;
 	void reduce(const int n) override;
 	std::string getName() const override;
 private:
-	std::shared_ptr<Shape> m_shapeTop;
-	std::shared_ptr<Shape> m_shapeBottom;
+	int m_amount;
+	std::shared_ptr<Shape> m_shape;
 };

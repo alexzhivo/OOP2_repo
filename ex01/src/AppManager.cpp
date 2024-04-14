@@ -1,14 +1,11 @@
 #include "AppManager.h"
 
 AppManager::AppManager()
-	: m_data()
-{
-	std::cout << "successfuly created an App!\n";
-}
+	: m_shapes() {}
 
 AppManager::~AppManager()
 {
-	std::cout << "app has closed..\n";
+	m_shapes.clear();
 }
 
 void AppManager::run()
@@ -29,19 +26,19 @@ void AppManager::run()
 			create(userInput);
 			break;
 		case ENLARGE:
-			std::cout << "ENLARGE!\n";
+			enlarge(userInput);
 			break;
 		case REDUCE:
-			std::cout << "REDUCE!\n";
+			reduce(userInput);
 			break;
 		case DRAW:
-			std::cout << "DRAW!\n";
+			draw(userInput);
 			break;
 		case DUPLICATE:
-			std::cout << "DUPLICATE!\n";
+			duplicate(userInput);
 			break;
 		case STACK:
-			std::cout << "STACK!\n";
+			stack(userInput);
 			break;
 		case DELETE:
 			deleteCmd(userInput);
@@ -105,26 +102,117 @@ void AppManager::create(const std::string& userInput)
 {
 	std::vector<std::string> args = split(userInput);
 
-	if (args.size() != 2 || args[1].size() == 0) {
-		std::cout << "correct usage : cre <number>\n";
+	if (args.size() != 3 && args.size() != 4) {
+		std::cout << "correct usage : cre <type> <size>\n";
 	}
 	else {
-		m_data.push_back(std::stoi(args[1]));
+		// check for valid input
+		for (int i = 0; i < args.size(); i++) {
+			if (args[i].size() == 0) {
+				std::cout << "correct usage : cre <type> <size>\n";
+				return;
+			}
+		}
+		if (args[1] == "s" && args.size() == 3) {			// square create
+			m_shapes.push_back(std::make_shared<Square>(std::stoi(args[2])));
+		}
+		else if (args[1] == "t" && args.size() == 3) {		// triangle create
+			m_shapes.push_back(std::make_shared<Triangle>(std::stoi(args[2])));
+		}
+		else if (args[1] == "r" && args.size() == 4) {		// rectangle create
+			m_shapes.push_back(std::make_shared<Rectangle>(std::stoi(args[2]), std::stoi(args[3])));
+		}
+		else {
+			std::cout << "not valid option\n";
+		}
+	}
+}
+
+void AppManager::enlarge(const std::string& userInput)
+{
+	std::vector<std::string> args = split(userInput);
+
+	if (args.size() != 3) {
+		std::cout << "correct usage : en <index> <size>\n";
+	}
+	else {
+		int index = stoi(args[1]);
+		int size = stoi(args[2]);
+		m_shapes.at(index)->enlarge(size);
+	}
+}
+
+void AppManager::reduce(const std::string& userInput)
+{
+	std::vector<std::string> args = split(userInput);
+
+	if (args.size() != 3) {
+		std::cout << "correct usage : red <index> <size>\n";
+	}
+	else {
+		int index = stoi(args[1]);
+		int size = stoi(args[2]);
+		m_shapes.at(index)->reduce(size);
+	}
+}
+
+void AppManager::draw(const std::string& userInput)
+{
+	std::vector<std::string> args = split(userInput);
+
+	if (args.size() != 2) {
+		std::cout << "correct usage : draw <index>\n";
+	}
+	else {
+		int index = stoi(args[1]);
+		m_shapes.at(index)->draw();
+	}
+}
+
+void AppManager::stack(const std::string& userInput)
+{
+	std::vector<std::string> args = split(userInput);
+
+	if (args.size() != 3) {
+		std::cout << "correct usage : stack <index> <index>\n";
+	}
+	else {
+		int index1 = stoi(args[1]);
+		int index2 = stoi(args[2]);
+		m_shapes.push_back(std::make_shared<Stack>(m_shapes.at(index1), m_shapes.at(index2)));
+	}
+}
+
+void AppManager::duplicate(const std::string& userInput)
+{
+	std::vector<std::string> args = split(userInput);
+
+	if (args.size() != 3) {
+		std::cout << "correct usage : dup <index> <number>\n";
+	}
+	else {
+		int index = stoi(args[1]);
+		int amount = stoi(args[2]);
+		m_shapes.push_back(std::make_shared<Duplicate>(m_shapes.at(index),amount));
 	}
 }
 
 void AppManager::print() const
 {
-	if (m_data.empty())
+	std::cout << std::endl;
+
+	if (m_shapes.empty())
 		std::cout << "Shape list is empty.\n";
 	else
 	{
 		std::cout << "List of the available shapes :\n";
-		for (int i = 0; i < m_data.size(); i++)
+		for (int i = 0; i < m_shapes.size(); i++)
 		{
-			std::cout << i << ". (" << m_data.at(i) << ")\n";
+			std::cout << i << ".  " << m_shapes.at(i)->getName() << "\n";
 		}
 	}
+	
+	std::cout << std::endl;
 
 	std::cout << "Enter command ('help' for the list of available commands): ";
 }
@@ -133,21 +221,22 @@ void AppManager::deleteCmd(const std::string& userInput)
 {
 	std::vector<std::string> args = split(userInput);
 
-	if (args.size() != 2 || args[1].size() == 0) {
-		std::cout << "correct usage : del <number>\n";
+	if (args.size() != 2 ||
+		args[1].size() == 0) {
+		std::cout << "correct usage : del <index>\n";
 	}
 	else {
 		int cell = std::stoi(args[1]);
 
-		if (m_data.empty()) {
+		if (m_shapes.empty()) {
 			std::cout << "list is empty, nothing to delete.\n";
 			return;
 		} 
-		if (m_data.size() < cell + 1 || cell < 0) {
-			std::cout << "number is not in range of the list!\n";
+		if (m_shapes.size() < cell + 1 || cell < 0) {
+			std::cout << "index is not in range of the list!\n";
 			return;
 		}
-		m_data.erase(m_data.begin() + cell);
+		m_shapes.erase(m_shapes.begin() + cell);
 	}
 }
 

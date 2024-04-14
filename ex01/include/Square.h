@@ -1,14 +1,15 @@
 #pragma once
 
-#include <iostream>
+#include "Shape.h"
 
-class Square {
+class Square : public Shape {
 public:
-	Square(const int width);
-	void draw() const;
-	void enlarge(const int n);
-	void reduce(const int n);
-	void printName() const;
+	Square(const double width);
+
+	void draw() const override;
+	void enlarge(const int n) override;
+	void reduce(const int n) override;
+	std::string getName() const override;
 private:
-	int m_width;
+	double m_width;
 };

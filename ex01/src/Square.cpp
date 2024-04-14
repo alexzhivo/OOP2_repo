@@ -1,8 +1,7 @@
 #include "Square.h"
 
-Square::Square(const int width)
-	: m_width(width)
-{}
+Square::Square(const double width)
+	: m_width(width) {}
 
 void Square::draw() const
 {
@@ -39,7 +38,8 @@ void Square::reduce(const int n)
 	m_width /= n;
 }
 
-void Square::printName() const
+std::string Square::getName() const
 {
-	std::cout << "Square(" << m_width << ")";
+	std::string name = "Square(" + std::to_string((int)m_width) + ")";
+	return name;
 }

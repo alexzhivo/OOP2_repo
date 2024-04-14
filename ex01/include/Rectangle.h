@@ -1,15 +1,16 @@
 #pragma once
 
-#include <iostream>
+#include "Shape.h"
 
-class Rectangle {
+class Rectangle : public Shape {
 public:
-	Rectangle(const int width, const int height);
-	void draw() const;
-	void enlarge(const int n);
-	void reduce(const int n);
-	void printName() const;
+	Rectangle(const double width, const double height);
+
+	void draw() const override;
+	void enlarge(const int n) override;
+	void reduce(const int n) override;
+	std::string getName() const override;
 private:
-	int m_width;
-	int m_height;
+	double m_width;
+	double m_height;
 };

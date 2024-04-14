@@ -1,8 +1,7 @@
 #include "Triangle.h"
 
-Triangle::Triangle(const int width)
-	: m_width(width)
-{}
+Triangle::Triangle(const double width)
+	: m_width(width) {}
 
 void Triangle::draw() const
 {
@@ -39,7 +38,8 @@ void Triangle::reduce(const int n)
 	m_width /= n;
 }
 
-void Triangle::printName() const
+std::string Triangle::getName() const
 {
-	std::cout << "Triangle(" << m_width << ")";
+	std::string name = "Triangle(" + std::to_string((int)m_width) + ")";
+	return name;
 }
