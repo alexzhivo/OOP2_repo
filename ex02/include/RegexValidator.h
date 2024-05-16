@@ -14,6 +14,10 @@ public:
 		return std::regex_match(value, pattern);
 	};
 
+	bool validate(const uint32_t) const override { return false; };		// not used.
+	bool validate(const Date&) const override { return false; };		// not used.
+	bool validate(const int) const override { return false; };			// not used.
+
 	std::string getMsg() const override {
 		return m_msg;
 	}
