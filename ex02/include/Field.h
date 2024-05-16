@@ -4,6 +4,8 @@
 #include <string>
 #include <memory>
 
+class Validator;
+
 class BaseField {
 public:
 	virtual ~BaseField() = default;
@@ -19,8 +21,12 @@ private:
 template <typename T>
 class Field : public BaseField {
 public:
-	Field(const std::string& text) : m_text(text), m_value(T()) {};
+	Field(const std::string& text) : m_text(text), m_value(T()) , m_validator(nullptr) {};
 	~Field() {};
+	
+	void addValidator(Validator* validator) {
+		this->m_validator = validator;
+	}
 
 	void ask() override {
 		std::cout << m_text << std::endl;
@@ -37,8 +43,7 @@ public:
 	};
 
 	bool check() {
-		// random check for testing
-		bool check = rand() % 2;
+		bool check = m_validator->validate(m_value);
 		if (check)
 			m_valid = true;
 		return check;
@@ -48,7 +53,7 @@ public:
 		os << "-------------------------------------------------------------------------\n";
 		os << m_text << " = " << m_value;
 		if (!m_valid) {
-			os << " : " << m_notValidText;
+			os << " : " << m_validator->getMsg();
 		}
 		os << "\n";
 		os << "-------------------------------------------------------------------------";
@@ -59,7 +64,9 @@ private:
 	T m_value;
 	bool m_empty = true;
 	bool m_valid = false;
-	const std::string m_notValidText = "wrong input";
+	
+	// validator
+	Validator* m_validator;
 };
 
 std::ostream& operator<<(std::ostream& os, const BaseField& obj) {
