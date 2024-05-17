@@ -8,12 +8,6 @@ public:
 	RangeValidator(const T& min, const T& max) : m_min(min) , m_max(max) {};
 	~RangeValidator() {};
 
-	bool validate(const int givenValue) const override {
-		if (m_min <= givenValue && givenValue <= m_max)
-			return true;
-		return false;
-	};
-
 	bool validate(const Date& givenDate) const override { 
 		if (m_min <= givenDate && givenDate <= m_max)
 			return true;

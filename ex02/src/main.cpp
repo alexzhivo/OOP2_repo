@@ -34,7 +34,7 @@
 // The class must override the << and >> operators.
 // >> operator reads an int and << operator prints destination name if the value is
 // valid and if not - the number.
-// include "ValuesToNames.h"
+//#include "ValuesToNames.h"
 
 // A class that defines Date
 #include "Date.h"
@@ -49,7 +49,7 @@
 #include "NamePattern.h"
 
 // A class that keeps the names of the different income options
-// include "IncomeOptions.h"
+//#include "IncomeOptions.h"
 
 // A class that keeps the names of the different other incomes options
 // #include "OtherIncomes.h"
@@ -153,6 +153,16 @@ int main()
 	// Adding form validators
 	//myForm.addValidator(incomesAndOtherIncomesValidator.get());
 	//myForm.addValidator(otherIncomesAndTaxCreditsValidator.get());
+
+	// ### next test ### //
+
+	//auto incomeOptions = ValuesToNames<IncomeOptions>();
+	//auto incomeField = std::make_unique<Field<ValuesToNames<IncomeOptions>>> ("Details of my income from this employer: I receive:\n" + incomeOptions.valuesAndNames());
+	//auto incomeValidator = std::make_unique<RangeValidator<ValuesToNames<IncomeOptions>>>(1, 4);
+	//incomeField->addValidator(incomeValidator.get());	
+	//myForm.addField(incomeField.get());
+	
+	// ### test  end ### //
 
 	// Getting the information from the user
 	clearScreen();

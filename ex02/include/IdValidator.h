@@ -25,9 +25,8 @@ public:
 		return (sum % 10 == 0);
 	};
 
-	bool validate(const std::string&) const override { return false; };		// not used.
-	bool validate(const Date&) const override { return false; };			// not used.
-	bool validate(const int) const override { return false; };				// not used.
+	bool validate(const std::string&) const override { return false; };					// not used.
+	bool validate(const Date&) const override { return false; };						// not used.
 
 	std::string getMsg() const override {
 		return m_msg;
