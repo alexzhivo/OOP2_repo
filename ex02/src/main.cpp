@@ -52,20 +52,20 @@
 //#include "IncomeOptions.h"
 
 // A class that keeps the names of the different other incomes options
-// #include "OtherIncomes.h"
+//#include "OtherIncomes.h"
 
 // A class that keeps the names of the tax credits options
-// #include "TaxCredits.h"
+//#include "TaxCredits.h"
 
 // A class that represents a incomes-vs.-other incomes validator.
 // It checks if reports matches each other.
 // The types used as template parameter must be Field.
-// #include "IncomesAndOtherIncomesValidator.h"
+//#include "IncomesAndOtherIncomesValidator.h"
 
 // A class that represents a other incomes-vs.-tax credits validator.
 // It checks if the reports matches each other.
 // The types used as template parameter must be Field.
-// #include "OtherIncomesAndTaxCreditsValidator.h"
+//#include "OtherIncomesAndTaxCreditsValidator.h"
 
 //------------------- Function declarations ----------------------------
 
@@ -116,7 +116,7 @@ int main()
 	auto mailValidator = std::make_unique<RegexValidator>(MailPattern::getPattern());
 	auto addressValidator = std::make_unique<RegexValidator>(AddressPattern::getPattern());
 	auto ageValidator = std::make_unique<RangeValidator<Date>>(currentDate() - MAX_AGE, currentDate() - MIN_AGE);
-	auto startDateTaxYearValidator = std::make_unique<RangeValidator<Date>>(currentYear(), currentDate());
+	auto startDateTaxYearValidator = std::make_unique<RangeValidator<Date >>(currentYear(), currentDate());
 	//auto incomeValidator = std::make_unique<RangeValidator<ValuesToNames<IncomeOptions>>>(1, 4);
 	//auto otherIncomeValidator = std::make_unique<RangeValidator<ValuesToNames<OtherIncomes>>>(1, 6);
 	//auto taxCreditsValidator = std::make_unique<RangeValidator<ValuesToNames<TaxCredits>>>(1, 3);
@@ -134,9 +134,9 @@ int main()
 
 	// Creating form validators
 	//auto incomesAndOtherIncomesValidator
-	//	= std::make_unique<IncomesAndOtherIncomesValidator>(incomeField.get(), otherIncomesField.get());
+		//= std::make_unique<IncomesAndOtherIncomesValidator>(incomeField.get(), otherIncomesField.get());
 	//auto otherIncomesAndTaxCreditsValidator
-	//	= std::make_unique<OtherIncomesAndTaxCreditsValidator>(otherIncomesField.get(), taxCreditsField.get());
+		//= std::make_unique<OtherIncomesAndTaxCreditsValidator>(otherIncomesField.get(), taxCreditsField.get());
 
 	// Creating the form and adding the fields to it
 	auto myForm = Form();
@@ -153,16 +153,6 @@ int main()
 	// Adding form validators
 	//myForm.addValidator(incomesAndOtherIncomesValidator.get());
 	//myForm.addValidator(otherIncomesAndTaxCreditsValidator.get());
-
-	// ### next test ### //
-
-	//auto incomeOptions = ValuesToNames<IncomeOptions>();
-	//auto incomeField = std::make_unique<Field<ValuesToNames<IncomeOptions>>> ("Details of my income from this employer: I receive:\n" + incomeOptions.valuesAndNames());
-	//auto incomeValidator = std::make_unique<RangeValidator<ValuesToNames<IncomeOptions>>>(1, 4);
-	//incomeField->addValidator(incomeValidator.get());	
-	//myForm.addField(incomeField.get());
-	
-	// ### test  end ### //
 
 	// Getting the information from the user
 	clearScreen();
@@ -192,7 +182,7 @@ std::string getWelcomeMessage()
 {
 	return "+----------------------------------------------------------+\n"
 		"|                  Hello and welcome!                      |\n"
-		"|           Please fill the following 101 form             |\n"
+		"|			Please fill the following 101 form			    |\n"
 		"+----------------------------------------------------------+\n";
 }
 
@@ -229,3 +219,4 @@ int currentYear()
 	auto ymd = ch::year_month_day(ch::floor<ch::days>(ch::system_clock::now()));
 	return static_cast<int>(ymd.year());
 }
+
