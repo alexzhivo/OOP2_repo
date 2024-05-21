@@ -182,7 +182,7 @@ std::string getWelcomeMessage()
 {
 	return "+----------------------------------------------------------+\n"
 		"|                  Hello and welcome!                      |\n"
-		"|			Please fill the following 101 form			    |\n"
+		"|          Please fill the following 101 form              |\n"
 		"+----------------------------------------------------------+\n";
 }
 
