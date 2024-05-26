@@ -10,6 +10,8 @@
 const unsigned int WINDOW_WIDTH = 600,
 				   WINDOW_HEIGTH = 800;
 
+const unsigned int NUM_OF_STICKS = 50;
+
 enum class GameState { MainMenu , Playing , Ending };
 
 class Game {
