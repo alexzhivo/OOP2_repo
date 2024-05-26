@@ -34,6 +34,15 @@ void Stick::draw(sf::RenderWindow& window)
 	window.draw(m_shape);
 }
 
+bool Stick::isClicked(const sf::Vector2i& mousePosition, sf::RenderWindow& window) const
+{
+	sf::FloatRect globalBounds = m_shape.getGlobalBounds();
+	// Get the mouse position relative to the window
+	sf::Vector2i mousePositionNew = sf::Mouse::getPosition(window);
+	// Check if the mouse position is inside the global bounds of the rotated rectangle
+	return globalBounds.contains(static_cast<sf::Vector2f>(mousePositionNew));
+}
+
 int Stick::getRandomNum(const int a, const int b)
 {
 	return a + (rand() % (b - a + 1));

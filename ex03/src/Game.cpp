@@ -5,7 +5,7 @@
 Game::Game()
 	: m_window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGTH), "Sticks Game"), 
 	m_currState(GameState::MainMenu),
-	m_menuWindow(m_window), m_gameWindow(m_window,NUM_OF_STICKS), m_endingWindow(m_window)
+	m_menuWindow(m_window), m_gameWindow(m_window,NUM_OF_STICKS,GAME_TIME), m_endingWindow(m_window)
 {}
 
 void Game::run() {
@@ -28,16 +28,12 @@ void Game::processEvents() {
 				if (m_menuWindow.startGameSelected()) {
 					m_gameWindow.restartGame();
 					m_currState = GameState::Playing;
-					// TEST STICKS
-					std::cout << "sticks : " << m_gameWindow.getNumOfSticks() << std::endl;
 				}
 				break;
 			case GameState::Playing:
 				m_gameWindow.handleEvent(event);
 				if (m_gameWindow.isGameOver()) {
 					m_currState = GameState::Ending;
-					// TEST STICKS
-					std::cout << "sticks : " << m_gameWindow.getNumOfSticks() << std::endl;
 				}
 				break;
 			case GameState::Ending:
@@ -46,8 +42,6 @@ void Game::processEvents() {
 					m_gameWindow.restartGame();
 					m_endingWindow.restartEnding();
 					m_currState = GameState::Playing;
-					// TEST STICKS
-					std::cout << "sticks : " << m_gameWindow.getNumOfSticks() << std::endl;
 				}
 				else if (m_endingWindow.backToMenuSelected()) {
 					m_endingWindow.restartEnding();

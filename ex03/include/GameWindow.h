@@ -7,7 +7,7 @@
 
 class GameWindow {
 public:
-	GameWindow(sf::RenderWindow& window, const int numSticks);
+	GameWindow(sf::RenderWindow& window, const int numSticks, const int time);
 	void handleEvent(const sf::Event& event);
 	void update();
 	void draw();
@@ -25,16 +25,21 @@ public:
 	int getNumOfSticks() const {
 		return (int)m_sticks.size();
 	};
+	int getStickByClick(const sf::Vector2i& mousePosition);
+	void pickUpStick(const int index);
 
 private:
 	sf::RenderWindow& m_window;
 	bool m_gameOver;
 	int m_score;
+	int m_sticksPicked;
 	
 	// text
 	sf::Font m_font;
 	sf::Text m_timerText;
 	sf::Text m_scoreText;
+	sf::Text m_sticksLeftText;
+	sf::Text m_sticksPickedText;
 
 	// clock
 	sf::Clock m_timer;

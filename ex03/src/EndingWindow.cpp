@@ -10,16 +10,16 @@ EndingWindow::EndingWindow(sf::RenderWindow& window) : m_window(window),
 
     // Configure title
     m_title.setFont(m_font);
-    m_title.setString("Game Over");
+    m_title.setString("Time Is Up!");
     m_title.setCharacterSize(70);
-    m_title.setFillColor(sf::Color::Red);
-    m_title.setPosition(120, 180);
+    m_title.setFillColor(sf::Color::Blue);
+    m_title.setPosition(130, 180);
 
     // Configure score
     m_score.setFont(m_font);
     m_score.setCharacterSize(30);
     m_score.setFillColor(sf::Color::White);
-    m_score.setPosition(230, 380);
+    m_score.setPosition(190, 380);
 
     // Configure restart button
     m_restartButton.setFont(m_font);
@@ -63,7 +63,7 @@ void EndingWindow::draw() {
 }
 
 void EndingWindow::setScore(const int score) {
-    m_score.setString("Score : " + std::to_string(score));
+    m_score.setString("Your Score : " + std::to_string(score));
 }
 
 bool EndingWindow::restartGameSelected() const {

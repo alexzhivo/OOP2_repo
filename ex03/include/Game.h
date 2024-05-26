@@ -8,9 +8,9 @@
 #include "EndingWindow.h"
 
 const unsigned int WINDOW_WIDTH = 600,
-				   WINDOW_HEIGTH = 800;
-
-const unsigned int NUM_OF_STICKS = 50;
+				   WINDOW_HEIGTH = 800,
+				   NUM_OF_STICKS = 5,
+				   GAME_TIME = 10;
 
 enum class GameState { MainMenu , Playing , Ending };
 
