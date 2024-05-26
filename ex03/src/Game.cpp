@@ -63,6 +63,7 @@ void Game::update() {
 			m_gameWindow.update();
 			if (m_gameWindow.isGameOver()) {
 				m_endingWindow.setScore(m_gameWindow.getScore());
+				m_endingWindow.setEnding(m_gameWindow.isGameOver());
 				m_currState = GameState::Ending;
 				m_gameWindow.stopClock();
 			}

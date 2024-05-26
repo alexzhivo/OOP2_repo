@@ -11,7 +11,7 @@ public:
 	void handleEvent(const sf::Event& event);
 	void update();
 	void draw();
-	bool isGameOver() const;
+	int isGameOver() const;
 	void restartGame();
 	int getScore() const;
 
@@ -30,7 +30,7 @@ public:
 
 private:
 	sf::RenderWindow& m_window;
-	bool m_gameOver;
+	int m_gameOver;	// 0 - game not over , 1 - times up , 2 - no more sticks
 	int m_score;
 	int m_sticksPicked;
 	

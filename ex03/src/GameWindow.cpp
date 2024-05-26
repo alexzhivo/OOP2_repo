@@ -1,7 +1,7 @@
 #include "GameWindow.h"
 
 GameWindow::GameWindow(sf::RenderWindow& window, const int numSticks, const int time)
-	: m_window(window), m_gameOver(false), m_gameDuration(sf::seconds((float)time)),
+	: m_window(window), m_gameOver(0), m_gameDuration(sf::seconds((float)time)),
 	m_clockRunning(false), m_score(0), m_numSticks(numSticks), m_sticksPicked(0)
 {
 	if (!m_font.loadFromFile("C:/Windows/Fonts/Arial.ttf")) {
@@ -94,8 +94,11 @@ void GameWindow::update() {
 
 		// Check if the game is over
 		if (elapsedTime >= m_gameDuration) {
-			m_gameOver = true;
+			m_gameOver = 1;
 		}
+
+		if (m_sticksPicked == m_numSticks)
+			m_gameOver = 2;
 	}
 }
 
@@ -113,12 +116,13 @@ void GameWindow::draw() {
 
 }
 
-bool GameWindow::isGameOver() const {
+// returns 0 - if game not over, 1 - times up, 2 - no sticks left to pick up
+int GameWindow::isGameOver() const {
 	return m_gameOver;
 }
 
 void GameWindow::restartGame() {
-	m_gameOver = false;
+	m_gameOver = 0;
 	m_clockRunning = true;
 	m_score = 0;
 	m_sticksPicked = 0;

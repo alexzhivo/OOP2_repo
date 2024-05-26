@@ -1,7 +1,8 @@
 #include "EndingWindow.h"
 
 EndingWindow::EndingWindow(sf::RenderWindow& window) : m_window(window), 
-    m_restartSelected(false), m_backToMenuSelected(false) {
+    m_restartSelected(false), m_backToMenuSelected(false), m_gameEndState(0)
+    {
     // Load font
     if (!m_font.loadFromFile("C:/Windows/Fonts/Arial.ttf")) {
         // Handle error
@@ -10,9 +11,7 @@ EndingWindow::EndingWindow(sf::RenderWindow& window) : m_window(window),
 
     // Configure title
     m_title.setFont(m_font);
-    m_title.setString("Time Is Up!");
     m_title.setCharacterSize(70);
-    m_title.setFillColor(sf::Color::Blue);
     m_title.setPosition(130, 180);
 
     // Configure score
@@ -64,6 +63,18 @@ void EndingWindow::draw() {
 
 void EndingWindow::setScore(const int score) {
     m_score.setString("Your Score : " + std::to_string(score));
+}
+
+void EndingWindow::setEnding(const int ending)
+{
+    if (ending == 1) {
+        m_title.setString("Time Is Up!");
+        m_title.setFillColor(sf::Color::Red);
+    }
+    if (ending == 2) {
+        m_title.setString(" Finished!");
+        m_title.setFillColor(sf::Color::Blue);
+    }
 }
 
 bool EndingWindow::restartGameSelected() const {
