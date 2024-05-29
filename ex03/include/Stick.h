@@ -7,7 +7,7 @@
 #include <chrono>
 #include <random>
 
-const int THICKNESS = 3,
+const int THICKNESS = 10,
 			LENGTH = 180;
 
 enum Color { Green , Blue , Orange , Red , Pink };
@@ -30,6 +30,10 @@ public:
 	
 	// getters
 	bool isClicked(const sf::Vector2i& mousePosition) const;
+
+	// TEST
+	bool isClickedNew(const sf::Vector2i& mousePosition) const;
+
 	Point getPoint(int index) const;
 	bool isUpperStick() const;
 	int getScoreByColor() const;

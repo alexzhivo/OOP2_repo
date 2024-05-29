@@ -81,6 +81,32 @@ bool Stick::isClicked(const sf::Vector2i& mousePosition) const
 	return globalBounds.contains(static_cast<sf::Vector2f>(mousePosition));
 }
 
+// TEST
+bool Stick::isClickedNew(const sf::Vector2i& mousePosition) const
+{
+	sf::FloatRect bounds = m_shape.getGlobalBounds();
+	sf::Vector2f point = sf::Vector2f(mousePosition.x, mousePosition.y);
+
+	if (m_shape.getRotation() == 0) {
+		return bounds.contains(point);
+	}
+
+	sf::Vector2f center = m_shape.getPosition();
+	sf::Vector2f halfSize = m_shape.getSize() * 0.5f;
+	float rotation = m_shape.getRotation();
+
+	// Convert the point to local coordinates
+	sf::Vector2f localPoint = point - center;
+	float angleRad = rotation * PI / 180.0f;
+	float sinRotation = std::sin(angleRad);
+	float cosRotation = std::cos(angleRad);
+	localPoint = sf::Vector2f(localPoint.x * cosRotation + localPoint.y * sinRotation,
+		-localPoint.x * sinRotation + localPoint.y * cosRotation);
+	// Check if the point is within the transformed rectangle
+	return (localPoint.x >= -halfSize.x && localPoint.x <= halfSize.x &&
+		localPoint.y >= -halfSize.y && localPoint.y <= halfSize.y);
+}
+
 Point Stick::getPoint(int index) const
 {
 	if (index != 0 && index != 1) {

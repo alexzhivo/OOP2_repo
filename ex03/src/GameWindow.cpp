@@ -71,7 +71,7 @@ bool GameWindow::isInsideWindow(const sf::Vector2i& point) const {
 // returns stick index in vector and if not clicked returns -1
 int GameWindow::getStickByClick(const sf::Vector2i& mousePosition)
 {
-	for (int i = 0; i < m_sticks.size(); i++) {
+	for (int i = (int)m_sticks.size() - 1 ; i >= 0 ; i--) {
 		if (m_sticks.at(i)->isClicked(mousePosition)) {
 			if (m_sticks.at(i)->isUpperStick())
 				return i;
