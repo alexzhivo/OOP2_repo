@@ -1,8 +1,8 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include <vector>
-#include <memory>
+#include <vector>	// for vector
+#include <memory>	// for shared_ptr
 #include "Stick.h"
 
 class GameWindow {
@@ -18,19 +18,14 @@ public:
 	void startClock();
 	void stopClock();
 
-	// TEST SCORE INCREASE
 	bool isInsideWindow(const sf::Vector2i& point) const;
 
-	// TEST STICKS
-	int getNumOfSticks() const {
-		return (int)m_sticks.size();
-	};
 	int getStickByClick(const sf::Vector2i& mousePosition);
 	void pickUpStick(const int index);
 
 private:
 	sf::RenderWindow& m_window;
-	int m_gameOver;	// 0 - game not over , 1 - times up , 2 - no more sticks
+	int m_gameOver;	// on which state the game ended
 	int m_score;
 	int m_sticksPicked;
 	
@@ -49,7 +44,12 @@ private:
 
 	// sticks
 	const int m_numSticks;
-	std::vector<std::unique_ptr<Stick>> m_sticks;
+	std::vector<std::shared_ptr<Stick>> m_sticks;
 
 	void emptyAndFillSticks();
+	int min(int a, int b);
+	int max(int a, int b);
+	bool onSegment(Point p, Point q, Point r);
+	int orientation(Point p, Point q, Point r);
+	bool doIntersect(Point p1, Point q1, Point p2, Point q2);
 };
