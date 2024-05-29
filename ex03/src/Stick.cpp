@@ -6,7 +6,7 @@ constexpr double PI = 3.14159265359;
 
 // constructor
 Stick::Stick(const sf::Vector2u& window_size, const int index)
-	: m_isUpperStick(true)
+	: m_isUpperStick(true), m_isFlickering(false)
 {
 	// set the id of stick
 	m_id = index;
@@ -35,6 +35,8 @@ Stick::Stick(const sf::Vector2u& window_size, const int index)
 	m_shape.setSize(sf::Vector2f(LENGTH, THICKNESS));
 	m_shape.setPosition((float)x_pos, (float)y_pos);
 	m_shape.rotate((float)rand_degree);
+	m_shape.setOutlineThickness(2);
+	m_shape.setOutlineColor(sf::Color::Transparent);
 
 	// set 2 points for each stick
 	m_points[0].m_x = x_pos;
@@ -60,12 +62,16 @@ Stick::Stick(const sf::Vector2u& window_size, const int index)
 		m_shape.setFillColor(sf::Color(255, 192, 203));
 		break;
 	}
-	
 }
 
 // functions
 void Stick::draw(sf::RenderWindow& window)
 {
+	if (m_isFlickering) {
+		if (m_flickerClock.getElapsedTime().asSeconds() >= 0.5f) {
+			m_shape.setOutlineColor(sf::Color::Transparent);
+		}
+	}
 	window.draw(m_shape);
 }
 
@@ -107,7 +113,7 @@ bool Stick::isUpperStick() const
 
 int Stick::getScoreByColor() const
 {
-	return ((int)m_color + 1) * 3;
+	return ((int)m_color + 1) * 2;
 }
 
 void Stick::updateUpperStick()
@@ -119,6 +125,22 @@ void Stick::updateUpperStick()
 		}
 	}
 	m_isUpperStick = true;
+}
+
+// TEST
+void Stick::flicker()
+{
+	m_isFlickering = true;
+	m_shape.setOutlineColor(sf::Color::Yellow);
+	m_flickerClock.restart();
+}
+
+void Stick::flickerIntersected()
+{
+	for (auto& stick : m_intersectedSticks) {
+		if (m_id < stick->getId())
+			stick->flicker();
+	}
 }
 
 int Stick::getRandomNum(const int a, const int b)

@@ -48,16 +48,14 @@ void GameWindow::handleEvent(const sf::Event& event) {
 		if (event.mouseButton.button == sf::Mouse::Left) {
 			sf::Vector2i mousePosition = sf::Mouse::getPosition(m_window);
 			if (isInsideWindow(mousePosition)) {
-				
-				// TEST
-				std::cout << "MouseClick : " << mousePosition.x << " " << mousePosition.y << std::endl;
-				for (const auto& stick : m_sticks) {
-					std::cout << stick->getId() << " stick has intersected : " << stick->getIntersectedNum() << ", is upper : " << stick->isUpperStick() << std::endl;
-				}
 
 				int index = getStickByClick(mousePosition);
-				if (index + 1) {
+				if (index + 1 > 0) {
 					pickUpStick(index);
+				}
+				if (index <= -2) {	// stick is not upper
+					index = std::abs(index + 2);
+					m_sticks[index]->flickerIntersected();
 				}
 
 			}
@@ -74,8 +72,12 @@ bool GameWindow::isInsideWindow(const sf::Vector2i& point) const {
 int GameWindow::getStickByClick(const sf::Vector2i& mousePosition)
 {
 	for (int i = 0; i < m_sticks.size(); i++) {
-		if (m_sticks.at(i)->isClicked(mousePosition) && m_sticks.at(i)->isUpperStick()) {
-			return i;
+		if (m_sticks.at(i)->isClicked(mousePosition)) {
+			if (m_sticks.at(i)->isUpperStick())
+				return i;
+			else {
+				return -(i+2);
+			}
 		}
 	}
 	return -1;
@@ -122,9 +124,8 @@ void GameWindow::update() {
 		m_sticksPickedText.setString("Picked : " + std::to_string(m_sticksPicked));
 
 		// Check if the game is over
-		if (elapsedTime >= m_gameDuration) {
+		if (elapsedTime >= m_gameDuration)
 			m_gameOver = 1;
-		}
 
 		if (m_sticksPicked == m_numSticks)
 			m_gameOver = 2;
@@ -193,7 +194,6 @@ void GameWindow::emptyAndFillSticks()
 				if (doIntersect(m_sticks[i]->getPoint(0), m_sticks[i]->getPoint(1),
 								m_sticks[j]->getPoint(0), m_sticks[j]->getPoint(1))) {
 					m_sticks[i]->addIntersected(m_sticks[j]);	
-					std::cout << "Sticks Intersected!\n";
 				}
 			}
 		}
@@ -203,7 +203,6 @@ void GameWindow::emptyAndFillSticks()
 	for (auto& stick : m_sticks) {
 		stick->updateUpperStick();
 	}
-
 }
 
 void GameWindow::setPickable()

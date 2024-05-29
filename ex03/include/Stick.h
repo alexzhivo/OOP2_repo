@@ -25,6 +25,8 @@ public:
 	void addIntersected(std::shared_ptr<Stick> stick);
 	void removeIntersected(std::shared_ptr<Stick>& address);
 	void updateUpperStick();
+	void flickerIntersected();
+	void flicker();
 	
 	// getters
 	bool isClicked(const sf::Vector2i& mousePosition) const;
@@ -32,11 +34,6 @@ public:
 	bool isUpperStick() const;
 	int getScoreByColor() const;
 	int getId() const { return m_id; };
-
-	// TEST
-	int getIntersectedNum() const {
-		return (int)m_intersectedSticks.size();
-	};
 
 	// operator overloading
 	bool operator<(const Stick& other) const {
@@ -47,7 +44,11 @@ private:
 	sf::RectangleShape m_shape;
 	Point m_points[2];
 	
-	// for building the data structure
+	// effect flicker
+	sf::Clock m_flickerClock;
+	bool m_isFlickering;
+	
+	// data structure
 	int m_id;
 	bool m_isUpperStick;
 	Color m_color;
