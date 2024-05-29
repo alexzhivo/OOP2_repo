@@ -28,6 +28,7 @@ private:
 	int m_gameOver;	// on which state the game ended
 	int m_score;
 	int m_sticksPicked;
+	int m_pickable;
 	
 	// text
 	sf::Font m_font;
@@ -35,6 +36,7 @@ private:
 	sf::Text m_scoreText;
 	sf::Text m_sticksLeftText;
 	sf::Text m_sticksPickedText;
+	sf::Text m_pickableText;
 
 	// clock
 	sf::Clock m_timer;
@@ -47,6 +49,7 @@ private:
 	std::vector<std::shared_ptr<Stick>> m_sticks;
 
 	void emptyAndFillSticks();
+	void setPickable();
 	int min(int a, int b);
 	int max(int a, int b);
 	bool onSegment(Point p, Point q, Point r);

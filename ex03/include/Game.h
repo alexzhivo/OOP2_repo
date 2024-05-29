@@ -9,7 +9,7 @@
 
 const unsigned int WINDOW_WIDTH = 600,
 				   WINDOW_HEIGTH = 800,
-				   NUM_OF_STICKS = 10,
+				   NUM_OF_STICKS = 50,
 				   GAME_TIME = 60;
 
 enum class GameState { MainMenu , Playing , Ending };

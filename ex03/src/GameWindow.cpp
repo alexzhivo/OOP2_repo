@@ -4,7 +4,7 @@
 
 GameWindow::GameWindow(sf::RenderWindow& window, const int numSticks, const int time)
 	: m_window(window), m_gameOver(0), m_gameDuration(sf::seconds((float)time)),
-	m_clockRunning(false), m_score(0), m_numSticks(numSticks), m_sticksPicked(0)
+	m_clockRunning(false), m_score(0), m_numSticks(numSticks), m_sticksPicked(0), m_pickable(0)
 {
 	if (!m_font.loadFromFile("C:/Windows/Fonts/Arial.ttf")) {
 		throw std::runtime_error("Failed to load font to GameWindow.cpp");
@@ -16,23 +16,29 @@ GameWindow::GameWindow(sf::RenderWindow& window, const int numSticks, const int 
 	m_timerText.setFillColor(sf::Color::White);
 	m_timerText.setPosition(10, 10);
 
+	// setting score text
+	m_scoreText.setFont(m_font);
+	m_scoreText.setCharacterSize(20);
+	m_scoreText.setFillColor(sf::Color::White);
+	m_scoreText.setPosition(485, 10);
+
 	// setting sticks left text
 	m_sticksLeftText.setFont(m_font);
 	m_sticksLeftText.setCharacterSize(20);
 	m_sticksLeftText.setFillColor(sf::Color::White);
-	m_sticksLeftText.setPosition(150, 10);
+	m_sticksLeftText.setPosition(10, 770);
+
+	// setting pickable text
+	m_pickableText.setFont(m_font);
+	m_pickableText.setCharacterSize(20);
+	m_pickableText.setFillColor(sf::Color::White);
+	m_pickableText.setPosition(250, 770);
 
 	// setting sticks picked text
 	m_sticksPickedText.setFont(m_font);
 	m_sticksPickedText.setCharacterSize(20);
 	m_sticksPickedText.setFillColor(sf::Color::White);
-	m_sticksPickedText.setPosition(300, 10);
-
-	// setting score text
-	m_scoreText.setFont(m_font);
-	m_scoreText.setCharacterSize(20);
-	m_scoreText.setFillColor(sf::Color::White);
-	m_scoreText.setPosition(490, 10);
+	m_sticksPickedText.setPosition(485, 770);
 
 	m_timer.restart();
 }
@@ -104,6 +110,10 @@ void GameWindow::update() {
 		// Update score text
 		m_scoreText.setString("Score : " + std::to_string(m_score));
 
+		// Update pickable text
+		setPickable();
+		m_pickableText.setString("Pickable : " + std::to_string(m_pickable));
+
 		// Update sticks left text
 		m_sticksLeftText.setString("Sticks Left : " + std::to_string(m_sticks.size()));
 
@@ -129,6 +139,7 @@ void GameWindow::draw() {
 	// draw text
 	m_window.draw(m_timerText);
 	m_window.draw(m_sticksLeftText);
+	m_window.draw(m_pickableText);
 	m_window.draw(m_sticksPickedText);
 	m_window.draw(m_scoreText);
 
@@ -142,6 +153,7 @@ int GameWindow::isGameOver() const {
 void GameWindow::restartGame() {
 	m_gameOver = 0;
 	m_clockRunning = true;
+	m_pickable = 0;
 	m_score = 0;
 	m_sticksPicked = 0;
 	emptyAndFillSticks();
@@ -191,6 +203,16 @@ void GameWindow::emptyAndFillSticks()
 		stick->updateUpperStick();
 	}
 
+}
+
+void GameWindow::setPickable()
+{
+	int counter = 0;
+	for (const auto& stick : m_sticks) {
+		if (stick->isUpperStick())
+			counter++;
+	}
+	m_pickable = counter;
 }
 
 // utility function for checking if two lines Intersect
