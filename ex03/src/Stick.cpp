@@ -33,22 +33,34 @@ Stick::Stick(const sf::Vector2u& window_size, const int index)
 
 	// create the SFML element
 	m_shape.setSize(sf::Vector2f(LENGTH, THICKNESS));
-	m_shape.setFillColor(sf::Color::Green);
 	m_shape.setPosition((float)x_pos, (float)y_pos);
 	m_shape.rotate((float)rand_degree);
 
+	// set 2 points for each stick
 	m_points[0].m_x = x_pos;
 	m_points[0].m_y = y_pos;
 	m_points[1] = getEndPoint(m_points[0], LENGTH, rand_degree);
 
-	// TEST TWO POINTS
-	std::cout << "Point 1 :\n";
-	std::cout << "x : " << m_points[0].m_x << std::endl;
-	std::cout << "y : " << m_points[0].m_y << std::endl;
-	std::cout << "Point 2 :\n";
-	std::cout << "x : " << m_points[1].m_x << std::endl;
-	std::cout << "y : " << m_points[1].m_y << std::endl;
-
+	// set color for stick
+	m_color = (Color)getRandomNum(0, 4);
+	switch (m_color) {
+	case Green:
+		m_shape.setFillColor(sf::Color::Green);
+		break;
+	case Blue:
+		m_shape.setFillColor(sf::Color::Blue);
+		break;
+	case Orange:
+		m_shape.setFillColor(sf::Color(255, 165, 0));
+		break;
+	case Red:
+		m_shape.setFillColor(sf::Color::Red);
+		break;
+	case Pink:
+		m_shape.setFillColor(sf::Color(255, 192, 203));
+		break;
+	}
+	
 }
 
 // functions
@@ -91,6 +103,11 @@ void Stick::removeIntersected(std::shared_ptr<Stick>& address)
 bool Stick::isUpperStick() const
 {
 	return m_isUpperStick;
+}
+
+int Stick::getScoreByColor() const
+{
+	return ((int)m_color + 1) * 3;
 }
 
 void Stick::updateUpperStick()

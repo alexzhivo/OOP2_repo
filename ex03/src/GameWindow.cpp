@@ -83,6 +83,10 @@ int GameWindow::getStickByClick(const sf::Vector2i& mousePosition)
 
 void GameWindow::pickUpStick(const int index)
 {
+	// update values
+	m_score += m_sticks[index]->getScoreByColor();
+	m_sticksPicked++;
+
 	// remove in intersected sticks
 	for (auto& stick : m_sticks) {
 		stick->removeIntersected(m_sticks[index]);
@@ -91,9 +95,6 @@ void GameWindow::pickUpStick(const int index)
 	m_sticks[index].reset();
 	m_sticks.erase(m_sticks.begin() + index);
 
-	// update values
-	m_score += 5;
-	m_sticksPicked++;
 	for (auto& stick : m_sticks) {
 		stick->updateUpperStick();
 	}
