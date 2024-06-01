@@ -32,7 +32,6 @@ public:
 	int getId() const { return m_id; };
 	sf::Vector2i getPos() const;
 	int getDegree() const;
-
 	bool isClicked(const sf::Vector2f& mousePosition) const;
 	Point getPoint(int index) const;
 	bool isUpperStick() const;
@@ -62,6 +61,7 @@ private:
 	Color m_color;
 	std::vector<std::shared_ptr<Stick>> m_intersectedSticks;
 	
-	int getRandomNum(const int a, const int b);	// utility function for creating random numbers
-	Point getEndPoint(const Point& startP, int length, int degree);
+	// private functions
+	int getRandomNum(const int a, const int b) const;	// utility function for creating random numbers
+	Point getEndPoint(const Point& startP, int length, int degree) const;
 };

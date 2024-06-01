@@ -6,7 +6,6 @@ class EndingWindow {
 public:
     EndingWindow(sf::RenderWindow& window);
     void handleEvent(const sf::Event& event);
-    void update();
     void draw();
 
     void setScore(const int score);

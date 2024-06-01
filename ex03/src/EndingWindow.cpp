@@ -50,10 +50,6 @@ void EndingWindow::handleEvent(const sf::Event& event) {
     }
 }
 
-void EndingWindow::update() {
-    // Update menu items if needed
-}
-
 void EndingWindow::draw() {
     m_window.draw(m_title);
     m_window.draw(m_score);

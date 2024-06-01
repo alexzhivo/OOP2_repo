@@ -80,7 +80,6 @@ void Game::update() {
 			}
 			break;
 		case GameState::Ending:
-			m_endingWindow.update();
 			break;
 	}
 }

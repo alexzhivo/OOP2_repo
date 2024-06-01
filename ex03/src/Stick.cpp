@@ -1,6 +1,6 @@
 #include "Stick.h"
 
-#include <iostream> // TEST
+#include <iostream>
 
 constexpr double PI = 3.14159265359;
 
@@ -167,12 +167,12 @@ void Stick::setColor(const int number)
 	}
 }
 
-int Stick::getRandomNum(const int a, const int b)
+int Stick::getRandomNum(const int a, const int b) const
 {
 	return a + (rand() % (b - a + 1));
 }
 
-Point Stick::getEndPoint(const Point& startP, int length, int degree)
+Point Stick::getEndPoint(const Point& startP, int length, int degree) const
 {
 	// convert angle from degrees to radians
 	double angleRad = degree * PI / 180.0;

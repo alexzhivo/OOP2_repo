@@ -8,9 +8,18 @@ GameWindow::GameWindow(sf::RenderWindow& window, const int numSticks, const int 
 	m_clockRunning(false), m_score(0), m_numSticks(numSticks), m_sticksPicked(0), 
 	m_hintActive(0), m_saveIsClicked(false)
 {
-	if (!m_font.loadFromFile("C:/Windows/Fonts/Arial.ttf")) {
-		throw std::runtime_error("Failed to load font to GameWindow.cpp");
+	try {
+		if (!m_font.loadFromFile("C:/Windows/Fonts/Arial.ttf")) {
+			throw std::runtime_error("Failed to load font to GameWindow.cpp");
+		}
 	}
+	catch (const std::exception& e) {
+		std::cerr << e.what() << std::endl;
+		exit(EXIT_FAILURE);
+	}
+
+	// set number of sticks
+	m_numSticks = getRandomNum(20, numSticks);
 
 	// setting timer text
 	m_timerText.setFont(m_font);
@@ -134,26 +143,38 @@ bool GameWindow::handleSaveClick(const sf::Vector2i& point) {
 	return false;
 }
 
-bool GameWindow::saveGame() const
-{
+bool GameWindow::saveGame() const {
 	const std::string filename = "gamesave.txt";
 
-	std::ifstream infile(filename);
-	if (infile.good()) {
-		// File exists, rewrite it
-		std::ofstream ofs(filename, std::ofstream::trunc);
-		writeOnFile(ofs);
-		ofs.close();
+	try {
+		std::ifstream infile(filename);
+		if (infile.good()) {
+			// File exists, rewrite it
+			std::ofstream ofs(filename, std::ofstream::trunc);
+			if (!ofs.is_open()) {
+				throw "Failed to open the file for writing.";
+			}
+			writeOnFile(ofs);
+			ofs.close();
+		}
+		else {
+			// File does not exist, create it
+			std::ofstream ofs(filename);
+			if (!ofs.is_open()) {
+				throw "Failed to create the file.";
+			}
+			writeOnFile(ofs);
+			ofs.close();
+		}
 	}
-	else {
-		// File does not exist, create it
-		std::ofstream ofs(filename);
-		writeOnFile(ofs);
-		ofs.close();
+	catch (const char* msg) {
+		std::cerr << "Error: " << msg << std::endl;
+		return false;
 	}
 
 	return true;
 }
+
 
 void GameWindow::writeOnFile(std::ofstream& ofs) const {
 	if (ofs.is_open()) {
@@ -296,39 +317,43 @@ void GameWindow::restartGame() {
 }
 
 void GameWindow::loadGame() {
-	
 	m_pickableSticks.clear();
 	if (!m_sticks.empty())
 		m_sticks.clear();
 
 	const std::string filename = "gamesave.txt";
-	std::ifstream ifs(filename);
+	
+	int numberOfSticks, time, id, pos_x, pos_y, degree, color;
 
-	// use for loading
-	int numberOfSticks,
-		time,
-		id,
-		pos_x,
-		pos_y,
-		degree,
-		color;
+	try {
+		std::ifstream ifs(filename);
+		if (!ifs.is_open()) {
+			throw std::runtime_error("Failed to open the file for reading.");
+		}
 
-	ifs >> m_score;
-	ifs >> m_sticksPicked;
-	ifs >> numberOfSticks;
-	ifs >> time;
-	for (int i = 0; i < numberOfSticks; i++) {
-		ifs >> id;
-		ifs >> pos_x;
-		ifs >> pos_y;
-		ifs >> degree;
-		ifs >> color;
-		
-		m_sticks.push_back(std::make_shared<Stick>(m_window.getSize(), id));
-		m_sticks[i]->setShape(pos_x,pos_y,degree);
-		m_sticks[i]->setColor(color);
+
+		ifs >> m_score >> m_sticksPicked >> numberOfSticks >> time;
+		if (ifs.fail()) {
+			throw std::runtime_error("Failed to read basic game data from file.");
+		}
+
+		for (int i = 0; i < numberOfSticks; i++) {
+			ifs >> id >> pos_x >> pos_y >> degree >> color;
+			if (ifs.fail()) {
+				throw std::runtime_error("Failed to read stick data from file.");
+			}
+
+			m_sticks.push_back(std::make_shared<Stick>(m_window.getSize(), id));
+			m_sticks[i]->setShape(pos_x, pos_y, degree);
+			m_sticks[i]->setColor(color);
+		}
+
+		ifs.close();
 	}
-	ifs.close();
+	catch (const std::exception& e) {
+		std::cerr << "Error loading game: " << e.what() << std::endl;
+		return;
+	}
 
 	orderSticks();
 
@@ -469,4 +494,9 @@ bool GameWindow::doIntersect(Point p1, Point q1, Point p2, Point q2)
 	if (o4 == 0 && onSegment(p2, q1, q2)) return true;
 
 	return false; // Doesn't fall in any of the above cases 
+}
+
+int GameWindow::getRandomNum(const int a, const int b) const
+{
+	return a + (rand() % (b - a + 1));
 }

@@ -11,18 +11,18 @@ public:
 	void handleEvent(const sf::Event& event);
 	void update();
 	void draw();
-	int isGameOver() const;
 	void restartGame();
 	void loadGame();
-	int getScore() const;
 
 	void startClock();
 	void stopClock();
-
-	int getStickByClick(const sf::Vector2f& mousePosition);
 	void pickUpStick(const int index);
 
+	// PUBLIC GET
+	int isGameOver() const;
+	int getScore() const;
 	bool getSaveClick();
+	int getStickByClick(const sf::Vector2f& mousePosition);
 
 private:
 	sf::RenderWindow& m_window;
@@ -56,7 +56,7 @@ private:
 	bool m_clockRunning;
 
 	// Sticks
-	const int m_numSticks;
+	int m_numSticks;
 	int m_sticksPicked;
 	std::vector<std::shared_ptr<Stick>> m_sticks;
 	std::vector<std::shared_ptr<Stick>> m_pickableSticks;
@@ -78,4 +78,5 @@ private:
 	bool onSegment(Point p, Point q, Point r);
 	int orientation(Point p, Point q, Point r);
 	bool doIntersect(Point p1, Point q1, Point p2, Point q2);
+	int getRandomNum(const int a, const int b) const;
 };

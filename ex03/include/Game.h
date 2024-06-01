@@ -7,10 +7,10 @@
 #include "GameWindow.h"
 #include "EndingWindow.h"
 
-const unsigned int WINDOW_WIDTH = 600,
-				   WINDOW_HEIGTH = 800,
-				   NUM_OF_STICKS = 5,
-				   GAME_TIME = 60;
+const unsigned int WINDOW_WIDTH = 600,	// UNCHANGEABLE
+				   WINDOW_HEIGTH = 800,	// UNCHANGEABLE
+				   NUM_OF_STICKS = 100, // FOR MAX (min is 20)
+				   GAME_TIME = 30; 
 
 enum class GameState { Menu , Playing , Ending };
 
@@ -18,6 +18,7 @@ class Game {
 public:
 	Game();
 	void run();
+
 private:
 	void processEvents();
 	void update();
