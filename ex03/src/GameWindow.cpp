@@ -100,7 +100,7 @@ bool GameWindow::handleHintClick(const sf::Vector2i& point) {
 }
 
 void GameWindow::processHint() {
-	if (m_hintTimer.getElapsedTime().asSeconds() >= 0.5) {
+	if (m_hintTimer.getElapsedTime().asSeconds() >= 0.7) {
 		if (m_hintActive > 0 && m_pickableSticks.size() >= m_hintActive) {
 			m_pickableSticks[m_hintActive - 1]->flicker();
 			m_hintActive++;
@@ -261,6 +261,13 @@ void GameWindow::setPickable()
 		if (stick->isUpperStick())
 			m_pickableSticks.push_back(stick);
 	}
+
+	// sort vector by points (colors)
+	std::sort(m_pickableSticks.begin(), m_pickableSticks.end(),
+		[](std::shared_ptr<Stick>& a, std::shared_ptr<Stick>& b) 
+	{
+		return a->getScoreByColor() > b->getScoreByColor();
+	});
 }
 
 // utility function for checking if two lines Intersect
