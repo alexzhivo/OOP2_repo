@@ -4,7 +4,8 @@
 
 GameWindow::GameWindow(sf::RenderWindow& window, const int numSticks, const int time)
 	: m_window(window), m_gameOver(0), m_gameDuration(sf::seconds((float)time)),
-	m_clockRunning(false), m_score(0), m_numSticks(numSticks), m_sticksPicked(0), m_pickable(0)
+	m_clockRunning(false), m_score(0), m_numSticks(numSticks), m_sticksPicked(0), 
+	m_hintActive(0)
 {
 	if (!m_font.loadFromFile("C:/Windows/Fonts/Arial.ttf")) {
 		throw std::runtime_error("Failed to load font to GameWindow.cpp");
@@ -15,6 +16,19 @@ GameWindow::GameWindow(sf::RenderWindow& window, const int numSticks, const int 
 	m_timerText.setCharacterSize(20);
 	m_timerText.setFillColor(sf::Color::White);
 	m_timerText.setPosition(10, 10);
+
+	// setting hint button + text
+	m_hintButton.setSize(sf::Vector2f(60, 30));
+	m_hintButton.setFillColor(sf::Color::Black);
+	m_hintButton.setOutlineThickness(2);
+	m_hintButton.setOutlineColor(sf::Color::White);
+	m_hintButton.setPosition(267, 10);
+
+	m_hintText.setFont(m_font);
+	m_hintText.setCharacterSize(20);
+	m_hintText.setFillColor(sf::Color::White);
+	m_hintText.setString("  HINT  ");
+	m_hintText.setPosition(262, 13);
 
 	// setting score text
 	m_scoreText.setFont(m_font);
@@ -49,15 +63,20 @@ void GameWindow::handleEvent(const sf::Event& event) {
 			sf::Vector2i mousePosition = sf::Mouse::getPosition(m_window);
 			if (isInsideWindow(mousePosition)) {
 
-				int index = getStickByClick(mousePosition);
-				if (index + 1 > 0) {
-					pickUpStick(index);
-				}
-				if (index <= -2) {	// stick is not upper
-					index = std::abs(index + 2);
-					m_sticks[index]->flickerIntersected();
+				if (handleHintClick(mousePosition)) { // activate hint process
+					return;
 				}
 
+				if (!m_hintActive) {	// cannot pickup sticks while in hint process
+					int index = getStickByClick(mousePosition);
+					if (index + 1 > 0) {
+						pickUpStick(index);
+					}
+					if (index <= -2) {	// stick is not upper
+						index = std::abs(index + 2);
+						m_sticks[index]->flickerIntersected();
+					}
+				}
 			}
 		}
 	}
@@ -66,6 +85,31 @@ void GameWindow::handleEvent(const sf::Event& event) {
 bool GameWindow::isInsideWindow(const sf::Vector2i& point) const {
 	sf::Vector2u windowSize = m_window.getSize();
 	return point.x >= 0 && point.y >= 0 && point.x < static_cast<int>(windowSize.x) && point.y < static_cast<int>(windowSize.y);
+}
+
+bool GameWindow::handleHintClick(const sf::Vector2i& point) {
+	sf::FloatRect globalBounds = m_hintButton.getGlobalBounds();
+	if (globalBounds.contains(static_cast<sf::Vector2f>(point))) {
+
+		// activate hint
+		m_hintActive = 1;	// start hint process
+
+		return true;
+	}
+	return false;
+}
+
+void GameWindow::processHint() {
+	if (m_hintTimer.getElapsedTime().asSeconds() >= 0.5) {
+		if (m_hintActive > 0 && m_pickableSticks.size() >= m_hintActive) {
+			m_pickableSticks[m_hintActive - 1]->flicker();
+			m_hintActive++;
+			m_hintTimer.restart();
+		}
+		else {
+			m_hintActive = 0; // finish hint process
+		}
+	}
 }
 
 // returns stick index in vector and if not clicked returns -1
@@ -115,7 +159,7 @@ void GameWindow::update() {
 
 		// Update pickable text
 		setPickable();
-		m_pickableText.setString("Pickable : " + std::to_string(m_pickable));
+		m_pickableText.setString("Pickable : " + std::to_string(m_pickableSticks.size()));
 
 		// Update sticks left text
 		m_sticksLeftText.setString("Sticks Left : " + std::to_string(m_sticks.size()));
@@ -129,6 +173,8 @@ void GameWindow::update() {
 
 		if (m_sticksPicked == m_numSticks)
 			m_gameOver = 2;
+	
+		processHint();
 	}
 }
 
@@ -144,6 +190,9 @@ void GameWindow::draw() {
 	m_window.draw(m_pickableText);
 	m_window.draw(m_sticksPickedText);
 	m_window.draw(m_scoreText);
+	// draw button
+	m_window.draw(m_hintButton);
+	m_window.draw(m_hintText);
 
 }
 
@@ -155,7 +204,7 @@ int GameWindow::isGameOver() const {
 void GameWindow::restartGame() {
 	m_gameOver = 0;
 	m_clockRunning = true;
-	m_pickable = 0;
+	m_pickableSticks.clear();
 	m_score = 0;
 	m_sticksPicked = 0;
 	emptyAndFillSticks();
@@ -207,12 +256,11 @@ void GameWindow::emptyAndFillSticks()
 
 void GameWindow::setPickable()
 {
-	int counter = 0;
-	for (const auto& stick : m_sticks) {
+	m_pickableSticks.clear();
+	for (auto& stick : m_sticks) {
 		if (stick->isUpperStick())
-			counter++;
+			m_pickableSticks.push_back(stick);
 	}
-	m_pickable = counter;
 }
 
 // utility function for checking if two lines Intersect

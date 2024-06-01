@@ -70,6 +70,7 @@ void Stick::draw(sf::RenderWindow& window)
 	if (m_isFlickering) {
 		if (m_flickerClock.getElapsedTime().asSeconds() >= 0.5f) {
 			m_shape.setOutlineColor(sf::Color::Transparent);
+			m_isFlickering = false;
 		}
 	}
 	window.draw(m_shape);

@@ -38,6 +38,7 @@ public:
 	bool isUpperStick() const;
 	int getScoreByColor() const;
 	int getId() const { return m_id; };
+	bool isFlickering() const { return m_isFlickering; };
 
 	// operator overloading
 	bool operator<(const Stick& other) const {

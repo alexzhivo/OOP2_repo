@@ -18,8 +18,6 @@ public:
 	void startClock();
 	void stopClock();
 
-	bool isInsideWindow(const sf::Vector2i& point) const;
-
 	int getStickByClick(const sf::Vector2i& mousePosition);
 	void pickUpStick(const int index);
 
@@ -28,7 +26,6 @@ private:
 	int m_gameOver;	// on which state the game ended
 	int m_score;
 	int m_sticksPicked;
-	int m_pickable;
 	
 	// text
 	sf::Font m_font;
@@ -37,6 +34,12 @@ private:
 	sf::Text m_sticksLeftText;
 	sf::Text m_sticksPickedText;
 	sf::Text m_pickableText;
+
+	// Hint Button
+	sf::Text m_hintText;
+	sf::RectangleShape m_hintButton;
+	sf::Clock m_hintTimer;
+	int m_hintActive; // what stick is hinting, 0 - if not active.
 
 	// clock
 	sf::Clock m_timer;
@@ -47,7 +50,11 @@ private:
 	// sticks
 	const int m_numSticks;
 	std::vector<std::shared_ptr<Stick>> m_sticks;
+	std::vector<std::shared_ptr<Stick>> m_pickableSticks;
 
+	void processHint();
+	bool isInsideWindow(const sf::Vector2i& point) const;
+	bool handleHintClick(const sf::Vector2i& point);
 	void emptyAndFillSticks();
 	void setPickable();
 	int min(int a, int b);
