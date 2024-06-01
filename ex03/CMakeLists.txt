@@ -18,6 +18,7 @@ include (cmake/Zip.cmake)
 
 set (SFML_LOCATION "C:/SFML/SFML-2.6.0")
 set (SFML_DIR "${SFML_LOCATION}/lib/cmake/SFML")
+set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/x64-Debug)
 
 find_package (SFML 2.6 COMPONENTS graphics REQUIRED)
 

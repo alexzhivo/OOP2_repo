@@ -1,11 +1,12 @@
 #include "GameWindow.h"
 
-#include <iostream> // TEST
+#include <iostream>	// for save
+#include <fstream>	// for save
 
 GameWindow::GameWindow(sf::RenderWindow& window, const int numSticks, const int time)
 	: m_window(window), m_gameOver(0), m_gameDuration(sf::seconds((float)time)),
 	m_clockRunning(false), m_score(0), m_numSticks(numSticks), m_sticksPicked(0), 
-	m_hintActive(0)
+	m_hintActive(0), m_saveIsClicked(false)
 {
 	if (!m_font.loadFromFile("C:/Windows/Fonts/Arial.ttf")) {
 		throw std::runtime_error("Failed to load font to GameWindow.cpp");
@@ -17,18 +18,31 @@ GameWindow::GameWindow(sf::RenderWindow& window, const int numSticks, const int 
 	m_timerText.setFillColor(sf::Color::White);
 	m_timerText.setPosition(10, 10);
 
+	// setting save button + text
+	m_saveButton.setSize(sf::Vector2f(60, 30));
+	m_saveButton.setFillColor(sf::Color::Black);
+	m_saveButton.setOutlineThickness(2);
+	m_saveButton.setOutlineColor(sf::Color::White);
+	m_saveButton.setPosition(200, 10);
+
+	m_saveText.setFont(m_font);
+	m_saveText.setCharacterSize(20);
+	m_saveText.setFillColor(sf::Color::White);
+	m_saveText.setString("SAVE");
+	m_saveText.setPosition(204, 13);
+
 	// setting hint button + text
 	m_hintButton.setSize(sf::Vector2f(60, 30));
 	m_hintButton.setFillColor(sf::Color::Black);
 	m_hintButton.setOutlineThickness(2);
 	m_hintButton.setOutlineColor(sf::Color::White);
-	m_hintButton.setPosition(267, 10);
+	m_hintButton.setPosition(330, 10);
 
 	m_hintText.setFont(m_font);
 	m_hintText.setCharacterSize(20);
 	m_hintText.setFillColor(sf::Color::White);
-	m_hintText.setString("  HINT  ");
-	m_hintText.setPosition(262, 13);
+	m_hintText.setString("HINT");
+	m_hintText.setPosition(337, 13);
 
 	// setting score text
 	m_scoreText.setFont(m_font);
@@ -55,20 +69,26 @@ GameWindow::GameWindow(sf::RenderWindow& window, const int numSticks, const int 
 	m_sticksPickedText.setPosition(485, 770);
 
 	m_timer.restart();
+	m_loadedTime = m_timer.getElapsedTime();
 }
 
 void GameWindow::handleEvent(const sf::Event& event) {
 	if (event.type == sf::Event::MouseButtonPressed) {
 		if (event.mouseButton.button == sf::Mouse::Left) {
 			sf::Vector2i mousePosition = sf::Mouse::getPosition(m_window);
+			auto floatPosition = sf::Vector2f((float)mousePosition.x, (float)mousePosition.y);
 			if (isInsideWindow(mousePosition)) {
+
+				if (handleSaveClick(mousePosition)) {
+					return;
+				}
 
 				if (handleHintClick(mousePosition)) { // activate hint process
 					return;
 				}
 
 				if (!m_hintActive) {	// cannot pickup sticks while in hint process
-					int index = getStickByClick(mousePosition);
+					int index = getStickByClick(floatPosition);
 					if (index + 1 > 0) {
 						pickUpStick(index);
 					}
@@ -99,6 +119,67 @@ bool GameWindow::handleHintClick(const sf::Vector2i& point) {
 	return false;
 }
 
+bool GameWindow::handleSaveClick(const sf::Vector2i& point) {
+	sf::FloatRect globalBounds = m_saveButton.getGlobalBounds();
+	if (globalBounds.contains(static_cast<sf::Vector2f>(point))) {
+
+		// activate save
+		
+		// save the game to a file
+		if (saveGame())	// checks if save finish correctly
+			m_saveIsClicked = true;
+
+		return true;
+	}
+	return false;
+}
+
+bool GameWindow::saveGame() const
+{
+	const std::string filename = "gamesave.txt";
+
+	std::ifstream infile(filename);
+	if (infile.good()) {
+		// File exists, rewrite it
+		std::ofstream ofs(filename, std::ofstream::trunc);
+		writeOnFile(ofs);
+		ofs.close();
+	}
+	else {
+		// File does not exist, create it
+		std::ofstream ofs(filename);
+		writeOnFile(ofs);
+		ofs.close();
+	}
+
+	return true;
+}
+
+void GameWindow::writeOnFile(std::ofstream& ofs) const {
+	if (ofs.is_open()) {
+		ofs << m_score << std::endl;
+		ofs << m_sticksPicked << std::endl;
+		ofs << m_sticks.size() << std::endl;
+		ofs << (int)m_elapsedTime.asSeconds() << std::endl;
+		for (const auto& stick : m_sticks) {
+			ofs << stick->getId() << " " 
+				<< stick->getPos().x << " "
+				<< stick->getPos().y << " "
+				<< stick->getDegree() << " " 
+				<< stick->getColorAsInt() << std::endl;
+		}
+	}
+}
+
+bool GameWindow::getSaveClick()
+{
+	if (m_saveIsClicked) {
+		m_saveIsClicked = false;
+		return true;
+	}
+	return false;
+}
+
 void GameWindow::processHint() {
 	if (m_hintTimer.getElapsedTime().asSeconds() >= 0.7) {
 		if (m_hintActive > 0 && m_pickableSticks.size() >= m_hintActive) {
@@ -113,7 +194,7 @@ void GameWindow::processHint() {
 }
 
 // returns stick index in vector and if not clicked returns -1
-int GameWindow::getStickByClick(const sf::Vector2i& mousePosition)
+int GameWindow::getStickByClick(const sf::Vector2f& mousePosition)
 {
 	for (int i = (int)m_sticks.size() - 1 ; i >= 0 ; i--) {
 		if (m_sticks.at(i)->isClicked(mousePosition)) {
@@ -130,7 +211,7 @@ int GameWindow::getStickByClick(const sf::Vector2i& mousePosition)
 void GameWindow::pickUpStick(const int index)
 {
 	// update values
-	m_score += m_sticks[index]->getScoreByColor();
+	m_score += ((m_sticks[index]->getColorAsInt() + 1) * 2);
 	m_sticksPicked++;
 
 	// remove in intersected sticks
@@ -149,8 +230,8 @@ void GameWindow::pickUpStick(const int index)
 void GameWindow::update() {
 	if (m_clockRunning) {
 		// Update timer text
-		sf::Time elapsedTime = m_timer.getElapsedTime();
-		sf::Time remainingTime = m_gameDuration - elapsedTime;
+		m_elapsedTime = sf::seconds(m_timer.getElapsedTime().asSeconds() + m_loadedTime.asSeconds());
+		sf::Time remainingTime = m_gameDuration - m_elapsedTime;
 		int remainingSeconds = static_cast<int>(remainingTime.asSeconds());
 		m_timerText.setString("Time : " + std::to_string(remainingSeconds));
 
@@ -168,7 +249,7 @@ void GameWindow::update() {
 		m_sticksPickedText.setString("Picked : " + std::to_string(m_sticksPicked));
 
 		// Check if the game is over
-		if (elapsedTime >= m_gameDuration)
+		if (m_elapsedTime >= m_gameDuration)
 			m_gameOver = 1;
 
 		if (m_sticksPicked == m_numSticks)
@@ -193,6 +274,8 @@ void GameWindow::draw() {
 	// draw button
 	m_window.draw(m_hintButton);
 	m_window.draw(m_hintText);
+	m_window.draw(m_saveButton);
+	m_window.draw(m_saveText);
 
 }
 
@@ -209,6 +292,50 @@ void GameWindow::restartGame() {
 	m_sticksPicked = 0;
 	emptyAndFillSticks();
 	m_timer.restart();
+	m_loadedTime = m_timer.getElapsedTime();
+}
+
+void GameWindow::loadGame() {
+	
+	m_pickableSticks.clear();
+	if (!m_sticks.empty())
+		m_sticks.clear();
+
+	const std::string filename = "gamesave.txt";
+	std::ifstream ifs(filename);
+
+	// use for loading
+	int numberOfSticks,
+		time,
+		id,
+		pos_x,
+		pos_y,
+		degree,
+		color;
+
+	ifs >> m_score;
+	ifs >> m_sticksPicked;
+	ifs >> numberOfSticks;
+	ifs >> time;
+	for (int i = 0; i < numberOfSticks; i++) {
+		ifs >> id;
+		ifs >> pos_x;
+		ifs >> pos_y;
+		ifs >> degree;
+		ifs >> color;
+		
+		m_sticks.push_back(std::make_shared<Stick>(m_window.getSize(), id));
+		m_sticks[i]->setShape(pos_x,pos_y,degree);
+		m_sticks[i]->setColor(color);
+	}
+	ifs.close();
+
+	orderSticks();
+
+	m_gameOver = 0;
+	m_clockRunning = true;
+	m_timer.restart();
+	m_loadedTime = sf::seconds((float)time);
 }
 
 int GameWindow::getScore() const {
@@ -226,6 +353,7 @@ void GameWindow::stopClock() {
 }
 
 // private functions
+
 void GameWindow::emptyAndFillSticks()
 {
 	// clear sticks
@@ -236,13 +364,18 @@ void GameWindow::emptyAndFillSticks()
 	for (int i = 0; i < m_numSticks; i++)
 		m_sticks.push_back(std::make_shared<Stick>(m_window.getSize(), i));
 
+	orderSticks();
+}
+
+void GameWindow::orderSticks()
+{
 	// for each stick add all the intersected sticks
-	for (int i = 0; i < m_numSticks; i++) {
-		for (int j = 0; j < m_numSticks; j++) {
+	for (int i = 0; i < m_sticks.size(); i++) {
+		for (int j = 0; j < m_sticks.size(); j++) {
 			if (i != j) {	// the same stick
 				if (doIntersect(m_sticks[i]->getPoint(0), m_sticks[i]->getPoint(1),
-								m_sticks[j]->getPoint(0), m_sticks[j]->getPoint(1))) {
-					m_sticks[i]->addIntersected(m_sticks[j]);	
+					m_sticks[j]->getPoint(0), m_sticks[j]->getPoint(1))) {
+					m_sticks[i]->addIntersected(m_sticks[j]);
 				}
 			}
 		}
@@ -266,7 +399,7 @@ void GameWindow::setPickable()
 	std::sort(m_pickableSticks.begin(), m_pickableSticks.end(),
 		[](std::shared_ptr<Stick>& a, std::shared_ptr<Stick>& b) 
 	{
-		return a->getScoreByColor() > b->getScoreByColor();
+		return a->getColorAsInt() > b->getColorAsInt();
 	});
 }
 

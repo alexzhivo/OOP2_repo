@@ -28,17 +28,20 @@ public:
 	void flickerIntersected();
 	void flicker();
 	
-	// getters
-	bool isClicked(const sf::Vector2i& mousePosition) const;
+	// get
+	int getId() const { return m_id; };
+	sf::Vector2i getPos() const;
+	int getDegree() const;
 
-	// TEST
-	bool isClickedNew(const sf::Vector2i& mousePosition) const;
-
+	bool isClicked(const sf::Vector2f& mousePosition) const;
 	Point getPoint(int index) const;
 	bool isUpperStick() const;
-	int getScoreByColor() const;
-	int getId() const { return m_id; };
+	int getColorAsInt() const;
 	bool isFlickering() const { return m_isFlickering; };
+
+	// set
+	void setShape(const int x_pos, const int y_pos, const int rand_degree);
+	void setColor(const int number);
 
 	// operator overloading
 	bool operator<(const Stick& other) const {

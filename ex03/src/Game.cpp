@@ -1,12 +1,16 @@
 #include "Game.h"
 
-#include <iostream> // TEST
+#include <iostream> // for save
+#include <fstream>	// for save
 
 Game::Game()
-	: m_window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGTH), "Sticks Game"), 
-	m_currState(GameState::MainMenu),
-	m_menuWindow(m_window), m_gameWindow(m_window,NUM_OF_STICKS,GAME_TIME), m_endingWindow(m_window)
-{}
+	: m_window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGTH), "Sticks Game"),
+	m_currState(GameState::Menu),
+	m_menuWindow(m_window), m_gameWindow(m_window, NUM_OF_STICKS, GAME_TIME),
+	m_endingWindow(m_window), m_isGameSaved(false)
+{
+	checkGameSave();
+}
 
 void Game::run() {
 	while (m_window.isOpen()) {
@@ -23,10 +27,14 @@ void Game::processEvents() {
 			m_window.close();
 
 		switch (m_currState) {
-			case GameState::MainMenu:
+			case GameState::Menu:
 				m_menuWindow.handleEvent(event);
 				if (m_menuWindow.startGameSelected()) {
 					m_gameWindow.restartGame();
+					m_currState = GameState::Playing;
+				}
+				if (m_menuWindow.loadSaveSelected() && m_isGameSaved) {
+					m_gameWindow.loadGame();
 					m_currState = GameState::Playing;
 				}
 				break;
@@ -34,6 +42,9 @@ void Game::processEvents() {
 				m_gameWindow.handleEvent(event);
 				if (m_gameWindow.isGameOver()) {
 					m_currState = GameState::Ending;
+				}
+				if (m_gameWindow.getSaveClick()) {
+					checkGameSave();
 				}
 				break;
 			case GameState::Ending:
@@ -45,8 +56,8 @@ void Game::processEvents() {
 				}
 				else if (m_endingWindow.backToMenuSelected()) {
 					m_endingWindow.restartEnding();
-					m_menuWindow.resetMenu();
-					m_currState = GameState::MainMenu;
+					checkGameSave();
+					m_currState = GameState::Menu;
 				}
 				break;
 		}
@@ -55,8 +66,8 @@ void Game::processEvents() {
 
 void Game::update() {
 	switch (m_currState) {
-		case GameState::MainMenu:
-			m_menuWindow.update();
+		case GameState::Menu:
+			m_menuWindow.update(m_isGameSaved);
 			break;
 		case GameState::Playing:
 			m_gameWindow.startClock();
@@ -77,7 +88,7 @@ void Game::update() {
 void Game::render() {
 	m_window.clear();
 	switch (m_currState) {
-	case GameState::MainMenu:
+	case GameState::Menu:
 		m_menuWindow.draw();
 		break;
 	case GameState::Playing:
@@ -88,4 +99,10 @@ void Game::render() {
 		break;
 	}
 	m_window.display();
+}
+
+void Game::checkGameSave() {
+	const std::string filename = "gamesave.txt";
+	std::ifstream infile(filename);
+	m_isGameSaved = infile.good();
 }

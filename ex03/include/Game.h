@@ -9,10 +9,10 @@
 
 const unsigned int WINDOW_WIDTH = 600,
 				   WINDOW_HEIGTH = 800,
-				   NUM_OF_STICKS = 20,
+				   NUM_OF_STICKS = 5,
 				   GAME_TIME = 60;
 
-enum class GameState { MainMenu , Playing , Ending };
+enum class GameState { Menu , Playing , Ending };
 
 class Game {
 public:
@@ -23,8 +23,12 @@ private:
 	void update();
 	void render();
 
+	void checkGameSave();
+
 	sf::RenderWindow m_window;
 	GameState m_currState;
+	bool m_isGameSaved;
+
 	MenuWindow m_menuWindow;
 	GameWindow m_gameWindow;
 	EndingWindow m_endingWindow;

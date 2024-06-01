@@ -30,38 +30,11 @@ Stick::Stick(const sf::Vector2u& window_size, const int index)
 		rand_degree = getRandomNum(0, 360);
 	} while (rand_degree == 90 || rand_degree == 270);
 
-
 	// create the SFML element
-	m_shape.setSize(sf::Vector2f(LENGTH, THICKNESS));
-	m_shape.setPosition((float)x_pos, (float)y_pos);
-	m_shape.rotate((float)rand_degree);
-	m_shape.setOutlineThickness(2);
-	m_shape.setOutlineColor(sf::Color::Transparent);
+	setShape(x_pos, y_pos, rand_degree);
 
-	// set 2 points for each stick
-	m_points[0].m_x = x_pos;
-	m_points[0].m_y = y_pos;
-	m_points[1] = getEndPoint(m_points[0], LENGTH, rand_degree);
-
-	// set color for stick
-	m_color = (Color)getRandomNum(0, 4);
-	switch (m_color) {
-	case Green:
-		m_shape.setFillColor(sf::Color::Green);
-		break;
-	case Blue:
-		m_shape.setFillColor(sf::Color::Blue);
-		break;
-	case Orange:
-		m_shape.setFillColor(sf::Color(255, 165, 0));
-		break;
-	case Red:
-		m_shape.setFillColor(sf::Color::Red);
-		break;
-	case Pink:
-		m_shape.setFillColor(sf::Color(255, 192, 203));
-		break;
-	}
+	// set random color for stick
+	setColor(getRandomNum(0, 4));
 }
 
 // functions
@@ -76,36 +49,9 @@ void Stick::draw(sf::RenderWindow& window)
 	window.draw(m_shape);
 }
 
-bool Stick::isClicked(const sf::Vector2i& mousePosition) const
+bool Stick::isClicked(const sf::Vector2f& mousePosition) const
 {
-	sf::FloatRect globalBounds = m_shape.getGlobalBounds();
-	return globalBounds.contains(static_cast<sf::Vector2f>(mousePosition));
-}
-
-// TEST
-bool Stick::isClickedNew(const sf::Vector2i& mousePosition) const
-{
-	sf::FloatRect bounds = m_shape.getGlobalBounds();
-	sf::Vector2f point = sf::Vector2f(mousePosition.x, mousePosition.y);
-
-	if (m_shape.getRotation() == 0) {
-		return bounds.contains(point);
-	}
-
-	sf::Vector2f center = m_shape.getPosition();
-	sf::Vector2f halfSize = m_shape.getSize() * 0.5f;
-	float rotation = m_shape.getRotation();
-
-	// Convert the point to local coordinates
-	sf::Vector2f localPoint = point - center;
-	float angleRad = rotation * PI / 180.0f;
-	float sinRotation = std::sin(angleRad);
-	float cosRotation = std::cos(angleRad);
-	localPoint = sf::Vector2f(localPoint.x * cosRotation + localPoint.y * sinRotation,
-		-localPoint.x * sinRotation + localPoint.y * cosRotation);
-	// Check if the point is within the transformed rectangle
-	return (localPoint.x >= -halfSize.x && localPoint.x <= halfSize.x &&
-		localPoint.y >= -halfSize.y && localPoint.y <= halfSize.y);
+	return m_shape.getLocalBounds().contains(m_shape.getInverseTransform().transformPoint(mousePosition));
 }
 
 Point Stick::getPoint(int index) const
@@ -138,9 +84,9 @@ bool Stick::isUpperStick() const
 	return m_isUpperStick;
 }
 
-int Stick::getScoreByColor() const
+int Stick::getColorAsInt() const
 {
-	return ((int)m_color + 1) * 2;
+	return (int)m_color;
 }
 
 void Stick::updateUpperStick()
@@ -154,7 +100,6 @@ void Stick::updateUpperStick()
 	m_isUpperStick = true;
 }
 
-// TEST
 void Stick::flicker()
 {
 	m_isFlickering = true;
@@ -162,11 +107,63 @@ void Stick::flicker()
 	m_flickerClock.restart();
 }
 
+sf::Vector2i Stick::getPos() const
+{
+	return sf::Vector2i((int)m_shape.getPosition().x, (int)m_shape.getPosition().y);
+}
+
+int Stick::getDegree() const
+{
+	return (int)m_shape.getRotation();
+}
+
 void Stick::flickerIntersected()
 {
 	for (auto& stick : m_intersectedSticks) {
 		if (m_id < stick->getId())
 			stick->flicker();
+	}
+}
+
+void Stick::setShape(const int x_pos, const int y_pos, const int degree)
+{
+	m_shape.setSize(sf::Vector2f(LENGTH, THICKNESS));
+	m_shape.setOutlineThickness(2);
+	m_shape.setOutlineColor(sf::Color::Transparent);
+	m_shape.setPosition((float)x_pos, (float)y_pos);
+	m_shape.setRotation(0);
+	m_shape.rotate((float)degree);
+
+	// set 2 points for each stick
+	m_points[0].m_x = x_pos;
+	m_points[0].m_y = y_pos;
+	m_points[1] = getEndPoint(m_points[0], LENGTH, degree);
+}
+
+void Stick::setColor(const int number)
+{
+	switch (number) {
+	case Blue:
+		m_shape.setFillColor(sf::Color::Blue);
+		m_color = Blue;
+		break;
+	case Orange:
+		m_shape.setFillColor(sf::Color(255, 165, 0));
+		m_color = Orange;
+		break;
+	case Red:
+		m_shape.setFillColor(sf::Color::Red);
+		m_color = Red;
+		break;
+	case Pink:
+		m_color = Pink;
+		m_shape.setFillColor(sf::Color(255, 192, 203));
+		break;
+	case Green:
+	default:
+		m_shape.setFillColor(sf::Color::Green);
+		m_color = Green;
+		break;
 	}
 }
 
