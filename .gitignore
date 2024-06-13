@@ -1,9 +1,15 @@
 # Ignore ex01 directories
 ex01/.vs
 ex01/out
+
 # Ignore ex02 directories
 ex02/.vs
 ex02/out
+
 # Ignore ex03 directories
 ex03/.vs
 ex03/out
+
+# Ignore project directories
+project/.vs
+project/out
