@@ -1,12 +1,18 @@
 #pragma once
 
+#include <SFML/Graphics.hpp>
+
 class GameManager {
 public:
+    GameManager();
+    ~GameManager();
 
-	GameManager() {};
-	~GameManager() {};
-
-	void run() {};
+    void run();
 
 private:
+    sf::RenderWindow m_window;
+
+    void handleInput(sf::Event& event);
+    void update(float deltaTime);
+    void render();
 };
