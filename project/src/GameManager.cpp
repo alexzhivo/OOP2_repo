@@ -3,10 +3,14 @@
 // Constructors & Destructor
 
 GameManager::GameManager() 
-    : m_window(sf::VideoMode(1280, 920), "BrickBuster"), m_currWindow(GameWindow::START)
+    : m_window(sf::VideoMode(1280, 920), "BrickBuster"), m_currWindow(WindowState::START)
 {
 	m_windows.push_back(std::make_unique<StartWindow>(m_window));
 	m_windows.push_back(std::make_unique<MenuWindow>(m_window));
+	m_windows.push_back(std::make_unique<GameWindow>(m_window));
+	m_windows.push_back(std::make_unique<LeaderboardWindow>(m_window));
+	m_windows.push_back(std::make_unique<HelpWindow>(m_window));
+	m_windows.push_back(std::make_unique<SettingsWindow>(m_window));
 };
 
 // Public Class Functions

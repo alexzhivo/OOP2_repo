@@ -2,17 +2,20 @@
 
 #include <SFML/Graphics.hpp>
 
-enum class GameWindow {
+enum class WindowState {
     START,
     MENU,
     PLAY,
+    LEADERBOARD,
+    HELP,
+    SETTINGS,
     FINISH,
     DEFAULT
 };
 
 struct UserChoice {
     bool isSelected = false;
-    GameWindow nextWindow = GameWindow::DEFAULT;
+    WindowState nextWindow = WindowState::DEFAULT;
 };
 
 class Window {

@@ -28,7 +28,7 @@ UserChoice StartWindow::handleInput(sf::Event& event)
     if (event.type == sf::Event::KeyPressed) {
         if (event.key.code == sf::Keyboard::Space) {
             choice.isSelected = true;
-            choice.nextWindow = GameWindow::MENU;
+            choice.nextWindow = WindowState::MENU;
         }
     }
     return choice;

@@ -65,7 +65,7 @@ UserChoice MenuWindow::handleInput(sf::Event& event)
     if (event.type == sf::Event::KeyPressed) {
         if (event.key.code == sf::Keyboard::Space) { 
             choice.isSelected = true;
-            choice.nextWindow = GameWindow::START;
+            choice.nextWindow = WindowState::START;
         }
         else if (event.key.code == sf::Keyboard::Up) {
             if ((int)m_currHoverButton == 4) {
@@ -81,6 +81,13 @@ UserChoice MenuWindow::handleInput(sf::Event& event)
             }
             else {
                 ++m_currHoverButton;
+            }
+        }
+        else if (event.key.code == sf::Keyboard::Enter) {
+            if ((int)m_currHoverButton != 4) {
+                choice.isSelected = true;
+                choice.nextWindow = static_cast<WindowState>((int)m_currHoverButton + 2);
+                resetWindow();
             }
         }
     }
@@ -99,6 +106,11 @@ void MenuWindow::render()
     m_window.draw(m_leaderboardButton);
     m_window.draw(m_helpButton);
     m_window.draw(m_settingsButton);
+}
+
+void MenuWindow::resetWindow()
+{
+    m_currHoverButton = Button::NONE;
 }
 
 void MenuWindow::updateHover()

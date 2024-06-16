@@ -7,7 +7,7 @@ enum class Button {
 	LEADERBOARD,
 	HELP,
 	SETTINGS,
-	NONE,
+	NONE
 };
 
 // operators for enum class
@@ -28,6 +28,8 @@ private:
 	sf::Text m_leaderboardButton;
 	sf::Text m_helpButton;
 	sf::Text m_settingsButton;
+
+	void resetWindow();
 
 	// hover effect
 	Button m_currHoverButton;

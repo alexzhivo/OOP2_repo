@@ -8,6 +8,10 @@
 #include "Window.h"
 #include "StartWindow.h"
 #include "MenuWindow.h"
+#include "LeaderboardWindow.h"
+#include "HelpWindow.h"
+#include "SettingsWindow.h"
+#include "GameWindow.h"
 
 class GameManager {
 public:
@@ -16,7 +20,7 @@ public:
     void run();
 private:
     sf::RenderWindow m_window;
-    GameWindow m_currWindow;
+    WindowState m_currWindow;
 
     std::vector<std::unique_ptr<Window>> m_windows;
 
