@@ -12,6 +12,7 @@
 #include "HelpWindow.h"
 #include "SettingsWindow.h"
 #include "GameWindow.h"
+#include "FinishWindow.h"
 
 class GameManager {
 public:

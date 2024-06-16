@@ -11,6 +11,7 @@ GameManager::GameManager()
 	m_windows.push_back(std::make_unique<LeaderboardWindow>(m_window));
 	m_windows.push_back(std::make_unique<HelpWindow>(m_window));
 	m_windows.push_back(std::make_unique<SettingsWindow>(m_window));
+	m_windows.push_back(std::make_unique<FinishWindow>(m_window));
 };
 
 // Public Class Functions

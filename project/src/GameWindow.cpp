@@ -46,6 +46,11 @@ UserChoice GameWindow::handleInput(sf::Event& event)
             if (event.key.code == sf::Keyboard::Escape) {   // enter pause mode
                 m_gamePaused = true;
             }
+            else if (event.key.code == sf::Keyboard::W) {
+                choice.isSelected = true;
+                choice.nextWindow = WindowState::FINISH;  // to finish
+                resetWindow();
+            }
         }
         else {                  // GAME IS PAUSED
             if (event.key.code == sf::Keyboard::Escape) {   // back to game
