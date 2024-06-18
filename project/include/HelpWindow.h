@@ -7,7 +7,7 @@ public:
 	HelpWindow(sf::RenderWindow& window);
 
 	UserChoice handleInput(sf::Event& event);
-	void update();
+	void update(float dt);
 	void render();
 
 private:

@@ -41,7 +41,7 @@ UserChoice LeaderboardWindow::handleInput(sf::Event& event)
     return choice;
 }
 
-void LeaderboardWindow::update()
+void LeaderboardWindow::update(float dt)
 {
     updateHover();
 }

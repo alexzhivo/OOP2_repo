@@ -34,7 +34,7 @@ UserChoice StartWindow::handleInput(sf::Event& event)
     return choice;
 }
 
-void StartWindow::update()
+void StartWindow::update(float dt)
 {
 
 }

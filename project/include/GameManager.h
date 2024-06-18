@@ -27,6 +27,6 @@ private:
 
     // functions
     void processEvents();
-    void update();
+    void update(float dt);
     void render();
 };

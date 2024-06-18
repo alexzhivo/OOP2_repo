@@ -28,7 +28,7 @@ UserChoice FinishWindow::handleInput(sf::Event& event)
     return choice;
 }
 
-void FinishWindow::update()
+void FinishWindow::update(float dt)
 {
 
 }

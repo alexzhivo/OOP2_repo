@@ -14,6 +14,13 @@ GameWindow::GameWindow(sf::RenderWindow& window)
     m_title.setFillColor(sf::Color::White);
     m_title.setPosition(300.f, 100.f);
 
+    // Set up element window
+    m_elementWindow.setFillColor(sf::Color(200, 200, 200));
+    m_elementWindow.setOutlineThickness(2);
+    m_elementWindow.setOutlineColor(sf::Color::White);
+    m_elementWindow.setPosition(200.f, 250.f);
+    m_elementWindow.setSize(sf::Vector2f(800.f, 600.f));
+
     // Set up pause screen
     m_pauseWindow.setFillColor(sf::Color::White);
     m_pauseWindow.setPosition(100.f, 300.f);
@@ -36,6 +43,8 @@ GameWindow::GameWindow(sf::RenderWindow& window)
     m_BackToMenuText.setCharacterSize(20);
     m_BackToMenuText.setFillColor(sf::Color::Black);
     m_BackToMenuText.setPosition(100.f, 340.f);
+
+    m_ball = std::make_unique<Ball>(sf::Vector2f(350.f, 150.f));
 }
 
 UserChoice GameWindow::handleInput(sf::Event& event)
@@ -76,13 +85,22 @@ UserChoice GameWindow::handleInput(sf::Event& event)
     return choice;
 }
 
-void GameWindow::update()
+void GameWindow::update(float dt)
 {
     updateHover();
+    m_ball->update(dt);
+    if (m_gamePaused) {
+        m_ball->setVelocity(sf::Vector2f(0.f, 0.f));
+    }
+    else {
+        m_ball->restoreVelocity();
+    }
 }
 
 void GameWindow::render()
 {
+    m_window.draw(m_elementWindow);
+    m_ball->draw(m_window); // draw ball
     m_window.draw(m_title);
     if (m_gamePaused) {
         m_window.draw(m_pauseWindow);
@@ -92,10 +110,17 @@ void GameWindow::render()
     }
 }
 
+void GameWindow::recreateBall()
+{
+    m_ball.reset();
+    m_ball = std::make_unique<Ball>(sf::Vector2f(350.f, 150.f));
+}
+
 void GameWindow::resetWindow()
 {
     m_gamePaused = false;
     m_pauseChoice = PauseChoice::GAME;
+    recreateBall();
 }
 
 void GameWindow::updateHover()
@@ -107,6 +132,5 @@ void GameWindow::updateHover()
     else {
         m_returnToGameText.setFillColor(sf::Color::Black);
         m_BackToMenuText.setFillColor(sf::Color::Red);
-
     }
 }

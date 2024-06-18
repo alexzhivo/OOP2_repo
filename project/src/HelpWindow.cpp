@@ -41,7 +41,7 @@ UserChoice HelpWindow::handleInput(sf::Event& event)
     return choice;
 }
 
-void HelpWindow::update()
+void HelpWindow::update(float dt)
 {
     updateHover();
 }

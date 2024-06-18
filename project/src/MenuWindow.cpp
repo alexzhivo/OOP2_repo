@@ -94,7 +94,7 @@ UserChoice MenuWindow::handleInput(sf::Event& event)
     return choice;
 }
 
-void MenuWindow::update()
+void MenuWindow::update(float dt)
 {
     updateHover();
 }

@@ -75,7 +75,7 @@ UserChoice SettingsWindow::handleInput(sf::Event& event)
     return choice;
 }
 
-void SettingsWindow::update()
+void SettingsWindow::update(float dt)
 {
     updateHover();
 }

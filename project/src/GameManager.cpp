@@ -12,14 +12,18 @@ GameManager::GameManager()
 	m_windows.push_back(std::make_unique<HelpWindow>(m_window));
 	m_windows.push_back(std::make_unique<SettingsWindow>(m_window));
 	m_windows.push_back(std::make_unique<FinishWindow>(m_window));
+
+	m_window.setFramerateLimit(120);
 };
 
 // Public Class Functions
 
 void GameManager::run() {
+	sf::Clock clock;
 	while (m_window.isOpen()) {
 		processEvents();
-		update();
+		float dt = clock.restart().asSeconds();
+		update(dt);
 		render();
 	}
 }
@@ -38,9 +42,9 @@ void GameManager::processEvents() {
 	}
 }
 
-void GameManager::update() {
+void GameManager::update(float dt) {
 
-	m_windows[(int)m_currWindow]->update();
+	m_windows[(int)m_currWindow]->update(dt);
 
 }
 
