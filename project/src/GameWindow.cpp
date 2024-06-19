@@ -1,7 +1,10 @@
 #include "GameWindow.h"
 
 GameWindow::GameWindow(sf::RenderWindow& window)
-    : Window(window), m_gamePaused(false), m_pauseChoice(PauseChoice::GAME)
+    :   Window(window), 
+        m_gamePaused(false), 
+        m_pauseChoice(PauseChoice::GAME),
+        m_ballSpeed(100)
 {
     if (!m_font.loadFromFile("C:/Windows/Fonts/Arial.ttf")) {
         // Handle font loading error
@@ -44,7 +47,7 @@ GameWindow::GameWindow(sf::RenderWindow& window)
     m_BackToMenuText.setFillColor(sf::Color::Black);
     m_BackToMenuText.setPosition(100.f, 340.f);
 
-    m_ball = std::make_unique<Ball>(sf::Vector2f(350.f, 150.f));
+    recreateBalls();
 }
 
 UserChoice GameWindow::handleInput(sf::Event& event)
@@ -88,21 +91,27 @@ UserChoice GameWindow::handleInput(sf::Event& event)
 void GameWindow::update(float dt)
 {
     updateHover();
-    m_ball->update(dt);
-    if (m_gamePaused) {
-        m_ball->setVelocity(sf::Vector2f(0.f, 0.f));
-    }
-    else {
-        m_ball->restoreVelocity();
+
+    for (auto& ball : m_balls) {
+        ball->update(dt);
+        m_collisionHandler.handleOutOfBoarder(m_balls, m_elementWindow);
+        if (m_gamePaused) {
+            ball->setVelocityZero();
+        }
+        else {
+            ball->restoreVelocity();
+        }
     }
 }
 
 void GameWindow::render()
 {
-    m_window.draw(m_elementWindow);
-    m_ball->draw(m_window); // draw ball
-    m_window.draw(m_title);
-    if (m_gamePaused) {
+    m_window.draw(m_elementWindow);     // Window For Balls
+    for (auto& ball : m_balls) {        // Balls
+        ball->draw(m_window);
+    }
+    m_window.draw(m_title);             // Title
+    if (m_gamePaused) {                 // Pause Menu
         m_window.draw(m_pauseWindow);
         m_window.draw(m_pauseText);
         m_window.draw(m_returnToGameText);
@@ -110,17 +119,18 @@ void GameWindow::render()
     }
 }
 
-void GameWindow::recreateBall()
+void GameWindow::recreateBalls()
 {
-    m_ball.reset();
-    m_ball = std::make_unique<Ball>(sf::Vector2f(350.f, 150.f));
+    m_balls.clear();
+    for (int i = 0; i < NUM_OF_BALLS; ++i)
+        m_balls.push_back(std::make_unique<Ball>(sf::Vector2f(300.f, 300.f),sf::Vector2f(3.f * m_ballSpeed, 3.f * m_ballSpeed)));
 }
 
 void GameWindow::resetWindow()
 {
     m_gamePaused = false;
     m_pauseChoice = PauseChoice::GAME;
-    recreateBall();
+    recreateBalls();
 }
 
 void GameWindow::updateHover()
