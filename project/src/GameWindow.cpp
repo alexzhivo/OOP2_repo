@@ -90,11 +90,12 @@ UserChoice GameWindow::handleInput(sf::Event& event)
 
 void GameWindow::update(float dt)
 {
+    // HOVER
     updateHover();
 
+    // BALLS
     for (auto& ball : m_balls) {
         ball->update(dt);
-        m_collisionHandler.handleOutOfBoarder(m_balls, m_elementWindow);
         if (m_gamePaused) {
             ball->setVelocityZero();
         }
@@ -102,11 +103,21 @@ void GameWindow::update(float dt)
             ball->restoreVelocity();
         }
     }
+    // PLATFORM
+    if (!m_gamePaused) {
+        m_platform.update(dt);
+    }
+
+    // COLLISIONS
+    m_collisionHandler.handleOutOfBoarder(m_balls, m_elementWindow);
 }
 
 void GameWindow::render()
 {
     m_window.draw(m_elementWindow);     // Window For Balls
+
+    m_platform.draw(m_window);          // Platform
+
     for (auto& ball : m_balls) {        // Balls
         ball->draw(m_window);
     }

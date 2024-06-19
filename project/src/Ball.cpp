@@ -24,7 +24,9 @@ void Ball::draw(sf::RenderWindow& window)
 void Ball::setVelocity(sf::Vector2f velocity)
 {
 	m_currVelocity = velocity;
-	m_lastVelocity = velocity;
+	if (velocity.x != 0 && velocity.y != 0) {
+		m_lastVelocity = velocity;
+	}
 }
 
 void Ball::setVelocityZero()

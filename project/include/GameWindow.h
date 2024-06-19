@@ -1,11 +1,12 @@
 #pragma once
 
+#include "Window.h"
 #include "CollisionHandler.h"
+#include "Platform.h"
+#include "Ball.h"
 
 #include <memory>
 #include <list>
-#include "Window.h"
-#include "Ball.h"
 
 enum class PauseChoice {
 	GAME,
@@ -31,6 +32,9 @@ private:
 	std::list<std::unique_ptr<Ball>> m_balls;
 	void recreateBalls();
 	int m_ballSpeed;
+
+	// platform
+	Platform m_platform;
 
 	// Collision Handler
 	CollisionHandler m_collisionHandler;
