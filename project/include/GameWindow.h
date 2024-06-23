@@ -50,6 +50,4 @@ private:
 
 	bool m_gamePaused;
 	PauseChoice m_pauseChoice;
-
-	sf::Font m_font;
 };

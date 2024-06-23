@@ -6,16 +6,8 @@ GameWindow::GameWindow(sf::RenderWindow& window, ObjectCreator* objectCreator)
         m_pauseChoice(PauseChoice::GAME),
         m_ballSpeed(100)
 {
-    if (!m_font.loadFromFile("C:/Windows/Fonts/Arial.ttf")) {
-        // Handle font loading error
-    }
-
     // Set up title
-    m_title.setFont(m_font);
-    m_title.setString("GAMEPLAY");
-    m_title.setCharacterSize(100);
-    m_title.setFillColor(sf::Color::White);
-    m_title.setPosition(300.f, 100.f);
+    m_title = objectCreator->createTextButton("GAME PLAY", 100, 'W', 300.f, 100.f);
 
     // Set up element window
     m_elementWindow.setFillColor(sf::Color(200, 200, 200));
@@ -29,23 +21,9 @@ GameWindow::GameWindow(sf::RenderWindow& window, ObjectCreator* objectCreator)
     m_pauseWindow.setPosition(100.f, 300.f);
     m_pauseWindow.setSize(sf::Vector2f(200.f, 200.f));
 
-    m_pauseText.setFont(m_font);
-    m_pauseText.setString("game paused");
-    m_pauseText.setCharacterSize(20);
-    m_pauseText.setFillColor(sf::Color::Black);
-    m_pauseText.setPosition(100.f, 300.f);
-
-    m_returnToGameText.setFont(m_font);
-    m_returnToGameText.setString("return to game");
-    m_returnToGameText.setCharacterSize(20);
-    m_returnToGameText.setFillColor(sf::Color::Black);
-    m_returnToGameText.setPosition(100.f, 320.f);
-
-    m_BackToMenuText.setFont(m_font);
-    m_BackToMenuText.setString("back to menu");
-    m_BackToMenuText.setCharacterSize(20);
-    m_BackToMenuText.setFillColor(sf::Color::Black);
-    m_BackToMenuText.setPosition(100.f, 340.f);
+    m_pauseText = objectCreator->createTextButton("game paused", 20, 'B', 100.f, 300.f);
+    m_returnToGameText = objectCreator->createTextButton("return to game", 20, 'B', 100.f, 320.f);
+    m_BackToMenuText = objectCreator->createTextButton("back to menu", 20, 'B', 100.f, 340.f);
 
     recreateBalls();
 }

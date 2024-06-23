@@ -28,7 +28,7 @@ sf::Color ObjectCreator::getColor(const char colorChar)
         // default color (white)
         break;
     case 'B':
-        return sf::Color::Blue;
+        return sf::Color::Black;
     case 'G':
         return sf::Color(100, 100, 100);
     default :
