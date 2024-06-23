@@ -23,12 +23,14 @@ MenuButton& operator--(MenuButton& button) {    // SCROLL UP
 MenuWindow::MenuWindow(sf::RenderWindow& window, ObjectCreator* objectCreator)
 	: Window(window,objectCreator), m_currHoverButton(MenuButton::NONE)
 {
+    // title
     m_title = m_objectCreator->createTextButton("GAME MENU",100,'W',350.f,200.f);
-    m_playButton = m_objectCreator->createTextButton("PLAY GAME", 50, 'W', 350.f, 400.f);
-    m_leaderboardButton = m_objectCreator->createTextButton("LEADERBOARD", 50, 'W', 350.f, 500.f);
-    m_helpButton = m_objectCreator->createTextButton("HELP", 50, 'W', 350.f, 600.f);
-    m_settingsButton = m_objectCreator->createTextButton("SETTINGS", 50, 'W', 350.f, 700.f);
-    m_exitButton = m_objectCreator->createTextButton("EXIT", 50, 'W', 350.f, 800.f);
+    // buttons
+    m_buttons.push_back(m_objectCreator->createTextButton("PLAY GAME", 50, 'W', 350.f, 400.f));
+    m_buttons.push_back(m_objectCreator->createTextButton("LEADERBOARD", 50, 'W', 350.f, 500.f));
+    m_buttons.push_back(m_objectCreator->createTextButton("HELP", 50, 'W', 350.f, 600.f));
+    m_buttons.push_back(m_objectCreator->createTextButton("SETTINGS", 50, 'W', 350.f, 700.f));
+    m_buttons.push_back(m_objectCreator->createTextButton("EXIT", 50, 'W', 350.f, 800.f));
 }
 
 UserChoice MenuWindow::handleInput(sf::Event& event)
@@ -74,52 +76,26 @@ void MenuWindow::update(float dt)
 void MenuWindow::render()
 {
     m_window.draw(m_title);
-    m_window.draw(m_playButton);
-    m_window.draw(m_leaderboardButton);
-    m_window.draw(m_helpButton);
-    m_window.draw(m_settingsButton);
-    m_window.draw(m_exitButton);
+    for (const auto& button : m_buttons)
+        m_window.draw(button);
 }
 
 void MenuWindow::resetWindow()
 {
     m_currHoverButton = MenuButton::NONE;
+    resetAllButtons();
 }
 
 void MenuWindow::updateHover()
 {
-    switch (m_currHoverButton) {
-    case MenuButton::PLAY:
+    if (m_currHoverButton != MenuButton::NONE) {
         resetAllButtons();
-        m_playButton.setFillColor(sf::Color::Blue);
-        break;
-    case MenuButton::LEADERBOARD:
-        resetAllButtons();
-        m_leaderboardButton.setFillColor(sf::Color::Blue);
-        break;
-    case MenuButton::HELP:
-        resetAllButtons();
-        m_helpButton.setFillColor(sf::Color::Blue);
-        break;
-    case MenuButton::SETTINGS:
-        resetAllButtons();
-        m_settingsButton.setFillColor(sf::Color::Blue);
-        break;
-    case MenuButton::EXIT:
-        resetAllButtons();
-        m_exitButton.setFillColor(sf::Color::Blue);
-        break;
-    case MenuButton::NONE:
-        resetAllButtons();
-        break;
+        m_buttons[(int)m_currHoverButton].setFillColor(sf::Color::Blue);
     }
 }
 
 void MenuWindow::resetAllButtons()
 {
-    m_playButton.setFillColor(sf::Color::White);
-    m_leaderboardButton.setFillColor(sf::Color::White);
-    m_helpButton.setFillColor(sf::Color::White);
-    m_settingsButton.setFillColor(sf::Color::White);
-    m_exitButton.setFillColor(sf::Color::White);
+    for (auto& button : m_buttons)
+        button.setFillColor(sf::Color::White);
 }

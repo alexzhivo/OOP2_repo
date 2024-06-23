@@ -28,16 +28,12 @@ public:
 
 private:
 	sf::Text m_title;
-	sf::Text m_playButton;
-	sf::Text m_leaderboardButton;
-	sf::Text m_helpButton;
-	sf::Text m_settingsButton;
-	sf::Text m_exitButton;
+
+	// Buttons
+	std::vector<sf::Text> m_buttons;
+	MenuButton m_currHoverButton;
 
 	void resetWindow();
-
-	// hover effect
-	MenuButton m_currHoverButton;
 	void updateHover();
 	void resetAllButtons();
 };
