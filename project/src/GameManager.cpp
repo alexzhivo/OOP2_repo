@@ -5,6 +5,7 @@
 GameManager::GameManager() 
     : m_window(sf::VideoMode(1280, 920), "BrickBuster"), m_currWindow(WindowState::START)
 {
+	// Creating the Window Vector
 	m_windows.push_back(std::make_unique<StartWindow>(m_window));
 	m_windows.push_back(std::make_unique<MenuWindow>(m_window));
 	m_windows.push_back(std::make_unique<GameWindow>(m_window));
@@ -13,13 +14,19 @@ GameManager::GameManager()
 	m_windows.push_back(std::make_unique<SettingsWindow>(m_window));
 	m_windows.push_back(std::make_unique<FinishWindow>(m_window));
 
+	// Set Framerate for Game
 	m_window.setFramerateLimit(120);
 };
 
 // Public Class Functions
 
+/*
+	Main Game Loop : process -> update -> render.
+*/
 void GameManager::run() {
-	sf::Clock clock;
+
+	sf::Clock clock;	// main game clock for delta-time
+	
 	while (m_window.isOpen()) {
 		processEvents();
 		float dt = clock.restart().asSeconds();
@@ -37,7 +44,10 @@ void GameManager::processEvents() {
 
 		auto choice = m_windows[(int)m_currWindow]->handleInput(event);
 		if (choice.isSelected) {
-			m_currWindow = choice.nextWindow;
+			if (choice.nextWindow == WindowState::EXIT)
+				m_window.close();
+			else
+				m_currWindow = choice.nextWindow;
 		}
 	}
 }
@@ -52,7 +62,7 @@ void GameManager::render() {
 
 	m_window.clear();
 
-	m_windows[(int)m_currWindow]->render();
+	m_windows[(int)m_currWindow]->render();	// render current window used.
 
 	m_window.display();
 }

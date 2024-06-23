@@ -9,6 +9,7 @@ enum class WindowState {
     LEADERBOARD,
     HELP,
     SETTINGS,
+    EXIT,       // NEW ADDED TEST
     FINISH,
     DEFAULT
 };

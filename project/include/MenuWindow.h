@@ -7,6 +7,7 @@ enum class Button {
 	LEADERBOARD,
 	HELP,
 	SETTINGS,
+	EXIT,
 	NONE
 };
 
@@ -28,6 +29,7 @@ private:
 	sf::Text m_leaderboardButton;
 	sf::Text m_helpButton;
 	sf::Text m_settingsButton;
+	sf::Text m_exitButton;
 
 	void resetWindow();
 

@@ -109,7 +109,8 @@ void GameWindow::update(float dt)
     }
 
     // COLLISIONS
-    m_collisionHandler.handleOutOfBoarder(m_balls, m_elementWindow);
+    m_collisionHandler.handleOutOfBoarder(m_balls, m_platform.getShape(), m_elementWindow);
+    m_collisionHandler.handleBallPlatform(m_balls, m_platform.getShape());
 }
 
 void GameWindow::render()
@@ -134,7 +135,7 @@ void GameWindow::recreateBalls()
 {
     m_balls.clear();
     for (int i = 0; i < NUM_OF_BALLS; ++i)
-        m_balls.push_back(std::make_unique<Ball>(sf::Vector2f(300.f, 300.f),sf::Vector2f(3.f * m_ballSpeed, 3.f * m_ballSpeed)));
+        m_balls.push_back(std::make_unique<Ball>(sf::Vector2f(300.f + i * 100, 300.f),sf::Vector2f(3.f * m_ballSpeed, 3.f * m_ballSpeed)));
 }
 
 void GameWindow::resetWindow()

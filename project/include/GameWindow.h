@@ -13,7 +13,7 @@ enum class PauseChoice {
 	MENU
 };
 
-constexpr int NUM_OF_BALLS = 1;
+constexpr int NUM_OF_BALLS = 10;
 
 class GameWindow : public Window {
 public:

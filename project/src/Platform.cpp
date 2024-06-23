@@ -23,3 +23,8 @@ void Platform::draw(sf::RenderWindow& window) const
 {
 	window.draw(m_shape);
 }
+
+sf::RectangleShape& Platform::getShape()
+{
+    return m_shape;
+}

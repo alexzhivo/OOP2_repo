@@ -1,10 +1,37 @@
 #include "CollisionHandler.h"
 
-void CollisionHandler::handleOutOfBoarder(std::list<std::unique_ptr<Ball>>& balls, sf::RectangleShape& window)
+void CollisionHandler::handleOutOfBoarder(std::list<std::unique_ptr<Ball>>& balls, sf::RectangleShape& platform, sf::RectangleShape& window)
 {
     for (auto& ball : balls) {
 		keepBallInBoarder(ball, window);
     }
+	keepPlatformInBoarder(platform, window);
+}
+
+void CollisionHandler::handleBallPlatform(std::list<std::unique_ptr<Ball>>& balls, sf::RectangleShape& platform)
+{
+	for (auto& ball : balls) {
+		if (ball->getShape().getGlobalBounds().intersects(platform.getGlobalBounds())) {
+			float ballCenter = ball->getShape().getPosition().x + ball->getShape().getGlobalBounds().width / 2.0f;
+			float platformLeft = platform.getPosition().x;
+			float platformRight = platform.getPosition().x + platform.getGlobalBounds().width;
+			float platformCenter = platformLeft + platform.getGlobalBounds().width / 2.0f;
+
+			float collisionPoint = ballCenter - platformLeft;
+			float platformWidth = platform.getGlobalBounds().width;
+			float normalizedCollisionPoint = (collisionPoint / platformWidth) - 0.5f; // Normalize between -0.5 and 0.5
+
+			// Calculate new velocity based on the collision point
+			sf::Vector2f newVelocity = ball->getVelocity();
+			newVelocity.y = -newVelocity.y; // Reverse vertical direction
+
+			float angle = normalizedCollisionPoint * 2.0f * 75.0f; // Max bounce angle is 75 degrees
+			float radians = angle * 3.14159f / 180.0f;
+
+			newVelocity.x = std::sin(radians) * std::sqrt(ball->getVelocity().x * ball->getVelocity().x + ball->getVelocity().y * ball->getVelocity().y);
+			ball->setVelocity(newVelocity);
+		}
+	}
 }
 
 void CollisionHandler::keepBallInBoarder(std::unique_ptr<Ball>& ball , const sf::RectangleShape& rectangle)
@@ -32,4 +59,20 @@ void CollisionHandler::keepBallInBoarder(std::unique_ptr<Ball>& ball , const sf:
 	}
 
 	ball->setVelocity(velocity);
+}
+
+void CollisionHandler::keepPlatformInBoarder(sf::RectangleShape& platform, const sf::RectangleShape& rectangle)
+{
+	auto pos = platform.getPosition();
+	sf::Vector2f size(platform.getGlobalBounds().width, platform.getGlobalBounds().height);
+
+	auto startWindow = rectangle.getPosition();
+	auto sizeWindow = rectangle.getSize();
+
+	if (pos.x < startWindow.x + 20) {
+		platform.move(4.0f, 0.0f);
+	}
+	else if (pos.x + size.x > startWindow.x + sizeWindow.x - 20) {
+		platform.move(-4.0f, 0.0f);
+	}
 }
