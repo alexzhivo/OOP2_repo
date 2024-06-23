@@ -2,7 +2,10 @@
 
 #include "Window.h"
 
-enum class Button {
+// Menu Buttons
+constexpr int NUM_OF_BUTTONS = 5;
+
+enum class MenuButton {
 	PLAY,
 	LEADERBOARD,
 	HELP,
@@ -12,12 +15,12 @@ enum class Button {
 };
 
 // operators for enum class
-Button& operator++(Button& button);
-Button& operator--(Button& button);
+MenuButton& operator++(MenuButton& button);
+MenuButton& operator--(MenuButton& button);
 
 class MenuWindow : public Window {
 public:
-	MenuWindow(sf::RenderWindow& window);
+	MenuWindow(sf::RenderWindow& window, ObjectCreator* objectCreator);
 
 	UserChoice handleInput(sf::Event& event);
 	void update(float dt);
@@ -34,9 +37,7 @@ private:
 	void resetWindow();
 
 	// hover effect
-	Button m_currHoverButton;
+	MenuButton m_currHoverButton;
 	void updateHover();
 	void resetAllButtons();
-
-	sf::Font m_font;
 };

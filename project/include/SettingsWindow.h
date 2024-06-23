@@ -15,7 +15,7 @@ Setting& operator--(Setting& setting);
 
 class SettingsWindow : public Window {
 public:
-	SettingsWindow(sf::RenderWindow& window);
+	SettingsWindow(sf::RenderWindow& window, ObjectCreator* objectCreator);
 
 	UserChoice handleInput(sf::Event& event);
 	void update(float dt);

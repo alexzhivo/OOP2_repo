@@ -4,7 +4,7 @@
 
 class LeaderboardWindow : public Window {
 public:
-	LeaderboardWindow(sf::RenderWindow& window);
+	LeaderboardWindow(sf::RenderWindow& window, ObjectCreator* objectCreator);
 
 	UserChoice handleInput(sf::Event& event);
 	void update(float dt);

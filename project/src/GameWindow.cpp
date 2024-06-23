@@ -1,7 +1,7 @@
 #include "GameWindow.h"
 
-GameWindow::GameWindow(sf::RenderWindow& window)
-    :   Window(window), 
+GameWindow::GameWindow(sf::RenderWindow& window, ObjectCreator* objectCreator)
+    :   Window(window,objectCreator), 
         m_gamePaused(false), 
         m_pauseChoice(PauseChoice::GAME),
         m_ballSpeed(100)

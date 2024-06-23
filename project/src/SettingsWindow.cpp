@@ -17,38 +17,13 @@ Setting& operator--(Setting& setting) {
     return setting;
 }
 
-SettingsWindow::SettingsWindow(sf::RenderWindow& window)
-    : Window(window), m_settingHover(Setting::NONE)
+SettingsWindow::SettingsWindow(sf::RenderWindow& window, ObjectCreator* objectCreator)
+    : Window(window,objectCreator), m_settingHover(Setting::NONE)
 {
-    if (!m_font.loadFromFile("C:/Windows/Fonts/Arial.ttf")) {
-        // Handle font loading error
-    }
-
-    // Set up title
-    m_title.setFont(m_font);
-    m_title.setString("SETTINGS");
-    m_title.setCharacterSize(100);
-    m_title.setFillColor(sf::Color::White);
-    m_title.setPosition(300.f, 200.f);
-
-    // Set up subtext
-    m_gameSoundText.setFont(m_font);
-    m_gameSoundText.setString("<< Game Sound >>");
-    m_gameSoundText.setCharacterSize(30);
-    m_gameSoundText.setFillColor(sf::Color(100, 100, 100));
-    m_gameSoundText.setPosition(500.f, 400.f);
-
-    m_playerNameText.setFont(m_font);
-    m_playerNameText.setString("<< Player Name >>");
-    m_playerNameText.setCharacterSize(30);
-    m_playerNameText.setFillColor(sf::Color(100, 100, 100));
-    m_playerNameText.setPosition(500.f, 500.f);
-
-    m_backButtonText.setFont(m_font);
-    m_backButtonText.setString("<< BACK >>");
-    m_backButtonText.setCharacterSize(30);
-    m_backButtonText.setFillColor(sf::Color(100, 100, 100));
-    m_backButtonText.setPosition(500.f, 600.f);
+    m_title = objectCreator->createTextButton("SETTINGS", 100, 'W', 300.f, 200.f);
+    m_gameSoundText = objectCreator->createTextButton("<< Game Sound >>", 30, 'G', 500.f, 400.f);
+    m_playerNameText = objectCreator->createTextButton("<< Player Name >>", 30, 'G', 500.f, 500.f);
+    m_backButtonText = objectCreator->createTextButton("<< BACK >>", 30, 'G', 500.f, 600.f);
 }
 
 UserChoice SettingsWindow::handleInput(sf::Event& event)

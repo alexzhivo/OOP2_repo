@@ -4,7 +4,7 @@
 
 class FinishWindow : public Window {
 public:
-	FinishWindow(sf::RenderWindow& window);
+	FinishWindow(sf::RenderWindow& window, ObjectCreator* objectCreator);
 
 	UserChoice handleInput(sf::Event& event);
 	void update(float dt);
@@ -14,6 +14,4 @@ private:
 	sf::Text m_title;
 
 	void resetWindow();
-
-	sf::Font m_font;
 };

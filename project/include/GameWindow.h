@@ -17,7 +17,7 @@ constexpr int NUM_OF_BALLS = 10;
 
 class GameWindow : public Window {
 public:
-	GameWindow(sf::RenderWindow& window);
+	GameWindow(sf::RenderWindow& window, ObjectCreator* objectCreator);
 
 	UserChoice handleInput(sf::Event& event);
 	void update(float dt);

@@ -6,23 +6,19 @@ GameManager::GameManager()
     : m_window(sf::VideoMode(1280, 920), "BrickBuster"), m_currWindow(WindowState::START)
 {
 	// Creating the Window Vector
-	m_windows.push_back(std::make_unique<StartWindow>(m_window));
-	m_windows.push_back(std::make_unique<MenuWindow>(m_window));
-	m_windows.push_back(std::make_unique<GameWindow>(m_window));
-	m_windows.push_back(std::make_unique<LeaderboardWindow>(m_window));
-	m_windows.push_back(std::make_unique<HelpWindow>(m_window));
-	m_windows.push_back(std::make_unique<SettingsWindow>(m_window));
-	m_windows.push_back(std::make_unique<FinishWindow>(m_window));
+	m_windows.push_back(std::make_unique<StartWindow>(m_window, &m_objectCreator));
+	m_windows.push_back(std::make_unique<MenuWindow>(m_window, &m_objectCreator));
+	m_windows.push_back(std::make_unique<GameWindow>(m_window, &m_objectCreator));
+	m_windows.push_back(std::make_unique<LeaderboardWindow>(m_window, &m_objectCreator));
+	m_windows.push_back(std::make_unique<HelpWindow>(m_window, &m_objectCreator));
+	m_windows.push_back(std::make_unique<SettingsWindow>(m_window, &m_objectCreator));
+	m_windows.push_back(std::make_unique<FinishWindow>(m_window, &m_objectCreator));
 
 	// Set Framerate for Game
 	m_window.setFramerateLimit(120);
 };
 
-// Public Class Functions
-
-/*
-	Main Game Loop : process -> update -> render.
-*/
+//	Main Game Loop : process -> update -> render.
 void GameManager::run() {
 
 	sf::Clock clock;	// main game clock for delta-time

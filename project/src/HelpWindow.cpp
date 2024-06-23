@@ -1,25 +1,10 @@
 #include "HelpWindow.h"
 
-HelpWindow::HelpWindow(sf::RenderWindow& window)
-    : Window(window), m_currBackButton(false)
+HelpWindow::HelpWindow(sf::RenderWindow& window, ObjectCreator* objectCreator)
+    : Window(window,objectCreator), m_currBackButton(false)
 {
-    if (!m_font.loadFromFile("C:/Windows/Fonts/Arial.ttf")) {
-        // Handle font loading error
-    }
-
-    // Set up title
-    m_title.setFont(m_font);
-    m_title.setString("NEED HELP?");
-    m_title.setCharacterSize(100);
-    m_title.setFillColor(sf::Color::White);
-    m_title.setPosition(300.f, 200.f);
-
-    // Set up subtext
-    m_backButton.setFont(m_font);
-    m_backButton.setString("<< BACK >>");
-    m_backButton.setCharacterSize(20);
-    m_backButton.setFillColor(sf::Color(100,100,100));
-    m_backButton.setPosition(500.f, 700.f);
+    m_title = objectCreator->createTextButton("NEED HELP?", 100, 'W', 300.f, 200.f);
+    m_backButton = objectCreator->createTextButton("<< BACK >>",20,'G',500.f,700.f);
 }
 
 UserChoice HelpWindow::handleInput(sf::Event& event)

@@ -1,6 +1,9 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include "ObjectCreator.h"
+
+#include <iostream> // TEST
 
 enum class WindowState {
     START,
@@ -9,8 +12,8 @@ enum class WindowState {
     LEADERBOARD,
     HELP,
     SETTINGS,
-    EXIT,       // NEW ADDED TEST
     FINISH,
+    EXIT,
     DEFAULT
 };
 
@@ -21,8 +24,8 @@ struct UserChoice {
 
 class Window {
 public:
-    Window(sf::RenderWindow& window)
-        : m_window(window) {};
+    Window(sf::RenderWindow& window, ObjectCreator* objectCreator)
+        : m_window(window), m_objectCreator(objectCreator) {};
     virtual ~Window() = default;
 
     virtual UserChoice handleInput(sf::Event& event) = 0;
@@ -31,4 +34,5 @@ public:
 
 protected:
     sf::RenderWindow& m_window;
+    ObjectCreator* m_objectCreator;
 };

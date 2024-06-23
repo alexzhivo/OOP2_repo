@@ -1,18 +1,9 @@
 #include "FinishWindow.h"
 
-FinishWindow::FinishWindow(sf::RenderWindow& window)
-	: Window(window)
+FinishWindow::FinishWindow(sf::RenderWindow& window, ObjectCreator* objectCreator)
+	: Window(window,objectCreator)
 {
-    if (!m_font.loadFromFile("C:/Windows/Fonts/Arial.ttf")) {
-        // Handle font loading error
-    }
-
-    // Set up title
-    m_title.setFont(m_font);
-    m_title.setString("YOU WIN!");
-    m_title.setCharacterSize(100);
-    m_title.setFillColor(sf::Color::White);
-    m_title.setPosition(300.f, 200.f);
+    m_title = objectCreator->createTextButton("YOU WIN!", 100, 'W', 300.f, 200.f);
 }
 
 UserChoice FinishWindow::handleInput(sf::Event& event)
@@ -30,7 +21,7 @@ UserChoice FinishWindow::handleInput(sf::Event& event)
 
 void FinishWindow::update(float dt)
 {
-
+    // >> UPDATE WINDOW
 }
 
 void FinishWindow::render()
@@ -40,5 +31,5 @@ void FinishWindow::render()
 
 void FinishWindow::resetWindow()
 {
-
+    // >> RESET WINDOW
 }

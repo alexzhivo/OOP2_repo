@@ -4,7 +4,7 @@
 
 class HelpWindow : public Window {
 public:
-	HelpWindow(sf::RenderWindow& window);
+	HelpWindow(sf::RenderWindow& window, ObjectCreator* objectCreator);
 
 	UserChoice handleInput(sf::Event& event);
 	void update(float dt);
@@ -19,6 +19,4 @@ private:
 	// hover effect
 	bool m_currBackButton;
 	void updateHover();
-
-	sf::Font m_font;
 };
