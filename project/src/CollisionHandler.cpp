@@ -1,6 +1,6 @@
 #include "CollisionHandler.h"
 
-void CollisionHandler::handleOutOfBoarder(std::list<std::unique_ptr<Ball>>& balls, sf::RectangleShape& platform, sf::RectangleShape& window)
+void CollisionHandler::handleOutOfBoarder(std::list<std::shared_ptr<Ball>>& balls, sf::RectangleShape& platform, sf::RectangleShape& window)
 {
     for (auto& ball : balls) {
 		keepBallInBoarder(ball, window);
@@ -8,7 +8,7 @@ void CollisionHandler::handleOutOfBoarder(std::list<std::unique_ptr<Ball>>& ball
 	keepPlatformInBoarder(platform, window);
 }
 
-void CollisionHandler::handleBallPlatform(std::list<std::unique_ptr<Ball>>& balls, sf::RectangleShape& platform)
+void CollisionHandler::handleBallPlatform(std::list<std::shared_ptr<Ball>>& balls, sf::RectangleShape& platform)
 {
 	for (auto& ball : balls) {
 		if (ball->getShape().getGlobalBounds().intersects(platform.getGlobalBounds())) {
@@ -34,7 +34,7 @@ void CollisionHandler::handleBallPlatform(std::list<std::unique_ptr<Ball>>& ball
 	}
 }
 
-void CollisionHandler::keepBallInBoarder(std::unique_ptr<Ball>& ball , const sf::RectangleShape& rectangle)
+void CollisionHandler::keepBallInBoarder(std::shared_ptr<Ball>& ball , const sf::RectangleShape& rectangle)
 {
 	auto ballShape = ball->getShape();
 	auto velocity = ball->getVelocity();

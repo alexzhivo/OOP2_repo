@@ -20,6 +20,17 @@ sf::Text ObjectCreator::createTextButton(const std::string& text, const int char
     return newText;
 }
 
+sf::RectangleShape ObjectCreator::createRectangle(const float width, const float height,
+    const char colorChar, const float pos_x, const float pos_y)
+{
+    sf::RectangleShape newShape;
+    newShape.setSize(sf::Vector2f(width, height));
+    newShape.setFillColor(getColor(colorChar));
+    newShape.setPosition(sf::Vector2f(pos_x, pos_y));
+
+    return newShape;
+}
+
 sf::Color ObjectCreator::getColor(const char colorChar)
 {
     switch (colorChar) {
@@ -31,6 +42,10 @@ sf::Color ObjectCreator::getColor(const char colorChar)
         return sf::Color::Black;
     case 'G':
         return sf::Color(100, 100, 100);
+    case 'C':
+        return sf::Color(200, 200, 200);
+    case 'M':
+        return sf::Color(0, 0, 0, 180);
     default :
         break;
     }

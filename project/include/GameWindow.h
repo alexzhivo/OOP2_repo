@@ -13,7 +13,7 @@ enum class PauseChoice {
 	MENU
 };
 
-constexpr int NUM_OF_BALLS = 10;
+constexpr int NUM_OF_BALLS = 0;
 
 class GameWindow : public Window {
 public:
@@ -29,7 +29,7 @@ private:
 	sf::RectangleShape m_elementWindow;
 
 	// ball
-	std::list<std::unique_ptr<Ball>> m_balls;
+	std::list<std::shared_ptr<Ball>> m_balls;
 	void recreateBalls();
 	int m_ballSpeed;
 

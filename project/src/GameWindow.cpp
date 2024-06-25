@@ -7,25 +7,22 @@ GameWindow::GameWindow(sf::RenderWindow& window, ObjectCreator* objectCreator)
         m_ballSpeed(100)
 {
     // Set up title
-    m_title = objectCreator->createTextButton("GAME PLAY", 100, 'W', 300.f, 100.f);
+    m_title = objectCreator->createTextButton("GamePlayScreen", 30, 'W', 10.f, 10.f);
 
     // Set up element window
-    m_elementWindow.setFillColor(sf::Color(200, 200, 200));
-    m_elementWindow.setOutlineThickness(2);
-    m_elementWindow.setOutlineColor(sf::Color::White);
-    m_elementWindow.setPosition(200.f, 250.f);
-    m_elementWindow.setSize(sf::Vector2f(800.f, 600.f));
+    m_elementWindow = objectCreator->createRectangle(800.f, 800.f, 'C', 250.f, 60.f);
 
     // Set up pause screen
-    m_pauseWindow.setFillColor(sf::Color::White);
-    m_pauseWindow.setPosition(100.f, 300.f);
-    m_pauseWindow.setSize(sf::Vector2f(200.f, 200.f));
+    m_pauseWindow = objectCreator->createRectangle(600.f, 750.f, 'M', 350.f, 100.f);
 
-    m_pauseText = objectCreator->createTextButton("game paused", 20, 'B', 100.f, 300.f);
-    m_returnToGameText = objectCreator->createTextButton("return to game", 20, 'B', 100.f, 320.f);
-    m_BackToMenuText = objectCreator->createTextButton("back to menu", 20, 'B', 100.f, 340.f);
+    m_pauseText = objectCreator->createTextButton("PAUSED", 50, 'W', 550.f, 200.f);
+    m_returnToGameText = objectCreator->createTextButton("continue game", 40, 'W', 510.f, 400.f);
+    m_BackToMenuText = objectCreator->createTextButton("return to menu", 40, 'W', 510.f, 500.f);
+
+    m_platform.initStickyBall();
 
     recreateBalls();
+
 }
 
 UserChoice GameWindow::handleInput(sf::Event& event)
@@ -40,6 +37,14 @@ UserChoice GameWindow::handleInput(sf::Event& event)
                 choice.isSelected = true;
                 choice.nextWindow = WindowState::FINISH;  // to finish
                 resetWindow();
+            }
+            else if (event.key.code == sf::Keyboard::Space) {
+                // release balls
+                for (int i = 0; i < m_platform.getStickyBallsNum(); i++) {
+                    auto ball = m_platform.releaseBall();
+                    ball->setVelocity(sf::Vector2f(-300.f, -300.f));
+                    m_balls.push_back(ball);   
+                }
             }
         }
         else {                  // GAME IS PAUSED
@@ -113,13 +118,14 @@ void GameWindow::recreateBalls()
 {
     m_balls.clear();
     for (int i = 0; i < NUM_OF_BALLS; ++i)
-        m_balls.push_back(std::make_unique<Ball>(sf::Vector2f(300.f + i * 100, 300.f),sf::Vector2f(3.f * m_ballSpeed, 3.f * m_ballSpeed)));
+        m_balls.push_back(std::make_shared<Ball>(sf::Vector2f(300.f + i * 100, 300.f),sf::Vector2f(3.f * m_ballSpeed, 3.f * m_ballSpeed)));
 }
 
 void GameWindow::resetWindow()
 {
     m_gamePaused = false;
     m_pauseChoice = PauseChoice::GAME;
+    m_platform.reset();
     recreateBalls();
 }
 
@@ -127,10 +133,10 @@ void GameWindow::updateHover()
 {
     if (m_pauseChoice == PauseChoice::GAME) {
         m_returnToGameText.setFillColor(sf::Color::Red);
-        m_BackToMenuText.setFillColor(sf::Color::Black);
+        m_BackToMenuText.setFillColor(sf::Color::White);
     }
     else {
-        m_returnToGameText.setFillColor(sf::Color::Black);
+        m_returnToGameText.setFillColor(sf::Color::White);
         m_BackToMenuText.setFillColor(sf::Color::Red);
     }
 }

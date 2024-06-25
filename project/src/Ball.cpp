@@ -49,3 +49,8 @@ const sf::CircleShape& Ball::getShape() const
 {
 	return m_shape;
 }
+
+void Ball::move(float offsetX, float offsetY)
+{
+	m_shape.move(offsetX, offsetY);
+}

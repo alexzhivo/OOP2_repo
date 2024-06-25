@@ -14,6 +14,8 @@ public:
 	void restoreVelocity();
 	const sf::CircleShape& getShape() const;
 
+	void move(float offsetX, float offsetY);
+
 private:
 	sf::CircleShape m_shape;
 	sf::Vector2f m_initVelocity;
