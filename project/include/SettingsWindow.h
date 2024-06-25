@@ -33,7 +33,4 @@ private:
 	Setting m_settingHover;
 	void updateHover();
 	void resetHover();
-
-
-	sf::Font m_font;
 };

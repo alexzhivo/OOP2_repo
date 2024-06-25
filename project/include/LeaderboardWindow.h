@@ -19,6 +19,4 @@ private:
 	// hover effect
 	bool m_currBackButton;
 	void updateHover();
-
-	sf::Font m_font;
 };

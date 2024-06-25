@@ -13,6 +13,4 @@ public:
 private:
 	sf::Text m_title;
 	sf::Text m_subtext;
-
-	sf::Font m_font;
 };
