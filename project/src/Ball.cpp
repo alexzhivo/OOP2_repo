@@ -50,6 +50,11 @@ const sf::CircleShape& Ball::getShape() const
 	return m_shape;
 }
 
+float Ball::getSpeed() const
+{
+	return m_speed;
+}
+
 void Ball::move(float offsetX, float offsetY)
 {
 	m_shape.move(offsetX, offsetY);

@@ -1,5 +1,7 @@
 #include "CollisionHandler.h"
 
+#include <iostream>
+
 void CollisionHandler::handleOutOfBoarder(std::list<std::shared_ptr<Ball>>& balls, sf::RectangleShape& platform, sf::RectangleShape& window)
 {
     for (auto& ball : balls) {
@@ -12,6 +14,7 @@ void CollisionHandler::handleBallPlatform(std::list<std::shared_ptr<Ball>>& ball
 {
 	for (auto& ball : balls) {
 		if (ball->getShape().getGlobalBounds().intersects(platform.getGlobalBounds())) {
+
 			float ballCenter = ball->getShape().getPosition().x + ball->getShape().getGlobalBounds().width / 2.0f;
 			float platformLeft = platform.getPosition().x;
 			float platformRight = platform.getPosition().x + platform.getGlobalBounds().width;
@@ -23,12 +26,15 @@ void CollisionHandler::handleBallPlatform(std::list<std::shared_ptr<Ball>>& ball
 
 			// Calculate new velocity based on the collision point
 			sf::Vector2f newVelocity = ball->getVelocity();
-			newVelocity.y = -newVelocity.y; // Reverse vertical direction
 
 			float angle = normalizedCollisionPoint * 2.0f * 75.0f; // Max bounce angle is 75 degrees
 			float radians = angle * 3.14159f / 180.0f;
+			float speed = ball->getSpeed();
 
-			newVelocity.x = std::sin(radians) * std::sqrt(ball->getVelocity().x * ball->getVelocity().x + ball->getVelocity().y * ball->getVelocity().y);
+			newVelocity.x = std::sin(radians) * speed;
+			newVelocity.y = speed * std::cos(radians);
+			newVelocity.y = -newVelocity.y; // Reverse vertical direction
+			
 			ball->setVelocity(newVelocity);
 		}
 	}

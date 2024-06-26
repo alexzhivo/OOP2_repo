@@ -13,6 +13,7 @@ public:
 	sf::Vector2f getVelocity() const;
 	void restoreVelocity();
 	const sf::CircleShape& getShape() const;
+	float getSpeed() const;
 
 	void move(float offsetX, float offsetY);
 
@@ -21,4 +22,5 @@ private:
 	sf::Vector2f m_initVelocity;
 	sf::Vector2f m_lastVelocity;
 	sf::Vector2f m_currVelocity;
+	float m_speed = 400.f;
 };
