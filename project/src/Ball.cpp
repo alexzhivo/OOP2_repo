@@ -1,5 +1,7 @@
 #include "Ball.h"
 
+#include <iostream>	// TEST
+
 Ball::Ball(sf::Vector2f position, sf::Vector2f velocity)
 	: m_initVelocity(velocity)
 {
@@ -58,4 +60,14 @@ float Ball::getSpeed() const
 void Ball::move(float offsetX, float offsetY)
 {
 	m_shape.move(offsetX, offsetY);
+}
+
+void Ball::release(float radians)
+{
+	sf::Vector2f newVelocity;
+	newVelocity.x = std::sin(radians) * m_speed;
+	newVelocity.y = m_speed * std::cos(radians);
+	newVelocity.y = -newVelocity.y; // Reverse vertical direction
+
+	setVelocity(newVelocity);
 }

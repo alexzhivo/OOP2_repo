@@ -13,7 +13,7 @@ enum class PauseChoice {
 	MENU
 };
 
-constexpr int NUM_OF_BALLS = 0;
+constexpr int NUM_OF_BALLS = 5;
 
 class GameWindow : public Window {
 public:
@@ -32,6 +32,9 @@ private:
 	std::list<std::shared_ptr<Ball>> m_balls;
 	void recreateBalls();
 	int m_ballSpeed;
+
+	void releaseBalls(float dt);
+	bool m_releasePressed;
 
 	// platform
 	Platform m_platform;

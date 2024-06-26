@@ -17,6 +17,8 @@ public:
 
 	void move(float offsetX, float offsetY);
 
+	void release(float radians);
+
 private:
 	sf::CircleShape m_shape;
 	sf::Vector2f m_initVelocity;

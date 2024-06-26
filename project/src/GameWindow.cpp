@@ -3,6 +3,7 @@
 GameWindow::GameWindow(sf::RenderWindow& window, ObjectCreator* objectCreator)
     :   Window(window,objectCreator), 
         m_gamePaused(false), 
+        m_releasePressed(false),
         m_pauseChoice(PauseChoice::GAME),
         m_ballSpeed(100)
 {
@@ -38,13 +39,8 @@ UserChoice GameWindow::handleInput(sf::Event& event)
                 choice.nextWindow = WindowState::FINISH;  // to finish
                 resetWindow();
             }
-            else if (event.key.code == sf::Keyboard::Space) {
-                // release balls
-                for (int i = 0; i < m_platform.getStickyBallsNum(); i++) {
-                    auto ball = m_platform.releaseBall();
-                    ball->setVelocity(sf::Vector2f(-300.f, -300.f));
-                    m_balls.push_back(ball);   
-                }
+            else if (event.key.code == sf::Keyboard::Space) {   // release balls
+                m_releasePressed = true;
             }
         }
         else {                  // GAME IS PAUSED
@@ -86,9 +82,15 @@ void GameWindow::update(float dt)
             ball->restoreVelocity();
         }
     }
+
     // PLATFORM
     if (!m_gamePaused) {
         m_platform.update(dt);
+    }
+
+    if (m_releasePressed) {
+        releaseBalls(dt);        
+        m_releasePressed = false;
     }
 
     // COLLISIONS
@@ -119,6 +121,21 @@ void GameWindow::recreateBalls()
     m_balls.clear();
     for (int i = 0; i < NUM_OF_BALLS; ++i)
         m_balls.push_back(std::make_shared<Ball>(sf::Vector2f(300.f + i * 100, 300.f),sf::Vector2f(3.f * m_ballSpeed, 3.f * m_ballSpeed)));
+}
+
+void GameWindow::releaseBalls(float dt)
+{
+    for (int i = 0; i < m_platform.getStickyBallsNum(); i++) {
+        auto ball = m_platform.releaseBall();
+
+        int seed = (int)(dt * 100000) % 100;
+        std::srand(seed);
+        double random_num = static_cast<double>(std::rand()) / 400;
+        double scaled_num = (random_num * 1.6) - 0.8;
+
+        ball->release(scaled_num);
+        m_balls.push_back(ball);
+    }
 }
 
 void GameWindow::resetWindow()
