@@ -3,6 +3,7 @@
 #include "Window.h"
 #include "CollisionHandler.h"
 #include "Platform.h"
+#include "Brick.h"
 #include "Ball.h"
 
 #include <memory>
@@ -12,8 +13,6 @@ enum class PauseChoice {
 	GAME,
 	MENU
 };
-
-constexpr int NUM_OF_BALLS = 5;
 
 class GameWindow : public Window {
 public:
@@ -28,12 +27,13 @@ private:
 	sf::Text m_title;
 	sf::RectangleShape m_elementWindow;
 
-	// ball
+	// elements
 	std::list<std::shared_ptr<Ball>> m_balls;
-	void recreateBalls();
+	std::vector<std::shared_ptr<Brick>> m_bricks;
 	int m_ballSpeed;
 
 	void releaseBalls(float dt);
+	void initBricks(int numOfBricks);
 	bool m_releasePressed;
 
 	// platform

@@ -11,7 +11,7 @@ GameWindow::GameWindow(sf::RenderWindow& window, ObjectCreator* objectCreator)
     m_title = objectCreator->createTextButton("GamePlayScreen", 30, 'W', 10.f, 10.f);
 
     // Set up element window
-    m_elementWindow = objectCreator->createRectangle(800.f, 800.f, 'C', 250.f, 60.f);
+    m_elementWindow = objectCreator->createRectangle(879.f, 800.f, 'C', 210.f, 60.f);
 
     // Set up pause screen
     m_pauseWindow = objectCreator->createRectangle(600.f, 750.f, 'M', 350.f, 100.f);
@@ -20,10 +20,9 @@ GameWindow::GameWindow(sf::RenderWindow& window, ObjectCreator* objectCreator)
     m_returnToGameText = objectCreator->createTextButton("continue game", 40, 'W', 510.f, 400.f);
     m_BackToMenuText = objectCreator->createTextButton("return to menu", 40, 'W', 510.f, 500.f);
 
+    initBricks(72);
+
     m_platform.initStickyBall();
-
-    recreateBalls();
-
 }
 
 UserChoice GameWindow::handleInput(sf::Event& event)
@@ -93,9 +92,16 @@ void GameWindow::update(float dt)
         m_releasePressed = false;
     }
 
+    // BRICKS
+    if (!m_gamePaused) {
+        for (auto& brick : m_bricks)
+            brick->update(dt);
+    }
+
     // COLLISIONS
     m_collisionHandler.handleOutOfBoarder(m_balls, m_platform.getShape(), m_elementWindow);
     m_collisionHandler.handleBallPlatform(m_balls, m_platform.getShape());
+    m_collisionHandler.handleBallBrick(m_balls, m_bricks);
 }
 
 void GameWindow::render()
@@ -104,9 +110,12 @@ void GameWindow::render()
 
     m_platform.draw(m_window);          // Platform
 
-    for (auto& ball : m_balls) {        // Balls
+    for (auto& brick : m_bricks)        // Bricks
+        brick->draw(m_window);
+
+    for (auto& ball : m_balls)          // Balls
         ball->draw(m_window);
-    }
+
     m_window.draw(m_title);             // Title
     if (m_gamePaused) {                 // Pause Menu
         m_window.draw(m_pauseWindow);
@@ -116,13 +125,6 @@ void GameWindow::render()
     }
 }
 
-void GameWindow::recreateBalls()
-{
-    m_balls.clear();
-    for (int i = 0; i < NUM_OF_BALLS; ++i)
-        m_balls.push_back(std::make_shared<Ball>(sf::Vector2f(300.f + i * 100, 300.f),sf::Vector2f(3.f * m_ballSpeed, 3.f * m_ballSpeed)));
-}
-
 void GameWindow::releaseBalls(float dt)
 {
     for (int i = 0; i < m_platform.getStickyBallsNum(); i++) {
@@ -130,11 +132,35 @@ void GameWindow::releaseBalls(float dt)
 
         int seed = (int)(dt * 100000) % 100;
         std::srand(seed);
-        double random_num = static_cast<double>(std::rand()) / 400;
-        double scaled_num = (random_num * 1.6) - 0.8;
+        float random_num = static_cast<float>(std::rand()) / 400;
+        float scaled_num = (random_num * 1.6) - 0.8;
 
         ball->release(scaled_num);
         m_balls.push_back(ball);
+    }
+}
+
+void GameWindow::initBricks(int numOfBricks)
+{
+    int space = 3;
+    float brick_width = 70;
+    float brick_height = 30;
+    float window_x_pos = m_elementWindow.getPosition().x;
+    float newXPos = window_x_pos;
+    float window_width = m_elementWindow.getSize().x;
+    float newYPos = m_elementWindow.getPosition().y + 200;
+
+
+    for (int i = 0; i < numOfBricks; i++) {
+        newXPos += space;
+        if (window_width + window_x_pos <= newXPos) {
+            newXPos -= window_width;
+            newXPos += space;
+            newYPos += brick_height;
+            newYPos += space;
+        }
+        m_bricks.push_back(std::make_shared<Brick>(3, newXPos, newYPos, brick_width, brick_height));
+        newXPos += brick_width;
     }
 }
 
@@ -142,8 +168,10 @@ void GameWindow::resetWindow()
 {
     m_gamePaused = false;
     m_pauseChoice = PauseChoice::GAME;
+    m_balls.clear();
+    m_bricks.clear();
+    initBricks(72);
     m_platform.reset();
-    recreateBalls();
 }
 
 void GameWindow::updateHover()

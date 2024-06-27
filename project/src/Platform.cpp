@@ -13,14 +13,14 @@ void Platform::update(float dt)
 {
     // Handle platform movement based on input
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-        m_shape.move(-400.0f * dt, 0.0f); // Move left
+        m_shape.move(-600.0f * dt, 0.0f); // Move left
         for (auto& ball : m_stickyBalls)
-            ball->move(-400.f * dt, 0.0f);
+            ball->move(-600.f * dt, 0.0f);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-        m_shape.move(400.0f * dt, 0.0f); // Move right
+        m_shape.move(600.0f * dt, 0.0f); // Move right
         for (auto& ball : m_stickyBalls)
-            ball->move(400.f * dt, 0.0f);
+            ball->move(600.f * dt, 0.0f);
     }
 }
 
@@ -63,6 +63,7 @@ int Platform::getStickyBallsNum() const
 
 void Platform::initStickyBall()
 {
+    m_stickyBalls.clear();
     m_stickyBalls.push_back(std::make_shared<Ball>(sf::Vector2f(635.f,770.f), sf::Vector2f(0.f, 0.f)));
 }
 

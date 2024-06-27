@@ -36,6 +36,25 @@ void CollisionHandler::handleBallPlatform(std::list<std::shared_ptr<Ball>>& ball
 			newVelocity.y = -newVelocity.y; // Reverse vertical direction
 			
 			ball->setVelocity(newVelocity);
+			return;
+		}
+	}
+}
+
+void CollisionHandler::handleBallBrick(std::list<std::shared_ptr<Ball>>& balls, std::vector<std::shared_ptr<Brick>>& bricks)
+{
+	for (auto& ball : balls) {
+
+		for (auto it = bricks.begin(); it != bricks.end();) {
+			if (ball->getShape().getGlobalBounds().intersects((*it)->getShape().getGlobalBounds())) {
+				resolveBallBrick(*ball, **it);
+				if ((*it)->hit(1))
+					it = bricks.erase(it); // Remove brick after collision
+				return;
+			}
+			else {
+				++it;
+			}
 		}
 	}
 }
@@ -81,4 +100,37 @@ void CollisionHandler::keepPlatformInBoarder(sf::RectangleShape& platform, const
 	else if (pos.x + size.x > startWindow.x + sizeWindow.x - 20) {
 		platform.move(-4.0f, 0.0f);
 	}
+}
+
+void CollisionHandler::resolveBallBrick(Ball& ball, Brick& brick) {
+
+	sf::FloatRect ballBounds = ball.getShape().getGlobalBounds();
+	sf::FloatRect brickBounds = brick.getShape().getGlobalBounds();
+
+	float ballLeft = ballBounds.left;
+	float ballRight = ballBounds.left + ballBounds.width;
+	float ballTop = ballBounds.top;
+	float ballBottom = ballBounds.top + ballBounds.height;
+
+	float brickLeft = brickBounds.left;
+	float brickRight = brickBounds.left + brickBounds.width;
+	float brickTop = brickBounds.top;
+	float brickBottom = brickBounds.top + brickBounds.height;
+
+	// Determine the side of the collision
+	bool fromLeft = (ballRight > brickLeft) && (ballLeft < brickLeft) && (ballBottom > brickTop) && (ballTop < brickBottom);
+	bool fromRight = (ballLeft < brickRight) && (ballRight > brickRight) && (ballBottom > brickTop) && (ballTop < brickBottom);
+	bool fromTop = (ballBottom > brickTop) && (ballTop < brickTop) && (ballRight > brickLeft) && (ballLeft < brickRight);
+	bool fromBottom = (ballTop < brickBottom) && (ballBottom > brickBottom) && (ballRight > brickLeft) && (ballLeft < brickRight);
+
+	sf::Vector2f newVelocity = ball.getVelocity();
+
+	if (fromTop || fromBottom) {
+		newVelocity.y = -newVelocity.y; // Reverse vertical direction
+	}
+	else if (fromLeft || fromRight) {
+		newVelocity.x = -newVelocity.x; // Reverse horizontal direction
+	}
+
+	ball.setVelocity(newVelocity);
 }

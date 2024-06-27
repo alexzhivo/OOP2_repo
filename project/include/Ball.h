@@ -24,5 +24,5 @@ private:
 	sf::Vector2f m_initVelocity;
 	sf::Vector2f m_lastVelocity;
 	sf::Vector2f m_currVelocity;
-	float m_speed = 400.f;
+	float m_speed = 800.f;
 };
