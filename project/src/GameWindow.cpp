@@ -1,7 +1,8 @@
 #include "GameWindow.h"
 
 GameWindow::GameWindow(sf::RenderWindow& window, ObjectCreator* objectCreator)
-    :   Window(window,objectCreator), 
+    : Window(window, objectCreator),
+        m_gameWon(false),
         m_gamePaused(false), 
         m_releasePressed(false),
         m_pauseChoice(PauseChoice::GAME),
@@ -20,7 +21,7 @@ GameWindow::GameWindow(sf::RenderWindow& window, ObjectCreator* objectCreator)
     m_returnToGameText = objectCreator->createTextButton("continue game", 40, 'W', 510.f, 400.f);
     m_BackToMenuText = objectCreator->createTextButton("return to menu", 40, 'W', 510.f, 500.f);
 
-    initBricks(72);
+    initBricks(NUM_OF_BRICKS);
 
     m_platform.initStickyBall();
 }
@@ -98,6 +99,10 @@ void GameWindow::update(float dt)
             brick->update(dt);
     }
 
+    // GAME WON
+    if (m_bricks.empty())
+        m_gameWon = true;
+
     // COLLISIONS
     m_collisionHandler.handleOutOfBoarder(m_balls, m_platform.getShape(), m_elementWindow);
     m_collisionHandler.handleBallPlatform(m_balls, m_platform.getShape());
@@ -123,6 +128,11 @@ void GameWindow::render()
         m_window.draw(m_returnToGameText);
         m_window.draw(m_BackToMenuText);
     }
+}
+
+bool GameWindow::isGameWon() const
+{
+    return m_gameWon;
 }
 
 void GameWindow::releaseBalls(float dt)
@@ -159,18 +169,19 @@ void GameWindow::initBricks(int numOfBricks)
             newYPos += brick_height;
             newYPos += space;
         }
-        m_bricks.push_back(std::make_shared<Brick>(3, newXPos, newYPos, brick_width, brick_height));
+        m_bricks.push_back(std::make_shared<Brick>(1, newXPos, newYPos, brick_width, brick_height));
         newXPos += brick_width;
     }
 }
 
 void GameWindow::resetWindow()
 {
+    m_gameWon = false;
     m_gamePaused = false;
     m_pauseChoice = PauseChoice::GAME;
     m_balls.clear();
     m_bricks.clear();
-    initBricks(72);
+    initBricks(NUM_OF_BRICKS);
     m_platform.reset();
 }
 

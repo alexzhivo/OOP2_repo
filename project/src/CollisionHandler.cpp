@@ -123,13 +123,50 @@ void CollisionHandler::resolveBallBrick(Ball& ball, Brick& brick) {
 	bool fromTop = (ballBottom > brickTop) && (ballTop < brickTop) && (ballRight > brickLeft) && (ballLeft < brickRight);
 	bool fromBottom = (ballTop < brickBottom) && (ballBottom > brickBottom) && (ballRight > brickLeft) && (ballLeft < brickRight);
 
+	if (fromLeft && fromBottom) {
+		float y_len = brickBottom - ballTop;
+		float x_len = ballRight - brickLeft;
+		if (y_len > x_len)
+			fromBottom = false;
+		else
+			fromLeft = false;
+	}
+
+	if (fromRight && fromBottom) {
+		float y_len = brickBottom - ballTop;
+		float x_len = brickRight - ballLeft;
+		if (y_len > x_len)
+			fromBottom = false;
+		else
+			fromRight = false;
+	}
+
+	if (fromLeft && fromTop) {
+		float y_len = ballBottom - brickTop;
+		float x_len = ballRight - brickLeft;
+		if (y_len > x_len)
+			fromTop = false;
+		else
+			fromLeft = false;
+	}
+
+	if (fromRight && fromTop) {
+		float y_len = ballBottom - brickTop;
+		float x_len = brickRight - ballLeft;
+		if (y_len > x_len)
+			fromTop = false;
+		else
+			fromRight = false;
+	}
+
 	sf::Vector2f newVelocity = ball.getVelocity();
+
+	if (fromLeft || fromRight) {
+		newVelocity.x = -newVelocity.x; // Reverse horizontal direction
+	}
 
 	if (fromTop || fromBottom) {
 		newVelocity.y = -newVelocity.y; // Reverse vertical direction
-	}
-	else if (fromLeft || fromRight) {
-		newVelocity.x = -newVelocity.x; // Reverse horizontal direction
 	}
 
 	ball.setVelocity(newVelocity);

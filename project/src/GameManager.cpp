@@ -19,7 +19,8 @@ GameManager::GameManager()
 };
 
 //	Main Game Loop : process -> update -> render.
-void GameManager::run() {
+void GameManager::run() 
+{
 
 	sf::Clock clock;	// main game clock for delta-time
 	
@@ -31,9 +32,12 @@ void GameManager::run() {
 	}
 }
 
-void GameManager::processEvents() {
+void GameManager::processEvents() 
+{
 
 	sf::Event event;
+	
+	// process user events
 	while (m_window.pollEvent(event)) {
 		if (event.type == sf::Event::Closed)
 			m_window.close();
@@ -46,15 +50,26 @@ void GameManager::processEvents() {
 				m_currWindow = choice.nextWindow;
 		}
 	}
+
+	// waits for GameWindow to return a GameWon Signal
+	if (m_currWindow == WindowState::PLAY) {
+		GameWindow* gameWindow = dynamic_cast<GameWindow*>(m_windows[(int)m_currWindow].get());
+		if (gameWindow->isGameWon()) {
+			gameWindow->resetWindow();
+			m_currWindow = WindowState::FINISH;
+		}
+	}
 }
 
-void GameManager::update(float dt) {
+void GameManager::update(float dt)
+{
 
 	m_windows[(int)m_currWindow]->update(dt);
 
 }
 
-void GameManager::render() {
+void GameManager::render() 
+{
 
 	m_window.clear();
 

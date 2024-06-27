@@ -9,6 +9,8 @@
 #include <memory>
 #include <list>
 
+const int NUM_OF_BRICKS = 12;
+
 enum class PauseChoice {
 	GAME,
 	MENU
@@ -21,6 +23,9 @@ public:
 	UserChoice handleInput(sf::Event& event);
 	void update(float dt);
 	void render();
+	
+	bool isGameWon() const;
+	void resetWindow();
 
 private:
 	// game window
@@ -48,9 +53,9 @@ private:
 	sf::Text m_returnToGameText;
 	sf::Text m_BackToMenuText;
 
-	void resetWindow();
 	void updateHover();
 
 	bool m_gamePaused;
+	bool m_gameWon;
 	PauseChoice m_pauseChoice;
 };
