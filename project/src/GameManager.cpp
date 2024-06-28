@@ -51,12 +51,15 @@ void GameManager::processEvents()
 		}
 	}
 
-	// waits for GameWindow to return a GameWon Signal
+	// waits for GameWindow to return Ended Signal
 	if (m_currWindow == WindowState::PLAY) {
 		GameWindow* gameWindow = dynamic_cast<GameWindow*>(m_windows[(int)m_currWindow].get());
-		if (gameWindow->isGameWon()) {
+		if (gameWindow->getGameState() == GameState::ENDED_WIN) {
+			auto finalScore = gameWindow->getScore();
 			gameWindow->resetWindow();
 			m_currWindow = WindowState::FINISH;
+			FinishWindow* finishWindow = dynamic_cast<FinishWindow*>(m_windows[(int)m_currWindow].get());
+			finishWindow->setScore(finalScore);
 		}
 	}
 }

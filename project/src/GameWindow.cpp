@@ -2,17 +2,21 @@
 
 GameWindow::GameWindow(sf::RenderWindow& window, ObjectCreator* objectCreator)
     : Window(window, objectCreator),
-        m_gameWon(false),
+        m_gameState(GameState::NOT_ENDED),
         m_gamePaused(false), 
         m_releasePressed(false),
         m_pauseChoice(PauseChoice::GAME),
-        m_ballSpeed(100)
+        m_ballSpeed(100),
+        m_score(0)
 {
     // Set up title
     m_title = objectCreator->createTextButton("GamePlayScreen", 30, 'W', 10.f, 10.f);
 
     // Set up element window
     m_elementWindow = objectCreator->createRectangle(879.f, 800.f, 'C', 210.f, 60.f);
+
+    // Set up game text
+    m_scoreText = objectCreator->createTextButton("", 20, 'W', 20.f, 100.f);
 
     // Set up pause screen
     m_pauseWindow = objectCreator->createRectangle(600.f, 750.f, 'M', 350.f, 100.f);
@@ -33,11 +37,6 @@ UserChoice GameWindow::handleInput(sf::Event& event)
         if (!m_gamePaused) {    // GAME IS ACTIVE
             if (event.key.code == sf::Keyboard::Escape) {   // enter pause mode
                 m_gamePaused = true;
-            }
-            else if (event.key.code == sf::Keyboard::W) {
-                choice.isSelected = true;
-                choice.nextWindow = WindowState::FINISH;  // to finish
-                resetWindow();
             }
             else if (event.key.code == sf::Keyboard::Space) {   // release balls
                 m_releasePressed = true;
@@ -101,17 +100,23 @@ void GameWindow::update(float dt)
 
     // GAME WON
     if (m_bricks.empty())
-        m_gameWon = true;
+        m_gameState = GameState::ENDED_WIN;
 
     // COLLISIONS
     m_collisionHandler.handleOutOfBoarder(m_balls, m_platform.getShape(), m_elementWindow);
     m_collisionHandler.handleBallPlatform(m_balls, m_platform.getShape());
-    m_collisionHandler.handleBallBrick(m_balls, m_bricks);
+    if (m_collisionHandler.handleBallBrick(m_balls, m_bricks))
+        m_score += 125;
+
+    // SCORE
+    m_scoreText.setString("SCORE : " + std::to_string(m_score));
 }
 
 void GameWindow::render()
 {
     m_window.draw(m_elementWindow);     // Window For Balls
+
+    m_window.draw(m_scoreText);         // Window Text
 
     m_platform.draw(m_window);          // Platform
 
@@ -130,9 +135,14 @@ void GameWindow::render()
     }
 }
 
-bool GameWindow::isGameWon() const
+GameState GameWindow::getGameState() const
 {
-    return m_gameWon;
+    return m_gameState;
+}
+
+int GameWindow::getScore() const
+{
+    return m_score;
 }
 
 void GameWindow::releaseBalls(float dt)
@@ -143,7 +153,7 @@ void GameWindow::releaseBalls(float dt)
         int seed = (int)(dt * 100000) % 100;
         std::srand(seed);
         float random_num = static_cast<float>(std::rand()) / 400;
-        float scaled_num = (random_num * 1.6) - 0.8;
+        float scaled_num = (random_num * 1.6f) - 0.8f;
 
         ball->release(scaled_num);
         m_balls.push_back(ball);
@@ -176,13 +186,14 @@ void GameWindow::initBricks(int numOfBricks)
 
 void GameWindow::resetWindow()
 {
-    m_gameWon = false;
+    m_gameState = GameState::NOT_ENDED;
     m_gamePaused = false;
     m_pauseChoice = PauseChoice::GAME;
     m_balls.clear();
     m_bricks.clear();
     initBricks(NUM_OF_BRICKS);
     m_platform.reset();
+    m_score = 0;
 }
 
 void GameWindow::updateHover()

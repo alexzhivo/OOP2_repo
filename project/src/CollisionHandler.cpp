@@ -17,8 +17,8 @@ void CollisionHandler::handleBallPlatform(std::list<std::shared_ptr<Ball>>& ball
 
 			float ballCenter = ball->getShape().getPosition().x + ball->getShape().getGlobalBounds().width / 2.0f;
 			float platformLeft = platform.getPosition().x;
-			float platformRight = platform.getPosition().x + platform.getGlobalBounds().width;
-			float platformCenter = platformLeft + platform.getGlobalBounds().width / 2.0f;
+			//float platformRight = platform.getPosition().x + platform.getGlobalBounds().width;
+			//float platformCenter = platformLeft + platform.getGlobalBounds().width / 2.0f;
 
 			float collisionPoint = ballCenter - platformLeft;
 			float platformWidth = platform.getGlobalBounds().width;
@@ -41,7 +41,7 @@ void CollisionHandler::handleBallPlatform(std::list<std::shared_ptr<Ball>>& ball
 	}
 }
 
-void CollisionHandler::handleBallBrick(std::list<std::shared_ptr<Ball>>& balls, std::vector<std::shared_ptr<Brick>>& bricks)
+bool CollisionHandler::handleBallBrick(std::list<std::shared_ptr<Ball>>& balls, std::vector<std::shared_ptr<Brick>>& bricks)
 {
 	for (auto& ball : balls) {
 
@@ -50,13 +50,15 @@ void CollisionHandler::handleBallBrick(std::list<std::shared_ptr<Ball>>& balls, 
 				resolveBallBrick(*ball, **it);
 				if ((*it)->hit(1))
 					it = bricks.erase(it); // Remove brick after collision
-				return;
+				return true;
 			}
 			else {
 				++it;
 			}
 		}
 	}
+
+	return false;
 }
 
 void CollisionHandler::keepBallInBoarder(std::shared_ptr<Ball>& ball , const sf::RectangleShape& rectangle)

@@ -10,8 +10,11 @@ public:
 	void update(float dt);
 	void render();
 
+	void setScore(int score);
+
 private:
 	sf::Text m_title;
+	sf::Text m_scoreText;
 
 	void resetWindow();
 };

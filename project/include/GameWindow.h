@@ -16,6 +16,13 @@ enum class PauseChoice {
 	MENU
 };
 
+enum class GameState {
+	NOT_ENDED,
+	ENDED_WIN,
+	ENDED_TIME,
+	ENDED_LIVE
+};
+
 class GameWindow : public Window {
 public:
 	GameWindow(sf::RenderWindow& window, ObjectCreator* objectCreator);
@@ -23,14 +30,17 @@ public:
 	UserChoice handleInput(sf::Event& event);
 	void update(float dt);
 	void render();
+
+	GameState getGameState() const;
+	int getScore() const;
 	
-	bool isGameWon() const;
 	void resetWindow();
 
 private:
 	// game window
 	sf::Text m_title;
 	sf::RectangleShape m_elementWindow;
+	sf::Text m_scoreText;
 
 	// elements
 	std::list<std::shared_ptr<Ball>> m_balls;
@@ -55,7 +65,8 @@ private:
 
 	void updateHover();
 
+	int m_score;
 	bool m_gamePaused;
-	bool m_gameWon;
+	GameState m_gameState;
 	PauseChoice m_pauseChoice;
 };

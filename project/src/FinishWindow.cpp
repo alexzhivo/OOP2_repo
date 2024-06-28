@@ -4,6 +4,7 @@ FinishWindow::FinishWindow(sf::RenderWindow& window, ObjectCreator* objectCreato
 	: Window(window,objectCreator)
 {
     m_title = objectCreator->createTextButton("YOU WIN!", 100, 'W', 300.f, 200.f);
+    m_scoreText = objectCreator->createTextButton("", 100, 'W', 200.f, 300.f);
 }
 
 UserChoice FinishWindow::handleInput(sf::Event& event)
@@ -27,9 +28,16 @@ void FinishWindow::update(float dt)
 void FinishWindow::render()
 {
     m_window.draw(m_title);
+    m_window.draw(m_scoreText);
 }
 
 void FinishWindow::resetWindow()
 {
     // >> RESET WINDOW
+    m_scoreText.setString("");
+}
+
+void FinishWindow::setScore(int score)
+{
+    m_scoreText.setString("FINAL SCORE : " + std::to_string(score));
 }
