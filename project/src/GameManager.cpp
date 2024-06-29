@@ -53,13 +53,22 @@ void GameManager::processEvents()
 
 	// waits for GameWindow to return Ended Signal
 	if (m_currWindow == WindowState::PLAY) {
-		GameWindow* gameWindow = dynamic_cast<GameWindow*>(m_windows[(int)m_currWindow].get());
-		if (gameWindow->getGameState() == GameState::ENDED_WIN) {
-			auto finalScore = gameWindow->getScore();
+		GameWindow* gameWindow = dynamic_cast<GameWindow*>(m_windows[(int)WindowState::PLAY].get());
+		FinishWindow* finishWindow = dynamic_cast<FinishWindow*>(m_windows[(int)WindowState::FINISH].get());
+		GameState currGameState = gameWindow->getGameState();
+		int finalScore;
+
+		switch (gameWindow->getGameState()) {
+		case GameState::NOT_ENDED:
+			break;
+		case GameState::ENDED_WIN:
+			finalScore = gameWindow->getScore();
+			finishWindow->setScore(finalScore);
+		case GameState::ENDED_TIME:
+		default:
 			gameWindow->resetWindow();
 			m_currWindow = WindowState::FINISH;
-			FinishWindow* finishWindow = dynamic_cast<FinishWindow*>(m_windows[(int)m_currWindow].get());
-			finishWindow->setScore(finalScore);
+			break;
 		}
 	}
 }

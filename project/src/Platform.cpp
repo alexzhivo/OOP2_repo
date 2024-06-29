@@ -24,8 +24,6 @@ void Platform::update(float dt)
     }
 }
 
-
-
 void Platform::draw(sf::RenderWindow& window) const
 {
     for (auto& ball : m_stickyBalls) {

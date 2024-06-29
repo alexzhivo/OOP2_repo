@@ -2,6 +2,7 @@
 
 #include "Window.h"
 #include "CollisionHandler.h"
+#include "GameClock.h"
 #include "Platform.h"
 #include "Brick.h"
 #include "Ball.h"
@@ -41,6 +42,7 @@ private:
 	sf::Text m_title;
 	sf::RectangleShape m_elementWindow;
 	sf::Text m_scoreText;
+	sf::Text m_timeText;
 
 	// elements
 	std::list<std::shared_ptr<Ball>> m_balls;
@@ -64,6 +66,9 @@ private:
 	sf::Text m_BackToMenuText;
 
 	void updateHover();
+
+	// Clock
+	GameClock m_gameClock;
 
 	int m_score;
 	bool m_gamePaused;

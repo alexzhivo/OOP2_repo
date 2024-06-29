@@ -17,6 +17,7 @@ GameWindow::GameWindow(sf::RenderWindow& window, ObjectCreator* objectCreator)
 
     // Set up game text
     m_scoreText = objectCreator->createTextButton("", 20, 'W', 20.f, 100.f);
+    m_timeText = objectCreator->createTextButton("", 20, 'W', 20.f, 200.f);
 
     // Set up pause screen
     m_pauseWindow = objectCreator->createRectangle(600.f, 750.f, 'M', 350.f, 100.f);
@@ -28,6 +29,8 @@ GameWindow::GameWindow(sf::RenderWindow& window, ObjectCreator* objectCreator)
     initBricks(NUM_OF_BRICKS);
 
     m_platform.initStickyBall();
+
+    m_gameClock.initTime(10);
 }
 
 UserChoice GameWindow::handleInput(sf::Event& event)
@@ -110,6 +113,17 @@ void GameWindow::update(float dt)
 
     // SCORE
     m_scoreText.setString("SCORE : " + std::to_string(m_score));
+
+    // TIME
+    if (m_gameClock.isTimeZero())   // TIME IS ENDED
+        m_gameState = GameState::ENDED_TIME;
+
+    if (m_gamePaused)
+        m_gameClock.stopTime();
+    else {
+        m_gameClock.startTime();
+        m_timeText.setString("TIME : " + m_gameClock.getTimeString());
+    }
 }
 
 void GameWindow::render()
@@ -117,6 +131,7 @@ void GameWindow::render()
     m_window.draw(m_elementWindow);     // Window For Balls
 
     m_window.draw(m_scoreText);         // Window Text
+    m_window.draw(m_timeText);
 
     m_platform.draw(m_window);          // Platform
 
@@ -179,7 +194,7 @@ void GameWindow::initBricks(int numOfBricks)
             newYPos += brick_height;
             newYPos += space;
         }
-        m_bricks.push_back(std::make_shared<Brick>(1, newXPos, newYPos, brick_width, brick_height));
+        m_bricks.push_back(std::make_shared<Brick>(3, newXPos, newYPos, brick_width, brick_height));
         newXPos += brick_width;
     }
 }
@@ -194,6 +209,7 @@ void GameWindow::resetWindow()
     initBricks(NUM_OF_BRICKS);
     m_platform.reset();
     m_score = 0;
+    m_gameClock.initTime(10);
 }
 
 void GameWindow::updateHover()
