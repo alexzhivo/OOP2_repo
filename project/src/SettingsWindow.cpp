@@ -108,6 +108,11 @@ void SettingsWindow::render()
     m_window.draw(m_backButtonText);
 }
 
+std::string SettingsWindow::getPlayerName() const
+{
+    return m_playerName;
+}
+
 void SettingsWindow::resetWindow()
 {
     m_settingHover = Setting::NONE;

@@ -21,6 +21,8 @@ public:
 	void update(float dt);
 	void render();
 
+	std::string getPlayerName() const;
+
 private:
 	sf::Text m_title;
 	sf::Text m_gameSoundText;

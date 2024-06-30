@@ -55,6 +55,9 @@ void GameManager::processEvents()
 	if (m_currWindow == WindowState::PLAY) {
 		GameWindow* gameWindow = dynamic_cast<GameWindow*>(m_windows[(int)WindowState::PLAY].get());
 		FinishWindow* finishWindow = dynamic_cast<FinishWindow*>(m_windows[(int)WindowState::FINISH].get());
+		SettingsWindow* settingsWindow = dynamic_cast<SettingsWindow*>(m_windows[(int)WindowState::SETTINGS].get());
+		LeaderboardWindow* leaderboardWindow = dynamic_cast<LeaderboardWindow*>(m_windows[(int)WindowState::LEADERBOARD].get());
+
 		GameState currGameState = gameWindow->getGameState();
 		int finalScore;
 
@@ -63,6 +66,7 @@ void GameManager::processEvents()
 			break;
 		case GameState::ENDED_WIN:
 			finalScore = gameWindow->getScore();
+			leaderboardWindow->insertValue(finalScore, settingsWindow->getPlayerName());
 			finishWindow->setTitle("YOU WON!");
 			finishWindow->setScore(finalScore);
 			gameWindow->resetWindow();
