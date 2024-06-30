@@ -30,7 +30,7 @@ GameWindow::GameWindow(sf::RenderWindow& window, ObjectCreator* objectCreator)
 
     m_platform.initStickyBall();
 
-    m_gameClock.initTime(10);
+    m_gameClock.initTime(TIMER_IN_SEC);
 }
 
 UserChoice GameWindow::handleInput(sf::Event& event)
@@ -115,14 +115,17 @@ void GameWindow::update(float dt)
     m_scoreText.setString("SCORE : " + std::to_string(m_score));
 
     // TIME
-    if (m_gameClock.isTimeZero())   // TIME IS ENDED
-        m_gameState = GameState::ENDED_TIME;
 
     if (m_gamePaused)
         m_gameClock.stopTime();
     else {
         m_gameClock.startTime();
         m_timeText.setString("TIME : " + m_gameClock.getTimeString());
+    }
+
+    if (m_gameClock.isTimeZero()) {   // TIME IS ENDED
+        m_gameState = GameState::ENDED_TIME;
+        return;
     }
 }
 
@@ -209,7 +212,7 @@ void GameWindow::resetWindow()
     initBricks(NUM_OF_BRICKS);
     m_platform.reset();
     m_score = 0;
-    m_gameClock.initTime(10);
+    m_gameClock.initTime(TIMER_IN_SEC);
 }
 
 void GameWindow::updateHover()

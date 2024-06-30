@@ -11,6 +11,7 @@
 #include <list>
 
 const int NUM_OF_BRICKS = 12;
+const int TIMER_IN_SEC = 30;
 
 enum class PauseChoice {
 	GAME,
