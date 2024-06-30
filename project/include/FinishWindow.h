@@ -11,6 +11,7 @@ public:
 	void render();
 
 	void setScore(int score);
+	void setTitle(std::string text);
 
 private:
 	sf::Text m_title;

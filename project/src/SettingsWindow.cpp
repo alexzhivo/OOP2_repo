@@ -18,7 +18,7 @@ Setting& operator--(Setting& setting) {
 }
 
 SettingsWindow::SettingsWindow(sf::RenderWindow& window, ObjectCreator* objectCreator)
-    : Window(window,objectCreator), m_settingHover(Setting::NONE)
+    : Window(window,objectCreator), m_settingHover(Setting::NONE), m_isGameSoundOn(true)
 {
     m_title = objectCreator->createTextButton("SETTINGS", 100, 'W', 300.f, 200.f);
     m_gameSoundText = objectCreator->createTextButton("<< Game Sound >>", 30, 'G', 500.f, 400.f);
@@ -41,10 +41,15 @@ UserChoice SettingsWindow::handleInput(sf::Event& event)
                     ++m_settingHover;
             }
         }
-        else if (event.key.code == sf::Keyboard::Enter && m_settingHover == Setting::BACK) {
+        else if (event.key.code == sf::Keyboard::Enter) {
+            if (m_settingHover == Setting::BACK) {
                 choice.isSelected = true;
                 choice.nextWindow = WindowState::MENU;
                 resetWindow();
+            }
+            else if (m_settingHover == Setting::GAMESOUND) {
+                m_isGameSoundOn = !m_isGameSoundOn;
+            }
         }
     }
     return choice;
@@ -53,6 +58,7 @@ UserChoice SettingsWindow::handleInput(sf::Event& event)
 void SettingsWindow::update(float dt)
 {
     updateHover();
+    updateGameSound();
 }
 
 void SettingsWindow::render()
@@ -91,4 +97,12 @@ void SettingsWindow::resetHover()
     m_gameSoundText.setFillColor(sf::Color(100, 100, 100));
     m_playerNameText.setFillColor(sf::Color(100, 100, 100));
     m_backButtonText.setFillColor(sf::Color(100, 100, 100));
+}
+
+void SettingsWindow::updateGameSound()
+{
+    if (m_isGameSoundOn)
+        m_gameSoundText.setString("Game Sound : ON");
+    else
+        m_gameSoundText.setString("Game Sound : OFF");
 }

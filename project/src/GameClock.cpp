@@ -31,7 +31,6 @@ void GameClock::stopTime() {
         m_time -= m_clock.getElapsedTime();
         m_isRunning = false;
     }
-    std::cout << "FROM STOPTIME() : Clock is : " << m_isRunning << '\n';
 }
 
 void GameClock::startTime() {
@@ -39,7 +38,6 @@ void GameClock::startTime() {
         m_clock.restart();
         m_isRunning = true;
     }
-    std::cout << "FROM STARTTIME() : Clock is : " << m_isRunning << '\n';
 }
 
 std::string GameClock::getTimeString()

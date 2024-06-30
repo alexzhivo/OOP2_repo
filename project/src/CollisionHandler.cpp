@@ -27,7 +27,7 @@ void CollisionHandler::handleBallPlatform(std::list<std::shared_ptr<Ball>>& ball
 			// Calculate new velocity based on the collision point
 			sf::Vector2f newVelocity = ball->getVelocity();
 
-			float angle = normalizedCollisionPoint * 2.0f * 75.0f; // Max bounce angle is 75 degrees
+			float angle = normalizedCollisionPoint * 2.0f * 50.0f; // Max bounce angle is 50 degrees
 			float radians = angle * 3.14159f / 180.0f;
 			float speed = ball->getSpeed();
 

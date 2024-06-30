@@ -58,16 +58,22 @@ void GameManager::processEvents()
 		GameState currGameState = gameWindow->getGameState();
 		int finalScore;
 
-		switch (gameWindow->getGameState()) {
+		switch (currGameState) {
 		case GameState::NOT_ENDED:
 			break;
 		case GameState::ENDED_WIN:
 			finalScore = gameWindow->getScore();
+			finishWindow->setTitle("YOU WON!");
 			finishWindow->setScore(finalScore);
-		case GameState::ENDED_TIME:
-		default:
 			gameWindow->resetWindow();
 			m_currWindow = WindowState::FINISH;
+			break;
+		case GameState::ENDED_TIME:
+			finishWindow->setTitle("TIME IS UP..");
+			gameWindow->resetWindow();
+			m_currWindow = WindowState::FINISH;
+			break;
+		default:
 			break;
 		}
 	}

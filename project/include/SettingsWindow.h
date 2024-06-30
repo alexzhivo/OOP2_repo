@@ -27,10 +27,12 @@ private:
 	sf::Text m_playerNameText;
 	sf::Text m_backButtonText;
 
-	void resetWindow();
-
-	// hover effect
 	Setting m_settingHover;
+	void resetWindow();
 	void updateHover();
+	void updateGameSound();
 	void resetHover();
+
+	bool m_isGameSoundOn;
+
 };

@@ -10,8 +10,8 @@
 #include <memory>
 #include <list>
 
-const int NUM_OF_BRICKS = 12;
-const int TIMER_IN_SEC = 30;
+const int NUM_OF_BRICKS = 6;
+const int TIMER_IN_SEC = 60;
 
 enum class PauseChoice {
 	GAME,
