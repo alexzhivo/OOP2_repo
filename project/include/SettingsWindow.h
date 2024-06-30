@@ -34,5 +34,7 @@ private:
 	void resetHover();
 
 	bool m_isGameSoundOn;
+	bool m_isEditName;
+	std::string m_playerName;
 
 };
