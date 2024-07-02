@@ -5,6 +5,8 @@
 #include <memory>
 #include "Ball.h"
 
+#include <iostream>
+
 class Platform {
 public:
 	Platform();

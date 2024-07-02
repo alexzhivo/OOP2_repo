@@ -61,8 +61,11 @@ int Platform::getStickyBallsNum() const
 
 void Platform::initStickyBall()
 {
+    float x_pos = m_shape.getGlobalBounds().getPosition().x;
+    float y_pos = m_shape.getGlobalBounds().getPosition().y;
+
     m_stickyBalls.clear();
-    m_stickyBalls.push_back(std::make_shared<Ball>(sf::Vector2f(635.f,770.f), sf::Vector2f(0.f, 0.f)));
+    m_stickyBalls.push_back(std::make_shared<Ball>(sf::Vector2f(x_pos + 65.f, y_pos - 20.f), sf::Vector2f(0.f, 0.f)));
 }
 
 std::shared_ptr<Ball> Platform::releaseBall() 

@@ -76,25 +76,34 @@ UserChoice GameWindow::handleInput(sf::Event& event)
 
 void GameWindow::update(float dt)
 {
+    // COLLISIONS
+    m_collisionHandler.handleBallPlatform(m_balls, m_platform.getShape());
+    if (m_collisionHandler.handleBallBrick(m_balls, m_bricks))
+        m_score += 523;
+    m_collisionHandler.handleOutOfBoarder(m_balls, m_platform.getShape(), m_elementWindow);
+
+    if (m_balls.empty() && m_platform.getStickyBallsNum() == 0) {
+        m_life--;
+        if (m_life < 0) {
+            m_gameState = GameState::ENDED_LIVE;
+        }
+        m_lifeText.setString("Life : " + std::to_string(m_life));
+        m_platform.initStickyBall();
+    }
+
     // HOVER
     updateHover();
 
     // BALLS
-    for (auto& ball : m_balls) {
-        ball->update(dt);
-        if (m_gamePaused) {
-            ball->setVelocityZero();
-        }
-        else {
-            ball->restoreVelocity();
-        }
-    }
-
-    if (false /* all ball are gone */ ) {
-        m_life--;
-        m_lifeText.setString("Life : " + m_life);
-        if (m_life < 0) {
-            m_gameState = GameState::ENDED_LIVE;
+    if (!m_balls.empty()) {
+        for (auto& ball : m_balls) {
+            ball->update(dt);
+            if (m_gamePaused) {
+                ball->setVelocityZero();
+            }
+            else {
+                ball->restoreVelocity();
+            }
         }
     }
 
@@ -118,17 +127,10 @@ void GameWindow::update(float dt)
     if (m_bricks.empty())
         m_gameState = GameState::ENDED_WIN;
 
-    // COLLISIONS
-    m_collisionHandler.handleOutOfBoarder(m_balls, m_platform.getShape(), m_elementWindow);
-    m_collisionHandler.handleBallPlatform(m_balls, m_platform.getShape());
-    if (m_collisionHandler.handleBallBrick(m_balls, m_bricks))
-        m_score += 523;
-
     // SCORE
     m_scoreText.setString("SCORE : " + std::to_string(m_score));
 
     // TIME
-
     if (m_gamePaused)
         m_gameClock.stopTime();
     else {
@@ -251,6 +253,7 @@ void GameWindow::resetWindow()
     m_score = 0;
     m_currLevel = 1;
     m_life = 5;
+    m_lifeText.setString("Life : " + std::to_string(m_life));
     m_gameClock.initTime(TIMER_IN_SEC);
 }
 
