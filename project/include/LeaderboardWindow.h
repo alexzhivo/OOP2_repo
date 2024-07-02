@@ -25,7 +25,9 @@ private:
 	sf::Text m_title;
 	sf::Text m_backButton;
 
-	std::list<std::unique_ptr<DataCell>> m_data;
+	std::list<std::shared_ptr<DataCell>> m_data;
+
+	void drawLeaderboard();
 
 	void resetWindow();
 

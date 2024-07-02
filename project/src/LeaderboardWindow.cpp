@@ -8,7 +8,7 @@ LeaderboardWindow::LeaderboardWindow(sf::RenderWindow& window, ObjectCreator* ob
 
     // initilize leaderboard
     for (int i = 0; i < 10; i++) {
-        m_data.push_back(std::make_unique<DataCell>());
+        m_data.push_back(std::make_shared<DataCell>());
         m_data.back()->m_lineText = objectCreator->createTextButton(std::to_string(i + 1) + ".\t\t<EMPTY>\t\t:", 20, 'W', 550.f, 250.f + (i * 50));
     }
 }
@@ -41,19 +41,24 @@ void LeaderboardWindow::render()
 {
     m_window.draw(m_title);
     m_window.draw(m_backButton);
-
-    int index = 1;
-    for (const auto& cell : m_data) {
-        std::string newStr = std::to_string(index) + ".\t\t" + cell->m_playerName + "\t\t" + std::to_string(cell->m_score);
-        cell->m_lineText.setString(newStr);
-        m_window.draw(cell->m_lineText);
-        index++;
-    }
+    drawLeaderboard();
 }
 
 void LeaderboardWindow::resetWindow()
 {
     m_currBackButton = false;
+    updateHover();
+}
+
+void LeaderboardWindow::drawLeaderboard()
+{
+    int index = 1;
+    for (auto& line : m_data) {
+        std::string lineStr = std::to_string(index) + ".\t" + line->m_playerName + "\t\t" + std::to_string(line->m_score);
+        line->m_lineText.setString(lineStr);
+        m_window.draw(line->m_lineText);
+        index++;
+    }
 }
 
 void LeaderboardWindow::updateHover()
@@ -80,14 +85,14 @@ void LeaderboardWindow::insertValue(int score, std::string name)
         return;
     }
 
-    auto newEntry = std::make_unique<DataCell>();
+    auto newEntry = std::make_shared<DataCell>();
     newEntry->m_playerName = name;
     newEntry->m_score = score;
-    
+    newEntry->m_lineText = m_objectCreator->createTextButton("", 20, 'W',0.f,0.f);
 
     // Find the correct insertion point based on score (descending order)
     auto insertIt = std::find_if(m_data.begin(), m_data.end(),
-        [&score](const std::unique_ptr<DataCell>& entry) {
+        [&score](const std::shared_ptr<DataCell>& entry) {
             return entry->m_score < score;
         });
 
@@ -97,5 +102,12 @@ void LeaderboardWindow::insertValue(int score, std::string name)
     // Ensure leaderboard size does not exceed 10 entries
     if (m_data.size() > 10) {
         m_data.pop_back();
+    }
+
+    // Re-position all text in data
+    int index = 0;
+    for (auto& line : m_data) {
+        line->m_lineText.setPosition(550.f, 250.f + (index * 50));
+        index++;
     }
 }
