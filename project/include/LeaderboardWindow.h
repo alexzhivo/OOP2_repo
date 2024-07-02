@@ -4,6 +4,11 @@
 #include <list>
 #include <memory>
 
+#include <fstream>	// FOR FILE
+#include <sstream>
+#include <string>
+#include <cctype>
+
 struct DataCell {
 	std::string m_playerName = "<< empty >>";
 	int m_score = 0;
@@ -34,4 +39,6 @@ private:
 	// hover effect
 	bool m_currBackButton;
 	void updateHover();
+	bool inputFromFile(const std::string& filename);
+	bool handleLineInput(std::string& line, int lineNum);
 };
