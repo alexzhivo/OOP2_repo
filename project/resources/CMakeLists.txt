@@ -1,1 +1,1 @@
-﻿# configure_file ("leaderboard.txt" ${CMAKE_BINARY_DIR} COPYONLY)
+﻿configure_file ("level_001.txt" ${CMAKE_BINARY_DIR} COPYONLY)

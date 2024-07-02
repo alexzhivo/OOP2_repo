@@ -7,10 +7,6 @@
 #include "Brick.h"
 #include "Ball.h"
 
-#include <memory>
-#include <list>
-
-const int NUM_OF_BRICKS = 1;
 const int TIMER_IN_SEC = 60;
 
 enum class PauseChoice {
@@ -51,7 +47,7 @@ private:
 	int m_ballSpeed;
 
 	void releaseBalls(float dt);
-	void initBricks(int numOfBricks);
+	void initBricks();
 	bool m_releasePressed;
 
 	// platform

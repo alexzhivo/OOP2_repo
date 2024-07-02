@@ -26,7 +26,7 @@ GameWindow::GameWindow(sf::RenderWindow& window, ObjectCreator* objectCreator)
     m_returnToGameText = objectCreator->createTextButton("continue game", 40, 'W', 510.f, 400.f);
     m_BackToMenuText = objectCreator->createTextButton("return to menu", 40, 'W', 510.f, 500.f);
 
-    initBricks(NUM_OF_BRICKS);
+    initBricks();
 
     m_platform.initStickyBall();
 
@@ -178,7 +178,7 @@ void GameWindow::releaseBalls(float dt)
     }
 }
 
-void GameWindow::initBricks(int numOfBricks)
+void GameWindow::initBricks()
 {
     int space = 3;
     float brick_width = 70;
@@ -186,19 +186,34 @@ void GameWindow::initBricks(int numOfBricks)
     float window_x_pos = m_elementWindow.getPosition().x;
     float newXPos = window_x_pos;
     float window_width = m_elementWindow.getSize().x;
-    float newYPos = m_elementWindow.getPosition().y + 200;
+    float newYPos = m_elementWindow.getPosition().y + space;
 
+    std::string filename = "level_001.txt";
 
-    for (int i = 0; i < numOfBricks; i++) {
-        newXPos += space;
-        if (window_width + window_x_pos <= newXPos) {
-            newXPos -= window_width;
-            newXPos += space;
-            newYPos += brick_height;
-            newYPos += space;
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Error opening : " + filename + "\n";
+        return;
+    }
+    else {
+        std::string line;
+        while (std::getline(file, line)) {
+
+            for (char c : line) {
+                int blockType = c - '0';  // convert from char to int
+                newXPos += space;
+                if (window_width + window_x_pos <= newXPos) {
+                    newXPos -= window_width;
+                    newXPos += space;
+                    newYPos += brick_height;
+                    newYPos += space;
+                }
+                if (blockType != 0) // if not empty space
+                    m_bricks.push_back(std::make_shared<Brick>(blockType, newXPos, newYPos, brick_width, brick_height));
+                newXPos += brick_width;
+            }
         }
-        m_bricks.push_back(std::make_shared<Brick>(3, newXPos, newYPos, brick_width, brick_height));
-        newXPos += brick_width;
+        file.close();
     }
 }
 
@@ -209,7 +224,7 @@ void GameWindow::resetWindow()
     m_pauseChoice = PauseChoice::GAME;
     m_balls.clear();
     m_bricks.clear();
-    initBricks(NUM_OF_BRICKS);
+    initBricks();
     m_platform.reset();
     m_score = 0;
     m_gameClock.initTime(TIMER_IN_SEC);

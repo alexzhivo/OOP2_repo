@@ -1,13 +1,6 @@
 #pragma once
 
 #include "Window.h"
-#include <list>
-#include <memory>
-
-#include <fstream>	// FOR FILE
-#include <sstream>
-#include <string>
-#include <cctype>
 
 struct DataCell {
 	std::string m_playerName = "<< empty >>";

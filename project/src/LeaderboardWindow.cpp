@@ -120,8 +120,6 @@ bool LeaderboardWindow::inputFromFile(const std::string& filename)
         return false;
     }
     else {
-        std::cout << filename + " has successfuly opened.\n";
-
         std::string line;
         int count = 0;
         while (std::getline(file, line) && count < 10) {
@@ -130,7 +128,6 @@ bool LeaderboardWindow::inputFromFile(const std::string& filename)
         }
         file.close();
     }
-
     return true;
 }
 

@@ -3,6 +3,14 @@
 #include <SFML/Graphics.hpp>
 #include "ObjectCreator.h"
 
+#include <fstream>  // for files
+#include <sstream>
+#include <string>
+#include <cctype>
+
+#include <memory>   // for data
+#include <list>
+
 #include <iostream> // TEST
 
 enum class WindowState {
