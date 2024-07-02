@@ -40,5 +40,6 @@ private:
 	bool m_currBackButton;
 	void updateHover();
 	bool inputFromFile(const std::string& filename);
+	bool updateFile(const std::string& filename);
 	bool handleLineInput(std::string& line, int lineNum);
 };

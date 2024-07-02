@@ -107,6 +107,9 @@ void LeaderboardWindow::insertValue(int score, std::string name)
         line->m_lineText.setPosition(550.f, 250.f + (index * 50));
         index++;
     }
+
+    // update leaderboard.txt file
+    updateFile("leaderboard.txt");
 }
 
 bool LeaderboardWindow::inputFromFile(const std::string& filename)
@@ -127,6 +130,25 @@ bool LeaderboardWindow::inputFromFile(const std::string& filename)
         }
         file.close();
     }
+
+    return true;
+}
+
+bool LeaderboardWindow::updateFile(const std::string& filename)
+{
+    std::ofstream file;
+
+    file.open(filename);
+
+    if (!file.is_open()) {
+        std::cerr << "Error opening " + filename + "!\n";
+        return false;
+    }
+
+    for (auto& line : m_data)
+        file << line->m_playerName << " " << line->m_score << std::endl;
+
+    file.close();
 
     return true;
 }

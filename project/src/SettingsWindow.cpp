@@ -35,18 +35,15 @@ UserChoice SettingsWindow::handleInput(sf::Event& event)
     UserChoice choice;
     if (m_isEditName) {
         if (event.type == sf::Event::TextEntered) {
-            std::cout << "textEnterd" << '\n';
             if (event.text.unicode < 128) { // Only consider ASCII characters
                 char enteredChar = static_cast<char>(event.text.unicode);
 
-                // Check if entered character is alphanumeric
-                if (std::isalnum(enteredChar)) {
-                    std::cout << "enterdChar" << '\n';
+                // Check if entered character is alphanumeric & namelimit
+                if (std::isalnum(enteredChar) && m_playerName.size() < 16) {
                     m_playerName += enteredChar;
                 }
                 // Handle backspace (ASCII 8)
                 else if (enteredChar == 8 && !m_playerName.empty()) {
-                    std::cout << "backspace" << '\n';
                     m_playerName.pop_back();
                 }
                 m_playerNameText.setString("Player Name : " + m_playerName);
