@@ -4,11 +4,6 @@
 
 void CollisionHandler::handleOutOfBoarder(std::list<std::shared_ptr<Ball>>& balls, sf::RectangleShape& platform, sf::RectangleShape& window)
 {
-	// old version
-  //  for (auto& ball : balls) {
-		//keepBallInBoarder(ball, window);
-  //  }
-
 	for (auto it = balls.begin(); it != balls.end(); ) {
 		if (keepBallInBoarder(*it, window)) { // Condition to delete the element
 			it = balls.erase(it); // Erase returns the iterator to the next element
@@ -51,24 +46,44 @@ void CollisionHandler::handleBallPlatform(std::list<std::shared_ptr<Ball>>& ball
 	}
 }
 
-bool CollisionHandler::handleBallBrick(std::list<std::shared_ptr<Ball>>& balls, std::vector<std::shared_ptr<Brick>>& bricks)
+BrickInfo CollisionHandler::handleBallBrick(std::list<std::shared_ptr<Ball>>& balls, std::vector<std::shared_ptr<Brick>>& bricks)
 {
+	BrickInfo info;
 	for (auto& ball : balls) {
-
 		for (auto it = bricks.begin(); it != bricks.end();) {
 			if (ball->getShape().getGlobalBounds().intersects((*it)->getShape().getGlobalBounds())) {
 				resolveBallBrick(*ball, **it);
-				if ((*it)->hit(1))
+				if ((*it)->hit(1)) {
+					info.cond = BrickCondition::BREAK;
+					info.pos_x = (*it)->getShape().getPosition().x;
+					info.pos_y = (*it)->getShape().getPosition().y;
 					it = bricks.erase(it); // Remove brick after collision
-				return true;
+					return info;
+				}
+				info.cond = BrickCondition::HIT;
+				return info;
 			}
 			else {
 				++it;
 			}
 		}
 	}
+	return info;
+}
 
-	return false;
+void CollisionHandler::handlePowerUpWindow(std::vector<std::shared_ptr<PowerUp>>& powers, sf::RectangleShape& window)
+{
+	for (auto it = powers.begin(); it != powers.end();) {
+		auto pos = (*it)->getShape().getPosition();
+		auto startWindow = window.getPosition();
+		auto sizeWindow = window.getSize();
+		sf::Vector2f size((*it)->getShape().getGlobalBounds().width, (*it)->getShape().getGlobalBounds().height);
+		if (pos.y + size.y > sizeWindow.y + startWindow.y) {
+			it = powers.erase(it);	// remove powerup if out of boarder
+			return;
+		}
+		++it;
+	}
 }
 
 bool CollisionHandler::keepBallInBoarder(std::shared_ptr<Ball>& ball , const sf::RectangleShape& rectangle)
@@ -92,10 +107,7 @@ bool CollisionHandler::keepBallInBoarder(std::shared_ptr<Ball>& ball , const sf:
 		velocity.y = std::abs(velocity.y);
 	}
 	else if (pos.y + size.y > sizeWindow.y + startWindow.y) {
-		if (pos.y + size.y > sizeWindow.y + startWindow.y) {
-			return true; // Exit the function after deleting the ball
-		}
-		velocity.y = -std::abs(velocity.y);
+		return true; // Exit the function after deleting the ball
 	}
 
 	ball->setVelocity(velocity);

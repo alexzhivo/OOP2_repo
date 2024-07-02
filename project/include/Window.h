@@ -3,6 +3,9 @@
 #include <SFML/Graphics.hpp>
 #include "ObjectCreator.h"
 
+#include <cstdlib> // For rand() and srand()
+#include <ctime>   // For time()
+
 #include <fstream>  // for files
 #include <sstream>
 #include <string>

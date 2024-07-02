@@ -6,6 +6,7 @@
 #include "Platform.h"
 #include "Brick.h"
 #include "Ball.h"
+#include "PowerUp.h"
 
 const int TIMER_IN_SEC = 120;
 
@@ -48,11 +49,14 @@ private:
 	// elements
 	std::list<std::shared_ptr<Ball>> m_balls;
 	std::vector<std::shared_ptr<Brick>> m_bricks;
+	std::vector<std::shared_ptr<PowerUp>> m_powers;
+
 	int m_ballSpeed;
 
 	void releaseBalls(float dt);
 	void initLevel();
 	bool m_releasePressed;
+	void chanceForGift(float pos_x, float pos_y);
 
 	// platform
 	Platform m_platform;

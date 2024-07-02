@@ -11,6 +11,9 @@ GameWindow::GameWindow(sf::RenderWindow& window, ObjectCreator* objectCreator)
         m_life(5),
         m_currLevel(1)
 {
+    // Set up random seed
+    srand(static_cast<unsigned int>(time(0)));
+
     // Set up title
     m_title = objectCreator->createTextButton("GamePlayScreen", 30, 'W', 10.f, 10.f);
 
@@ -78,9 +81,20 @@ void GameWindow::update(float dt)
 {
     // COLLISIONS
     m_collisionHandler.handleBallPlatform(m_balls, m_platform.getShape());
-    if (m_collisionHandler.handleBallBrick(m_balls, m_bricks))
-        m_score += 523;
+    BrickInfo info = m_collisionHandler.handleBallBrick(m_balls, m_bricks);
+    switch (info.cond) {
+    case BrickCondition::HIT:
+        m_score += 75;
+        break;
+    case BrickCondition::BREAK:
+        m_score += 150; 
+        chanceForGift(info.pos_x,info.pos_y);
+        break;
+    case BrickCondition::NO_TOUCH:
+        break;
+    }
     m_collisionHandler.handleOutOfBoarder(m_balls, m_platform.getShape(), m_elementWindow);
+    m_collisionHandler.handlePowerUpWindow(m_powers, m_elementWindow);
 
     if (m_balls.empty() && m_platform.getStickyBallsNum() == 0) {
         m_life--;
@@ -110,6 +124,11 @@ void GameWindow::update(float dt)
     // PLATFORM
     if (!m_gamePaused) {
         m_platform.update(dt);
+    }
+
+    if (!m_gamePaused) {
+        for (auto& power : m_powers)
+            power->update(dt);
     }
 
     if (m_releasePressed) {
@@ -154,13 +173,17 @@ void GameWindow::render()
     m_window.draw(m_lifeText);
     m_window.draw(m_bestScoreText);
 
-    m_platform.draw(m_window);          // Platform
 
     for (auto& brick : m_bricks)        // Bricks
         brick->draw(m_window);
 
+    for (auto& power : m_powers)        // Powers
+        power->draw(m_window);
+
     for (auto& ball : m_balls)          // Balls
         ball->draw(m_window);
+
+    m_platform.draw(m_window);          // Platform
 
     m_window.draw(m_title);             // Title
     if (m_gamePaused) {                 // Pause Menu
@@ -238,6 +261,15 @@ void GameWindow::initLevel()
             }
         }
         file.close();
+    }
+}
+
+void GameWindow::chanceForGift(float pos_x, float pos_y)
+{
+    double randomSpawn = static_cast<double>(rand()) / RAND_MAX;
+    auto randomPower = (PowerType)(rand() % 2);
+    if (randomSpawn < 0.15) {
+        m_powers.push_back(std::make_shared<PowerUp>(randomPower,sf::Vector2f(pos_x + 25,pos_y + 6)));
     }
 }
 
