@@ -3,11 +3,13 @@
 GameWindow::GameWindow(sf::RenderWindow& window, ObjectCreator* objectCreator)
     : Window(window, objectCreator),
         m_gameState(GameState::NOT_ENDED),
-        m_gamePaused(false), 
+        m_gamePaused(false),
         m_releasePressed(false),
         m_pauseChoice(PauseChoice::GAME),
         m_ballSpeed(100),
-        m_score(0)
+        m_score(0),
+        m_life(5),
+        m_currLevel(1)
 {
     // Set up title
     m_title = objectCreator->createTextButton("GamePlayScreen", 30, 'W', 10.f, 10.f);
@@ -18,6 +20,9 @@ GameWindow::GameWindow(sf::RenderWindow& window, ObjectCreator* objectCreator)
     // Set up game text
     m_scoreText = objectCreator->createTextButton("", 20, 'W', 20.f, 100.f);
     m_timeText = objectCreator->createTextButton("", 20, 'W', 20.f, 200.f);
+    m_levelText = objectCreator->createTextButton("", 20, 'W', 20.f, 300.f);
+    m_lifeText = objectCreator->createTextButton("Life : " + std::to_string(m_life), 20, 'W', 20.f, 400.f);
+    m_bestScoreText = objectCreator->createTextButton("", 20, 'W', 20.f, 500.f);
 
     // Set up pause screen
     m_pauseWindow = objectCreator->createRectangle(600.f, 750.f, 'M', 350.f, 100.f);
@@ -26,7 +31,7 @@ GameWindow::GameWindow(sf::RenderWindow& window, ObjectCreator* objectCreator)
     m_returnToGameText = objectCreator->createTextButton("continue game", 40, 'W', 510.f, 400.f);
     m_BackToMenuText = objectCreator->createTextButton("return to menu", 40, 'W', 510.f, 500.f);
 
-    initBricks();
+    initLevel();
 
     m_platform.initStickyBall();
 
@@ -85,6 +90,14 @@ void GameWindow::update(float dt)
         }
     }
 
+    if (false /* all ball are gone */ ) {
+        m_life--;
+        m_lifeText.setString("Life : " + m_life);
+        if (m_life < 0) {
+            m_gameState = GameState::ENDED_LIVE;
+        }
+    }
+
     // PLATFORM
     if (!m_gamePaused) {
         m_platform.update(dt);
@@ -109,7 +122,7 @@ void GameWindow::update(float dt)
     m_collisionHandler.handleOutOfBoarder(m_balls, m_platform.getShape(), m_elementWindow);
     m_collisionHandler.handleBallPlatform(m_balls, m_platform.getShape());
     if (m_collisionHandler.handleBallBrick(m_balls, m_bricks))
-        m_score += 125;
+        m_score += 523;
 
     // SCORE
     m_scoreText.setString("SCORE : " + std::to_string(m_score));
@@ -135,6 +148,9 @@ void GameWindow::render()
 
     m_window.draw(m_scoreText);         // Window Text
     m_window.draw(m_timeText);
+    m_window.draw(m_levelText);
+    m_window.draw(m_lifeText);
+    m_window.draw(m_bestScoreText);
 
     m_platform.draw(m_window);          // Platform
 
@@ -163,6 +179,11 @@ int GameWindow::getScore() const
     return m_score;
 }
 
+void GameWindow::updateBestScore(int score)
+{
+    m_bestScoreText.setString("Best Score : " + std::to_string(score));
+}
+
 void GameWindow::releaseBalls(float dt)
 {
     for (int i = 0; i < m_platform.getStickyBallsNum(); i++) {
@@ -178,7 +199,7 @@ void GameWindow::releaseBalls(float dt)
     }
 }
 
-void GameWindow::initBricks()
+void GameWindow::initLevel()
 {
     int space = 3;
     float brick_width = 70;
@@ -188,7 +209,7 @@ void GameWindow::initBricks()
     float window_width = m_elementWindow.getSize().x;
     float newYPos = m_elementWindow.getPosition().y + space;
 
-    std::string filename = "level_001.txt";
+    std::string filename = "level_" + std::to_string(m_currLevel) + ".txt";
 
     std::ifstream file(filename);
     if (!file.is_open()) {
@@ -196,6 +217,7 @@ void GameWindow::initBricks()
         return;
     }
     else {
+        m_levelText.setString("Level : " + std::to_string(m_currLevel));
         std::string line;
         while (std::getline(file, line)) {
 
@@ -224,9 +246,11 @@ void GameWindow::resetWindow()
     m_pauseChoice = PauseChoice::GAME;
     m_balls.clear();
     m_bricks.clear();
-    initBricks();
+    initLevel();
     m_platform.reset();
     m_score = 0;
+    m_currLevel = 1;
+    m_life = 5;
     m_gameClock.initTime(TIMER_IN_SEC);
 }
 

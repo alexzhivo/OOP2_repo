@@ -112,6 +112,11 @@ void LeaderboardWindow::insertValue(int score, std::string name)
     updateFile("leaderboard.txt");
 }
 
+int LeaderboardWindow::getBestScore() const
+{
+    return (m_data.begin()->get()->m_score);
+}
+
 bool LeaderboardWindow::inputFromFile(const std::string& filename)
 {
     std::ifstream file(filename);

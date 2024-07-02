@@ -18,6 +18,7 @@ public:
 
 	bool isScoreValidForBoard(int score) const;
 	void insertValue(int score, std::string name);
+	int getBestScore() const;
 
 private:
 	sf::Text m_title;

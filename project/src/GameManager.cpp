@@ -46,8 +46,11 @@ void GameManager::processEvents()
 		if (choice.isSelected) {
 			if (choice.nextWindow == WindowState::EXIT)
 				m_window.close();
-			else
+			else {
+				if (choice.nextWindow == WindowState::PLAY)
+					updateAtGameStart();
 				m_currWindow = choice.nextWindow;
+			}
 		}
 	}
 
@@ -62,23 +65,25 @@ void GameManager::processEvents()
 		int finalScore;
 
 		switch (currGameState) {
-		case GameState::NOT_ENDED:
-			break;
 		case GameState::ENDED_WIN:
 			finalScore = gameWindow->getScore();
 			leaderboardWindow->insertValue(finalScore, settingsWindow->getPlayerName());
 			finishWindow->setTitle("YOU WON!");
 			finishWindow->setScore(finalScore);
-			gameWindow->resetWindow();
-			m_currWindow = WindowState::FINISH;
 			break;
 		case GameState::ENDED_TIME:
 			finishWindow->setTitle("TIME IS UP..");
+			break;
+		case GameState::ENDED_LIVE:
+			finishWindow->setTitle("Out Of Lives..");
+			break;
+		case GameState::NOT_ENDED:
+			break;
+		}
+
+		if (currGameState != GameState::NOT_ENDED) {
 			gameWindow->resetWindow();
 			m_currWindow = WindowState::FINISH;
-			break;
-		default:
-			break;
 		}
 	}
 }
@@ -98,4 +103,13 @@ void GameManager::render()
 	m_windows[(int)m_currWindow]->render();	// render current window used.
 
 	m_window.display();
+}
+
+void GameManager::updateAtGameStart()
+{
+	GameWindow* gameWindow = dynamic_cast<GameWindow*>(m_windows[(int)WindowState::PLAY].get());
+	LeaderboardWindow* leadWindow = dynamic_cast<LeaderboardWindow*>(m_windows[(int)WindowState::LEADERBOARD].get());
+	
+	// update Best Score text in-game
+	gameWindow->updateBestScore(leadWindow->getBestScore());
 }

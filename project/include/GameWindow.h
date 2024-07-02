@@ -7,7 +7,7 @@
 #include "Brick.h"
 #include "Ball.h"
 
-const int TIMER_IN_SEC = 60;
+const int TIMER_IN_SEC = 120;
 
 enum class PauseChoice {
 	GAME,
@@ -31,6 +31,7 @@ public:
 
 	GameState getGameState() const;
 	int getScore() const;
+	void updateBestScore(int score);
 	
 	void resetWindow();
 
@@ -40,6 +41,9 @@ private:
 	sf::RectangleShape m_elementWindow;
 	sf::Text m_scoreText;
 	sf::Text m_timeText;
+	sf::Text m_levelText;
+	sf::Text m_lifeText;
+	sf::Text m_bestScoreText;
 
 	// elements
 	std::list<std::shared_ptr<Ball>> m_balls;
@@ -47,7 +51,7 @@ private:
 	int m_ballSpeed;
 
 	void releaseBalls(float dt);
-	void initBricks();
+	void initLevel();
 	bool m_releasePressed;
 
 	// platform
@@ -67,7 +71,10 @@ private:
 	// Clock
 	GameClock m_gameClock;
 
+	
 	int m_score;
+	int m_life;
+	int m_currLevel;
 	bool m_gamePaused;
 	GameState m_gameState;
 	PauseChoice m_pauseChoice;
