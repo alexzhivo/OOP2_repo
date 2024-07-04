@@ -65,6 +65,9 @@ void GameManager::processEvents()
 		int finalScore;
 
 		switch (currGameState) {
+		case GameState::NEXT_LEVEL:
+			gameWindow->setupNextLevel();
+			break;
 		case GameState::ENDED_WIN:
 			finalScore = gameWindow->getScore();
 			leaderboardWindow->insertValue(finalScore, settingsWindow->getPlayerName());
@@ -81,8 +84,10 @@ void GameManager::processEvents()
 			break;
 		}
 
-		if (currGameState != GameState::NOT_ENDED) {
-			gameWindow->resetWindow();
+		if (currGameState != GameState::NOT_ENDED &&
+			currGameState != GameState::NEXT_LEVEL) 
+		{
+			gameWindow->reset();
 			m_currWindow = WindowState::FINISH;
 		}
 	}

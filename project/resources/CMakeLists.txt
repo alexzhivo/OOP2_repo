@@ -3,6 +3,8 @@ configure_file ("arcadefont.ttf" ${CMAKE_BINARY_DIR} COPYONLY)
 
 # - Levels
 configure_file ("level_1.txt" ${CMAKE_BINARY_DIR} COPYONLY)
+configure_file ("level_2.txt" ${CMAKE_BINARY_DIR} COPYONLY)
+configure_file ("level_3.txt" ${CMAKE_BINARY_DIR} COPYONLY)
 
 # - Wallpaper
 configure_file ("wallpaper.png" ${CMAKE_BINARY_DIR} COPYONLY)

@@ -19,7 +19,8 @@ enum class GameState {
 	NOT_ENDED,
 	ENDED_WIN,
 	ENDED_TIME,
-	ENDED_LIVE
+	ENDED_LIVE,
+	NEXT_LEVEL
 };
 
 class GameWindow : public Window {
@@ -33,30 +34,31 @@ public:
 	GameState getGameState() const;
 	int getScore() const;
 	void updateBestScore(int score);
+	void setupNextLevel();
 	
-	void resetWindow();
+	void reset();
+
 
 private:
-	// game window
+	// User Interface
 	sf::RectangleShape m_elementWindow;
 	sf::Text m_scoreText;
 	sf::Text m_timeText;
 	sf::Text m_levelText;
 	sf::Text m_bestScoreText;
 
-	// elements
+	// data for elements
 	std::list<std::shared_ptr<Ball>> m_balls;
 	std::vector<std::shared_ptr<Brick>> m_bricks;
 	std::vector<std::shared_ptr<PowerUp>> m_powers;
 
-	int m_ballSpeed;
-
 	void releaseBalls(float dt);
-	void initLevel();
-	bool m_releasePressed;
+	bool initLevel(int level);
 	void chanceForGift(float pos_x, float pos_y);
-
+	void handleCollisions(float dt);
 	void drawLives();
+	void updateHover();
+	void softReset();
 
 	// platform
 	Platform m_platform;
@@ -70,7 +72,6 @@ private:
 	sf::Text m_returnToGameText;
 	sf::Text m_BackToMenuText;
 
-	void updateHover();
 
 	// Clock
 	GameClock m_gameClock;
@@ -78,6 +79,8 @@ private:
 	int m_score;
 	int m_life;
 	int m_currLevel;
+	int m_ballSpeed;
+	bool m_releasePressed;
 	bool m_gamePaused;
 	GameState m_gameState;
 	PauseChoice m_pauseChoice;

@@ -31,7 +31,7 @@ GameWindow::GameWindow(sf::RenderWindow& window, ObjectCreator* objectCreator)
     m_returnToGameText = objectCreator->createTextButton("CONTINUE GAME", 30, 'W', 440.f, 400.f);
     m_BackToMenuText = objectCreator->createTextButton("RETURN TO MENU", 30, 'W', 440.f, 500.f);
 
-    initLevel();
+    initLevel(1);
 
     m_platform.initStickyBall(objectCreator->getSprite("ball"));
 
@@ -66,7 +66,7 @@ UserChoice GameWindow::handleInput(sf::Event& event)
                 else {
                     choice.isSelected = true;
                     choice.nextWindow = WindowState::MENU;  // back to menu
-                    resetWindow();
+                    this->reset();
                 }
             }
         }
@@ -76,44 +76,7 @@ UserChoice GameWindow::handleInput(sf::Event& event)
 
 void GameWindow::update(float dt)
 {
-    // COLLISIONS
-    m_collisionHandler.handleBallPlatform(m_balls, m_platform.getRect());
-    BrickInfo info = m_collisionHandler.handleBallBrick(m_balls, m_bricks);
-    switch (info.cond) {
-    case BrickCondition::HIT:
-        m_score += 75;
-        break;
-    case BrickCondition::BREAK:
-        m_score += 150; 
-        chanceForGift(info.pos_x,info.pos_y);
-        break;
-    case BrickCondition::NO_TOUCH:
-        break;
-    }
-    m_collisionHandler.handleOutOfBoarder(m_balls, m_elementWindow);
-    m_collisionHandler.handlePowerUpWindow(m_powers, m_elementWindow);
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-        m_platform.move(-600.f * dt, 0.0f); // Move left
-        if (m_collisionHandler.handlePlatformWindow(m_platform.getRect(), m_elementWindow))
-            m_platform.move(600.f * dt, 0.0f);
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-        m_platform.move(600.0f * dt, 0.0f); // Move right
-        if (m_collisionHandler.handlePlatformWindow(m_platform.getRect(), m_elementWindow))
-            m_platform.move(-600.f * dt, 0.0f);
-    }
-
-    switch (m_collisionHandler.handlePowerPlatform(m_powers, m_platform.getRect())) {
-    case PowerType::ADD_PTS:
-        m_score += 1000;
-        break;
-    case PowerType::DEC_PTS:
-        m_score -= 1000;
-        break;
-    case PowerType::EMPTY:
-        break;
-    }
+    handleCollisions(dt);
 
     if (m_balls.empty() && m_platform.getStickyBallsNum() == 0) {
         m_life--;
@@ -161,9 +124,9 @@ void GameWindow::update(float dt)
             brick->update(dt);
     }
 
-    // GAME WON
+    // NEXT LEVEL
     if (m_bricks.empty())
-        m_gameState = GameState::ENDED_WIN;
+        m_gameState = GameState::NEXT_LEVEL;
 
     // SCORE
     m_scoreText.setString("SCORE: " + std::to_string(m_score));
@@ -242,7 +205,7 @@ void GameWindow::releaseBalls(float dt)
     }
 }
 
-void GameWindow::initLevel()
+bool GameWindow::initLevel(int level)
 {
     int space = 3;
     float brick_width = 70;
@@ -252,15 +215,15 @@ void GameWindow::initLevel()
     float window_width = m_elementWindow.getSize().x;
     float newYPos = m_elementWindow.getPosition().y + space;
 
-    std::string filename = "level_" + std::to_string(m_currLevel) + ".txt";
+    std::string filename = "level_" + std::to_string(level) + ".txt";
 
     std::ifstream file(filename);
     if (!file.is_open()) {
         std::cerr << "Error opening : " + filename + "\n";
-        return;
+        return false;
     }
     else {
-        m_levelText.setString("LEVEL: " + std::to_string(m_currLevel));
+        m_levelText.setString("LEVEL: " + std::to_string(level));
         std::string line;
         while (std::getline(file, line)) {
 
@@ -289,13 +252,15 @@ void GameWindow::initLevel()
         }
         file.close();
     }
+    m_gameState = GameState::NOT_ENDED;
+    return true;
 }
 
 void GameWindow::chanceForGift(float pos_x, float pos_y)
 {
     double randomSpawn = static_cast<double>(rand()) / RAND_MAX;
     auto randomPower = (PowerType)(rand() % 2);
-    if (randomSpawn < 0.15) {
+    if (randomSpawn < 0.2) {
         if (randomPower == PowerType::ADD_PTS) {
             m_powers.push_back(std::make_shared<PowerUp>(randomPower, sf::Vector2f(pos_x + 18, pos_y + 10), m_objectCreator->getSprite("power_upscore")));
             return;
@@ -304,6 +269,47 @@ void GameWindow::chanceForGift(float pos_x, float pos_y)
             m_powers.push_back(std::make_shared<PowerUp>(randomPower, sf::Vector2f(pos_x + 18, pos_y + 10), m_objectCreator->getSprite("power_lowscore")));
             return;
         }
+    }
+}
+
+void GameWindow::handleCollisions(float dt)
+{
+    m_collisionHandler.handleBallPlatform(m_balls, m_platform.getRect());
+    BrickInfo info = m_collisionHandler.handleBallBrick(m_balls, m_bricks);
+    switch (info.cond) {
+    case BrickCondition::HIT:
+        m_score += 75;
+        break;
+    case BrickCondition::BREAK:
+        m_score += 150;
+        chanceForGift(info.pos_x, info.pos_y);
+        break;
+    case BrickCondition::NO_TOUCH:
+        break;
+    }
+    m_collisionHandler.handleOutOfBoarder(m_balls, m_elementWindow);
+    m_collisionHandler.handlePowerUpWindow(m_powers, m_elementWindow);
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+        m_platform.move(-600.f * dt, 0.0f); // Move left
+        if (m_collisionHandler.handlePlatformWindow(m_platform.getRect(), m_elementWindow))
+            m_platform.move(600.f * dt, 0.0f);
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+        m_platform.move(600.0f * dt, 0.0f); // Move right
+        if (m_collisionHandler.handlePlatformWindow(m_platform.getRect(), m_elementWindow))
+            m_platform.move(-600.f * dt, 0.0f);
+    }
+
+    switch (m_collisionHandler.handlePowerPlatform(m_powers, m_platform.getRect())) {
+    case PowerType::ADD_PTS:
+        m_score += 1000;
+        break;
+    case PowerType::DEC_PTS:
+        m_score -= 1000;
+        break;
+    case PowerType::EMPTY:
+        break;
     }
 }
 
@@ -326,20 +332,35 @@ void GameWindow::drawLives()
     }
 }
 
+void GameWindow::setupNextLevel()
+{
+    if (!initLevel(m_currLevel + 1)) {
+        m_gameState = GameState::ENDED_WIN;
+    }
+    else {
+        m_currLevel++;
+        softReset();
+    }
+}
 
-void GameWindow::resetWindow()
+void GameWindow::reset()
 {
     m_gameState = GameState::NOT_ENDED;
     m_gamePaused = false;
     m_pauseChoice = PauseChoice::GAME;
-    m_balls.clear();
     m_bricks.clear();
-    m_powers.clear();
-    initLevel();
-    m_platform.reset(m_objectCreator->getSprite("ball"));
-    m_score = 0;
     m_currLevel = 1;
+    initLevel(m_currLevel);
+    m_score = 0;
     m_life = 5;
+    softReset();
+}
+
+void GameWindow::softReset()
+{
+    m_balls.clear();
+    m_powers.clear();
+    m_platform.reset(m_objectCreator->getSprite("ball"));
     m_gameClock.initTime(TIMER_IN_SEC);
 }
 
