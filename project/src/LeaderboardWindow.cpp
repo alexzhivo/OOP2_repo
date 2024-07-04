@@ -3,7 +3,7 @@
 LeaderboardWindow::LeaderboardWindow(sf::RenderWindow& window, ObjectCreator* objectCreator)
     : Window(window,objectCreator), m_currBackButton(false)
 {
-    m_title = objectCreator->createTextButton("LEADERBOARD", 70, 'W', 400.f, 100.f);
+    m_title = objectCreator->createTextButton("LEADERBOARD", 70, 'W', 300.f, 100.f);
     m_backButton = objectCreator->createTextButton("<< BACK >>", 20, 'G', 600.f, 800.f);
 
     // initilize leaderboard by reading from file
@@ -104,7 +104,7 @@ void LeaderboardWindow::insertValue(int score, std::string name)
     // Re-position all text in data
     int index = 0;
     for (auto& line : m_data) {
-        line->m_lineText.setPosition(550.f, 250.f + (index * 50));
+        line->m_lineText.setPosition(300.f, 250.f + (index * 50));
         index++;
     }
 
@@ -188,7 +188,7 @@ bool LeaderboardWindow::handleLineInput(std::string& line, int lineNum)
         m_data.push_back(std::make_shared<DataCell>());
         m_data.back()->m_playerName = first_word;
         m_data.back()->m_score = lineScore;
-        m_data.back()->m_lineText = m_objectCreator->createTextButton(std::to_string(lineNum + 1) + ".\t" + first_word + '\t' + second_word, 20, 'W', 550.f, 250.f + (lineNum * 50));
+        m_data.back()->m_lineText = m_objectCreator->createTextButton(std::to_string(lineNum + 1) + ".\t" + first_word + '\t' + second_word, 20, 'W', 300.f, 250.f + (lineNum * 50));
     }
     else {
         return false;

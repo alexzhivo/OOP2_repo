@@ -1,27 +1,16 @@
 #include "Platform.h"
 
-Platform::Platform()
-    : m_sticky(false)
+Platform::Platform(sf::Sprite& sprite)
+    : m_sticky(false) , m_sprite(sprite)
 {
-	// create shape for platform
-    m_shape.setPosition(570.f, 800.f);
-    m_shape.setSize(sf::Vector2f(150.f, 20.f));
-    m_shape.setFillColor(sf::Color::Green);
+    // Platfrom Sprite
+    m_sprite.setPosition(570.f, 800.f);
+    m_sprite.setScale(2.3f,2.f);
 }
 
 void Platform::update(float dt)
 {
-    // Handle platform movement based on input
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-        m_shape.move(-600.0f * dt, 0.0f); // Move left
-        for (auto& ball : m_stickyBalls)
-            ball->move(-600.f * dt, 0.0f);
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-        m_shape.move(600.0f * dt, 0.0f); // Move right
-        for (auto& ball : m_stickyBalls)
-            ball->move(600.f * dt, 0.0f);
-    }
+
 }
 
 void Platform::draw(sf::RenderWindow& window) const
@@ -29,19 +18,28 @@ void Platform::draw(sf::RenderWindow& window) const
     for (auto& ball : m_stickyBalls) {
         ball->draw(window);
     }
-	window.draw(m_shape);
+    window.draw(m_sprite);
 }
 
-void Platform::reset()
+void Platform::move(float x, float y)
 {
-    m_shape.setPosition(570.f, 800.f);
+    m_sprite.move(x, y);
+    for (auto& ball : m_stickyBalls) {
+        ball->move(x, y);
+    }
+}
+
+void Platform::reset(sf::Sprite& sprite)
+{
+    m_sprite.setPosition(570.f, 800.f);
     setSticky(false);
-    initStickyBall();
+    initStickyBall(sprite);
 }
 
-sf::RectangleShape& Platform::getShape()
+
+sf::FloatRect Platform::getRect() const
 {
-    return m_shape;
+    return m_sprite.getGlobalBounds();
 }
 
 bool Platform::isSticky() const
@@ -59,13 +57,13 @@ int Platform::getStickyBallsNum() const
     return (int)m_stickyBalls.size();
 }
 
-void Platform::initStickyBall()
+void Platform::initStickyBall(sf::Sprite& sprite)
 {
-    float x_pos = m_shape.getGlobalBounds().getPosition().x;
-    float y_pos = m_shape.getGlobalBounds().getPosition().y;
+    float x_pos = m_sprite.getGlobalBounds().getPosition().x;
+    float y_pos = m_sprite.getGlobalBounds().getPosition().y;
 
     m_stickyBalls.clear();
-    m_stickyBalls.push_back(std::make_shared<Ball>(sf::Vector2f(x_pos + 65.f, y_pos - 20.f), sf::Vector2f(0.f, 0.f)));
+    m_stickyBalls.push_back(std::make_shared<Ball>(sf::Vector2f(x_pos + 65.f, y_pos - 20.f), sf::Vector2f(0.f, 0.f), sprite));
 }
 
 std::shared_ptr<Ball> Platform::releaseBall() 

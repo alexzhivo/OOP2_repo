@@ -4,25 +4,28 @@
 
 class Ball {
 public:
-	Ball(sf::Vector2f position, sf::Vector2f velocity);
+	Ball(sf::Vector2f position, sf::Vector2f velocity, sf::Sprite& sprite);
 
 	void update(float dt);
 	void draw(sf::RenderWindow& window);
+	void move(float offsetX, float offsetY);
+
+	const sf::Sprite& getSprite() const;
+
 	void setVelocity(sf::Vector2f velocity);
 	void setVelocityZero();
 	sf::Vector2f getVelocity() const;
 	void restoreVelocity();
-	const sf::CircleShape& getShape() const;
 	float getSpeed() const;
 
-	void move(float offsetX, float offsetY);
 
 	void release(float radians);
 
 private:
-	sf::CircleShape m_shape;
+	sf::Sprite& m_sprite;
+
 	sf::Vector2f m_initVelocity;
 	sf::Vector2f m_lastVelocity;
 	sf::Vector2f m_currVelocity;
-	float m_speed = 800.f;
+	float m_speed;
 };

@@ -97,8 +97,7 @@ void GameManager::update(float dt)
 
 void GameManager::render() 
 {
-
-	m_window.clear();
+	m_window.clear(sf::Color(10, 60, 80));
 
 	m_windows[(int)m_currWindow]->render();	// render current window used.
 

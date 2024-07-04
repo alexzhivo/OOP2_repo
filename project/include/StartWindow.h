@@ -11,6 +11,10 @@ public:
 	void render();
 
 private:
+	sf::Sprite m_wallpaper;
 	sf::Text m_title;
+	sf::Text m_version;
 	sf::Text m_subtext;
+
+	void runWallpaper();
 };

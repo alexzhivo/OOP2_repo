@@ -24,10 +24,10 @@ SettingsWindow::SettingsWindow(sf::RenderWindow& window, ObjectCreator* objectCr
     // default player name
     m_playerName = "Challenger300624";
 
-    m_title = objectCreator->createTextButton("SETTINGS", 100, 'W', 300.f, 200.f);
-    m_gameSoundText = objectCreator->createTextButton("Game Sound : ON", 30, 'G', 500.f, 400.f);
-    m_playerNameText = objectCreator->createTextButton("Player Name : " + m_playerName, 30, 'G', 450.f, 500.f);
-    m_backButtonText = objectCreator->createTextButton("<< BACK >>", 30, 'G', 500.f, 600.f);
+    m_title = objectCreator->createTextButton("SETTINGS", 80, 'W', 280.f, 200.f);
+    m_gameSoundText = objectCreator->createTextButton("Game Sound : ON", 30, 'G', 400.f, 400.f);
+    m_playerNameText = objectCreator->createTextButton("Player Name : " + m_playerName, 30, 'G', 250.f, 500.f);
+    m_backButtonText = objectCreator->createTextButton("<< BACK >>", 30, 'G', 400.f, 600.f);
 }
 
 UserChoice SettingsWindow::handleInput(sf::Event& event)

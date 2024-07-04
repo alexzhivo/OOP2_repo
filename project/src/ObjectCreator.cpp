@@ -2,9 +2,25 @@
 
 ObjectCreator::ObjectCreator() 
 {
-    if (!m_font.loadFromFile("C:/Windows/Fonts/Arial.ttf")) {
-        // >> FONT LOADING ERROR <<
-    }
+    // LOAD FONTS
+    if (!m_font.loadFromFile("arcadefont.ttf"))
+        m_font.loadFromFile("C:/Windows/Fonts/Arial.ttf");
+
+    // LOAD SPRITES
+    loadTexture("platform_long");
+    loadTexture("platform_sm");
+    loadTexture("platform_mid");
+    loadTexture("bar_grey");
+    loadTexture("brick_blue");
+    loadTexture("brick_green");
+    loadTexture("brick_red");
+    loadTexture("heart_blue");
+    loadTexture("heart_red");
+    loadTexture("ball");
+    loadTexture("wallpaper");
+    loadTexture("power_lowscore");
+    loadTexture("power_upscore");
+
 }
 
 sf::Text ObjectCreator::createTextButton(const std::string& text, const int charSize,
@@ -31,6 +47,37 @@ sf::RectangleShape ObjectCreator::createRectangle(const float width, const float
     return newShape;
 }
 
+sf::Sprite& ObjectCreator::getSprite(const std::string& name)
+{
+    auto it = m_sprites.find(name);
+    if (it != m_sprites.end()) {
+        return it->second;
+    }
+    else {
+        std::cerr << "Sprite not found: " << name << std::endl;
+        static sf::Sprite defaultSprite; // Return a default sprite if not found
+        return defaultSprite;
+    }
+}
+
+bool ObjectCreator::loadTexture(const std::string& name)
+{
+    sf::Texture texture;
+    sf::Sprite sprite;
+
+    if (!texture.loadFromFile(name + ".png")) {
+        std::cerr << "Error loading texture file: " << name + ".png" << std::endl;
+        return false;
+    }
+    m_textures[name] = texture;
+
+    sprite.setTexture(m_textures[name]);
+    m_sprites[name] = sprite;
+
+    return true;
+}
+
+
 sf::Color ObjectCreator::getColor(const char colorChar)
 {
     switch (colorChar) {
@@ -46,6 +93,8 @@ sf::Color ObjectCreator::getColor(const char colorChar)
         return sf::Color(200, 200, 200);
     case 'M':
         return sf::Color(0, 0, 0, 180);
+    case 'D':
+        return sf::Color(16, 44, 87);
     default :
         break;
     }

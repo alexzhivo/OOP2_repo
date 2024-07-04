@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-void CollisionHandler::handleOutOfBoarder(std::list<std::shared_ptr<Ball>>& balls, sf::RectangleShape& platform, sf::RectangleShape& window)
+void CollisionHandler::handleOutOfBoarder(std::list<std::shared_ptr<Ball>>& balls, sf::RectangleShape& window)
 {
 	for (auto it = balls.begin(); it != balls.end(); ) {
 		if (keepBallInBoarder(*it, window)) { // Condition to delete the element
@@ -12,21 +12,18 @@ void CollisionHandler::handleOutOfBoarder(std::list<std::shared_ptr<Ball>>& ball
 			++it; // Only increment the iterator if you don't erase
 		}
 	}
-	keepPlatformInBoarder(platform, window);
 }
 
-void CollisionHandler::handleBallPlatform(std::list<std::shared_ptr<Ball>>& balls, sf::RectangleShape& platform)
+void CollisionHandler::handleBallPlatform(std::list<std::shared_ptr<Ball>>& balls, const sf::FloatRect& platform_rect)
 {
 	for (auto& ball : balls) {
-		if (ball->getShape().getGlobalBounds().intersects(platform.getGlobalBounds())) {
+		if (platform_rect.intersects(ball->getSprite().getGlobalBounds())) {
 
-			float ballCenter = ball->getShape().getPosition().x + ball->getShape().getGlobalBounds().width / 2.0f;
-			float platformLeft = platform.getPosition().x;
-			//float platformRight = platform.getPosition().x + platform.getGlobalBounds().width;
-			//float platformCenter = platformLeft + platform.getGlobalBounds().width / 2.0f;
+			float ballCenter = ball->getSprite().getPosition().x + ball->getSprite().getGlobalBounds().width / 2.0f;
+			float platformLeft = platform_rect.getPosition().x;
 
 			float collisionPoint = ballCenter - platformLeft;
-			float platformWidth = platform.getGlobalBounds().width;
+			float platformWidth = platform_rect.getSize().x;
 			float normalizedCollisionPoint = (collisionPoint / platformWidth) - 0.5f; // Normalize between -0.5 and 0.5
 
 			// Calculate new velocity based on the collision point
@@ -51,12 +48,12 @@ BrickInfo CollisionHandler::handleBallBrick(std::list<std::shared_ptr<Ball>>& ba
 	BrickInfo info;
 	for (auto& ball : balls) {
 		for (auto it = bricks.begin(); it != bricks.end();) {
-			if (ball->getShape().getGlobalBounds().intersects((*it)->getShape().getGlobalBounds())) {
+			if (ball->getSprite().getGlobalBounds().intersects((*it)->getSprite().getGlobalBounds())) {
 				resolveBallBrick(*ball, **it);
 				if ((*it)->hit(1)) {
 					info.cond = BrickCondition::BREAK;
-					info.pos_x = (*it)->getShape().getPosition().x;
-					info.pos_y = (*it)->getShape().getPosition().y;
+					info.pos_x = (*it)->getSprite().getPosition().x;
+					info.pos_y = (*it)->getSprite().getPosition().y;
 					it = bricks.erase(it); // Remove brick after collision
 					return info;
 				}
@@ -74,10 +71,10 @@ BrickInfo CollisionHandler::handleBallBrick(std::list<std::shared_ptr<Ball>>& ba
 void CollisionHandler::handlePowerUpWindow(std::vector<std::shared_ptr<PowerUp>>& powers, sf::RectangleShape& window)
 {
 	for (auto it = powers.begin(); it != powers.end();) {
-		auto pos = (*it)->getShape().getPosition();
+		auto pos = (*it)->getSprite().getPosition();
 		auto startWindow = window.getPosition();
 		auto sizeWindow = window.getSize();
-		sf::Vector2f size((*it)->getShape().getGlobalBounds().width, (*it)->getShape().getGlobalBounds().height);
+		sf::Vector2f size((*it)->getSprite().getGlobalBounds().width, (*it)->getSprite().getGlobalBounds().height);
 		if (pos.y + size.y > sizeWindow.y + startWindow.y) {
 			it = powers.erase(it);	// remove powerup if out of boarder
 			return;
@@ -86,9 +83,42 @@ void CollisionHandler::handlePowerUpWindow(std::vector<std::shared_ptr<PowerUp>>
 	}
 }
 
+PowerType CollisionHandler::handlePowerPlatform(std::vector<std::shared_ptr<PowerUp>>& powers, const sf::FloatRect& platform_rect)
+{
+	PowerType type = PowerType::EMPTY;
+	for (auto it = powers.begin(); it != powers.end();) {
+		if (platform_rect.intersects((**it).getSprite().getGlobalBounds())) {
+			type = (*it)->getType();
+			it = powers.erase(it); // Remove brick after collision
+			return type;
+		}
+		else {
+			++it;
+		}
+	}
+	return type;
+}
+
+bool CollisionHandler::handlePlatformWindow(const sf::FloatRect& platform_rect, const sf::RectangleShape& window_shape)
+{
+	auto platform_pos = platform_rect.getPosition().x;
+	auto platform_size = platform_rect.getSize();
+
+	auto startWindow = window_shape.getPosition();
+	auto sizeWindow = window_shape.getSize();
+
+	if (platform_pos < startWindow.x + 3) {
+		return true;
+	}
+	else if (platform_pos + platform_size.x > startWindow.x + sizeWindow.x - 3) {
+		return true;
+	}
+	return false;
+}
+
 bool CollisionHandler::keepBallInBoarder(std::shared_ptr<Ball>& ball , const sf::RectangleShape& rectangle)
 {
-	auto ballShape = ball->getShape();
+	auto ballShape = ball->getSprite();
 	auto velocity = ball->getVelocity();
 	auto pos = ballShape.getPosition();
 	sf::Vector2f size(ballShape.getGlobalBounds().width, ballShape.getGlobalBounds().height);
@@ -132,8 +162,8 @@ void CollisionHandler::keepPlatformInBoarder(sf::RectangleShape& platform, const
 
 void CollisionHandler::resolveBallBrick(Ball& ball, Brick& brick) {
 
-	sf::FloatRect ballBounds = ball.getShape().getGlobalBounds();
-	sf::FloatRect brickBounds = brick.getShape().getGlobalBounds();
+	sf::FloatRect ballBounds = ball.getSprite().getGlobalBounds();
+	sf::FloatRect brickBounds = brick.getSprite().getGlobalBounds();
 
 	float ballLeft = ballBounds.left;
 	float ballRight = ballBounds.left + ballBounds.width;

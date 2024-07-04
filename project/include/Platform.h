@@ -9,22 +9,24 @@
 
 class Platform {
 public:
-	Platform();
+	Platform(sf::Sprite& sprite);
 	void update(float dt);
 	void draw(sf::RenderWindow& window) const;
 
-	sf::RectangleShape& getShape();
-	void reset();
+	sf::FloatRect getRect() const;
+
+	void move(float x, float y);
+	void reset(sf::Sprite& sprite);
 
 	// sticky feature
 	bool isSticky() const;
 	void setSticky(const bool state);
 	int getStickyBallsNum() const;
-	void initStickyBall();
+	void initStickyBall(sf::Sprite& sprite);
 	std::shared_ptr<Ball> releaseBall();
 
 private:
-	sf::RectangleShape m_shape;
-	std::list<std::shared_ptr<Ball>> m_stickyBalls;
+	sf::Sprite& m_sprite;
 	bool m_sticky;
+	std::list<std::shared_ptr<Ball>> m_stickyBalls;
 };

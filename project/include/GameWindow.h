@@ -38,12 +38,10 @@ public:
 
 private:
 	// game window
-	sf::Text m_title;
 	sf::RectangleShape m_elementWindow;
 	sf::Text m_scoreText;
 	sf::Text m_timeText;
 	sf::Text m_levelText;
-	sf::Text m_lifeText;
 	sf::Text m_bestScoreText;
 
 	// elements
@@ -57,6 +55,8 @@ private:
 	void initLevel();
 	bool m_releasePressed;
 	void chanceForGift(float pos_x, float pos_y);
+
+	void drawLives();
 
 	// platform
 	Platform m_platform;
@@ -75,7 +75,6 @@ private:
 	// Clock
 	GameClock m_gameClock;
 
-	
 	int m_score;
 	int m_life;
 	int m_currLevel;

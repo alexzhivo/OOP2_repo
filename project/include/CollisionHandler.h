@@ -21,10 +21,12 @@ struct BrickInfo {
 
 class CollisionHandler {
 public:
-    void handleOutOfBoarder(std::list<std::shared_ptr<Ball>>& balls, sf::RectangleShape& platform, sf::RectangleShape& window);
-    void handleBallPlatform(std::list<std::shared_ptr<Ball>>& balls, sf::RectangleShape& platform);
+    void handleOutOfBoarder(std::list<std::shared_ptr<Ball>>& balls, sf::RectangleShape& window);
+    void handleBallPlatform(std::list<std::shared_ptr<Ball>>& balls, const sf::FloatRect& platform_rect);
     BrickInfo handleBallBrick(std::list<std::shared_ptr<Ball>>& balls, std::vector<std::shared_ptr<Brick>>& bricks);
+    PowerType handlePowerPlatform(std::vector<std::shared_ptr<PowerUp>>& powers, const sf::FloatRect& platform_rect);
     void handlePowerUpWindow(std::vector<std::shared_ptr<PowerUp>>& powers, sf::RectangleShape& window);
+    bool handlePlatformWindow(const sf::FloatRect& platform_rect, const sf::RectangleShape& window_shape);
 private:
     bool keepBallInBoarder(std::shared_ptr<Ball>& ball, const sf::RectangleShape& rectangle);
     void keepPlatformInBoarder(sf::RectangleShape& platform, const sf::RectangleShape& rectangle);

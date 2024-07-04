@@ -24,13 +24,13 @@ MenuWindow::MenuWindow(sf::RenderWindow& window, ObjectCreator* objectCreator)
 	: Window(window,objectCreator), m_currHoverButton(MenuButton::NONE)
 {
     // title
-    m_title = m_objectCreator->createTextButton("GAME MENU",100,'W',345.f,100.f);
+    m_title = m_objectCreator->createTextButton("GAME MENU",90,'W',230.f,150.f);
     // buttons
-    m_buttons.push_back(m_objectCreator->createTextButton("PLAY GAME", 50, 'W', 510.f, 350.f));
-    m_buttons.push_back(m_objectCreator->createTextButton("LEADERBOARD", 50, 'W', 465.f, 450.f));
-    m_buttons.push_back(m_objectCreator->createTextButton("HELP", 50, 'W', 580.f, 550.f));
-    m_buttons.push_back(m_objectCreator->createTextButton("SETTINGS", 50, 'W', 520.f, 650.f));
-    m_buttons.push_back(m_objectCreator->createTextButton("EXIT", 50, 'W', 590.f, 750.f));
+    m_buttons.push_back(m_objectCreator->createTextButton("PLAY GAME", 40, 'W', 300.f, 350.f));
+    m_buttons.push_back(m_objectCreator->createTextButton("LEADERBOARD", 40, 'W', 300.f, 450.f));
+    m_buttons.push_back(m_objectCreator->createTextButton("HELP", 40, 'W', 300.f, 550.f));
+    m_buttons.push_back(m_objectCreator->createTextButton("SETTINGS", 40, 'W', 300.f, 650.f));
+    m_buttons.push_back(m_objectCreator->createTextButton("EXIT", 40, 'W', 300.f, 750.f));
 }
 
 UserChoice MenuWindow::handleInput(sf::Event& event)

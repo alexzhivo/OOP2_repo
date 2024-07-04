@@ -2,25 +2,25 @@
 
 #include <iostream>	// TEST
 
-Ball::Ball(sf::Vector2f position, sf::Vector2f velocity)
-	: m_initVelocity(velocity)
+Ball::Ball(sf::Vector2f position, sf::Vector2f velocity, sf::Sprite& sprite)
+	: m_initVelocity(velocity), m_sprite(sprite), m_speed(500.f)
 {
-	m_shape.setPosition(position);
-	m_shape.setRadius(10.f);
-	m_shape.setFillColor(sf::Color::Red);
+	m_sprite.setPosition(position);
+	m_sprite.setScale(2.5f, 2.5f);
+
 	setVelocity(m_initVelocity);
 }
 
 void Ball::update(float dt)
 {
-	sf::Vector2f pos = m_shape.getPosition();
+	sf::Vector2f pos = m_sprite.getPosition();
 	pos += m_currVelocity * dt;
-	m_shape.setPosition(pos);
+	m_sprite.setPosition(pos);
 }
 
 void Ball::draw(sf::RenderWindow& window)
 {
-	window.draw(m_shape);
+	window.draw(m_sprite);
 }
 
 void Ball::setVelocity(sf::Vector2f velocity)
@@ -47,9 +47,9 @@ void Ball::restoreVelocity()
 	setVelocity(m_lastVelocity);
 }
 
-const sf::CircleShape& Ball::getShape() const
+const sf::Sprite& Ball::getSprite() const
 {
-	return m_shape;
+	return m_sprite;
 }
 
 float Ball::getSpeed() const
@@ -59,7 +59,7 @@ float Ball::getSpeed() const
 
 void Ball::move(float offsetX, float offsetY)
 {
-	m_shape.move(offsetX, offsetY);
+	m_sprite.move(offsetX, offsetY);
 }
 
 void Ball::release(float radians)

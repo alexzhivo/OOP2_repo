@@ -1,35 +1,28 @@
 #include "PowerUp.h"
 
-PowerUp::PowerUp(const PowerType& type,const sf::Vector2f& position)
-	: m_type(type)
+PowerUp::PowerUp(const PowerType& type,const sf::Vector2f& position, sf::Sprite& sprite)
+	: m_type(type), m_sprite(sprite)
 {
-	m_shape.setSize(sf::Vector2f(20.f, 20.f));
-	m_shape.setPosition(position);
-	m_shape.setFillColor(getColorByType(type));
+	m_sprite.setPosition(position);
+	m_sprite.setScale(2.f, 2.f);
 }
 
 void PowerUp::update(float dt)
 {
-	m_shape.move(0.f,100.f * dt);
+	m_sprite.move(0.f,100.f * dt);
 }
 
 void PowerUp::draw(sf::RenderWindow& window) const
 {
-	window.draw(m_shape);
+	window.draw(m_sprite);
 }
 
-sf::RectangleShape& PowerUp::getShape()
+const PowerType PowerUp::getType() const
 {
-	return m_shape;
+	return m_type;
 }
 
-sf::Color PowerUp::getColorByType(const PowerType& type) const
+const sf::Sprite& PowerUp::getSprite() const
 {
-	switch (type) {
-	case PowerType::ADD_PTS:
-		return sf::Color::Green;
-	case PowerType::DEC_PTS:
-		return sf::Color::Red;
-	}
-	return sf::Color::Green;
+	return m_sprite;
 }
