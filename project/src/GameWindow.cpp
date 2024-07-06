@@ -10,7 +10,7 @@ GameWindow::GameWindow(sf::RenderWindow& window, ObjectCreator* objectCreator, S
     m_score(0),
     m_life(5),
     m_currLevel(1),
-    m_platform(objectCreator->getSprite("platform_mid")),
+    m_platform(objectCreator->getSprite("platform")),
     m_bigBall(false)
 {
     // Set up random seed
@@ -368,14 +368,14 @@ void GameWindow::handleCollisions(float dt)
         if (m_platform.makeShort())
             m_platform.setSprite(m_objectCreator->getSprite("platform_sm"));
         else
-            m_platform.setSprite(m_objectCreator->getSprite("platform_mid"));
+            m_platform.setSprite(m_objectCreator->getSprite("platform"));
         m_soundManager->playSound("add_pts", false);
         break;
     case PowerType::LONG:
         if (m_platform.makeLong())
             m_platform.setSprite(m_objectCreator->getSprite("platform_long"));
         else
-            m_platform.setSprite(m_objectCreator->getSprite("platform_mid"));
+            m_platform.setSprite(m_objectCreator->getSprite("platform"));
         m_soundManager->playSound("add_pts", false);
         break;
     case PowerType::BIG_BALL:
@@ -471,11 +471,6 @@ void GameWindow::softReset()
     m_platform.reset(m_objectCreator->getSprite("ball"));
     m_bigBall = false;
     m_gameClock.initTime(TIMER_IN_SEC);
-}
-
-void GameWindow::setBack()
-{
-
 }
 
 void GameWindow::splitBalls()

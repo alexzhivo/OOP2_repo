@@ -1,6 +1,9 @@
 ﻿# - Fonts
 configure_file ("fonts/arcadefont.ttf" ${CMAKE_BINARY_DIR} COPYONLY)
 
+# - LeaderBoard
+configure_file ("leaderboard.txt" ${CMAKE_BINARY_DIR} COPYONLY)
+
 # - Levels
 configure_file ("levels/level_1.txt" ${CMAKE_BINARY_DIR} COPYONLY)
 #configure_file ("levels/level_2.txt" ${CMAKE_BINARY_DIR} COPYONLY)
@@ -17,8 +20,8 @@ configure_file ("media/images/brick_green.png" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file ("media/images/brick_red.png" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file ("media/images/heart_blue.png" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file ("media/images/heart_red.png" ${CMAKE_BINARY_DIR} COPYONLY)
+configure_file ("media/images/platform.png" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file ("media/images/platform_long.png" ${CMAKE_BINARY_DIR} COPYONLY)
-configure_file ("media/images/platform_mid.png" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file ("media/images/platform_sm.png" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file ("media/images/power_upscore.png" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file ("media/images/power_lowscore.png" ${CMAKE_BINARY_DIR} COPYONLY)

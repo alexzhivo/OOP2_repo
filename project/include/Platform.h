@@ -34,7 +34,7 @@ public:
 	void* getListOfStickyBalls();
 
 private:
-	sf::Sprite& m_sprite;
+	sf::Sprite* m_sprite;
 
 	bool m_sticky;
 	bool m_short;

@@ -9,7 +9,7 @@ ObjectCreator::ObjectCreator()
     // load sprites
     loadTexture("platform_long");
     loadTexture("platform_sm");
-    loadTexture("platform_mid");
+    loadTexture("platform");
     loadTexture("bar_grey");
     loadTexture("brick_blue");
     loadTexture("brick_green");

@@ -60,7 +60,6 @@ private:
 	void drawPowers();
 	void updateHover();
 	void softReset();
-	void setBack();
 
 	// special powers
 	void splitBalls();
