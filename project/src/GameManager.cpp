@@ -45,10 +45,12 @@ void GameManager::processEvents()
 
 		auto choice = m_windows[(int)m_currWindow]->handleInput(event);
 		if (choice.isSelected) {
+			m_soundManager.stopSound("theme_music");
 			if (choice.nextWindow == WindowState::EXIT)
 				m_window.close();
 			else {
 				if (choice.nextWindow == WindowState::PLAY)
+					m_soundManager.playSound("game_start", false);
 					updateAtGameStart();
 				m_currWindow = choice.nextWindow;
 			}
@@ -64,6 +66,7 @@ void GameManager::processEvents()
 		LeaderboardWindow* leaderboardWindow = dynamic_cast<LeaderboardWindow*>(m_windows[(int)WindowState::LEADERBOARD].get());
 
 		GameState currGameState = gameWindow->getGameState();
+
 		int finalScore;
 
 		switch (currGameState) {
@@ -86,8 +89,7 @@ void GameManager::processEvents()
 			break;
 		}
 
-		if (currGameState != GameState::NOT_ENDED &&
-			currGameState != GameState::NEXT_LEVEL) 
+		if (currGameState != GameState::NOT_ENDED && currGameState != GameState::NEXT_LEVEL) 
 		{
 			gameWindow->reset();
 			m_currWindow = WindowState::FINISH;

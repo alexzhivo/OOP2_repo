@@ -44,6 +44,7 @@ UserChoice GameWindow::handleInput(sf::Event& event)
     if (event.type == sf::Event::KeyPressed) {
         if (!m_gamePaused) {    // GAME IS ACTIVE
             if (event.key.code == sf::Keyboard::Escape) {   // enter pause mode
+                m_soundManager->playSound("select", false);
                 m_gamePaused = true;
             }
             if (event.key.code == sf::Keyboard::Space) {   // release balls
@@ -55,12 +56,14 @@ UserChoice GameWindow::handleInput(sf::Event& event)
                 m_gamePaused = false;
             }
             else if (event.key.code == sf::Keyboard::Up || event.key.code == sf::Keyboard::Down) {
+                m_soundManager->playSound("hover", false);
                 if (m_pauseChoice == PauseChoice::GAME)
                     m_pauseChoice = PauseChoice::MENU;
                 else
                     m_pauseChoice = PauseChoice::GAME;
             }
             else if (event.key.code == sf::Keyboard::Enter) {   
+                m_soundManager->playSound("select", false);
                 if (m_pauseChoice == PauseChoice::GAME)     // back to game
                     m_gamePaused = false;
                 else {
@@ -125,7 +128,7 @@ void GameWindow::update(float dt)
     }
 
     // NEXT LEVEL
-    if (m_bricks.empty())
+    if (m_bricks.empty() && m_gameState == GameState::NOT_ENDED)
         m_gameState = GameState::NEXT_LEVEL;
 
     // SCORE
@@ -278,6 +281,7 @@ void GameWindow::handleCollisions(float dt)
     BrickInfo info = m_collisionHandler.handleBallBrick(m_balls, m_bricks);
     switch (info.cond) {
     case BrickCondition::HIT:
+        m_soundManager->playSound("not_break",false);
         m_score += 75;
         break;
     case BrickCondition::BREAK:
@@ -303,6 +307,7 @@ void GameWindow::handleCollisions(float dt)
 
     switch (m_collisionHandler.handlePowerPlatform(m_powers, m_platform.getRect())) {
     case PowerType::ADD_PTS:
+        m_soundManager->playSound("add_pts", false);
         m_score += 1000;
         break;
     case PowerType::DEC_PTS:
@@ -336,10 +341,12 @@ void GameWindow::setupNextLevel()
 {
     if (!initLevel(m_currLevel + 1)) {
         m_gameState = GameState::ENDED_WIN;
+        m_soundManager->playSound("game_win", false);
     }
     else {
         m_currLevel++;
         softReset();
+        m_soundManager->playSound("level_up",false);
     }
 }
 

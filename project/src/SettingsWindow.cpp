@@ -54,12 +54,14 @@ UserChoice SettingsWindow::handleInput(sf::Event& event)
     if (event.type == sf::Event::KeyPressed) {
         if (m_isEditName) {
             if (event.key.code == sf::Keyboard::Enter) {
+                m_soundManager->playSound("select", false);
                 m_isEditName = false;
                 updateHover();
             }
         }
         else {
             if (event.key.code == sf::Keyboard::Up || event.key.code == sf::Keyboard::Down) {
+                m_soundManager->playSound("hover", false);
                 if (m_settingHover == Setting::NONE) {
                     m_settingHover = Setting::GAMESOUND;
                 }
@@ -72,6 +74,7 @@ UserChoice SettingsWindow::handleInput(sf::Event& event)
                 updateHover();
             }
             else if (event.key.code == sf::Keyboard::Enter) {
+                m_soundManager->playSound("select", false);
                 if (m_settingHover == Setting::BACK) {
                     choice.isSelected = true;
                     choice.nextWindow = WindowState::MENU;

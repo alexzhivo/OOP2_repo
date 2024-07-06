@@ -15,11 +15,13 @@ UserChoice LeaderboardWindow::handleInput(sf::Event& event)
     UserChoice choice;
     if (event.type == sf::Event::KeyPressed) {
         if (event.key.code == sf::Keyboard::Enter && m_currBackButton) {
+            m_soundManager->playSound("select", false);
             choice.isSelected = true;
             choice.nextWindow = WindowState::MENU;
             resetWindow();
         }
         else if (event.key.code == sf::Keyboard::Down || event.key.code == sf::Keyboard::Up) {
+            m_soundManager->playSound("hover", false);
             if (m_currBackButton)
                 m_currBackButton = false;
             else
