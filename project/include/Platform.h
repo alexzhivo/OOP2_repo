@@ -21,9 +21,10 @@ public:
 	// sticky feature
 	bool isSticky() const;
 	void setSticky(const bool state);
+	void splitSticky(sf::Sprite& sprite);
 	int getStickyBallsNum() const;
 	void initStickyBall(sf::Sprite& sprite);
-	std::shared_ptr<Ball> releaseBall();
+	void* getListOfStickyBalls();
 
 private:
 	sf::Sprite& m_sprite;

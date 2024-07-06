@@ -196,14 +196,19 @@ void GameWindow::updateBestScore(int score)
 
 void GameWindow::releaseBalls(float dt)
 {
-    for (int i = 0; i < m_platform.getStickyBallsNum(); i++) {
-        auto ball = m_platform.releaseBall();
+    auto list = m_platform.getListOfStickyBalls();
+    auto stickyList = static_cast<std::list<std::shared_ptr<Ball>>*>(list);
+
+    while (!stickyList->empty()) {
 
         int seed = (int)(dt * 100000) % 100;
         std::srand(seed);
         float random_num = static_cast<float>(std::rand()) / 400;
         float scaled_num = (random_num * 1.6f) - 0.8f;
 
+        auto it = stickyList->begin();
+        std::shared_ptr<Ball> ball = *it;
+        stickyList->erase(it);
         ball->release(scaled_num);
         m_balls.push_back(ball);
     }
@@ -382,8 +387,12 @@ void GameWindow::softReset()
 
 void GameWindow::splitBalls()
 {
-    if (m_balls.empty())
+    if (m_balls.empty()) {
+        if (m_platform.getStickyBallsNum()) {
+            m_platform.splitSticky(m_objectCreator->getSprite("ball"));
+        }
         return;
+    }
 
     if (m_balls.size() > 10)
         return;
@@ -392,14 +401,15 @@ void GameWindow::splitBalls()
     sf::Vector2f velocity;
     
     auto size = m_balls.size();
-    auto iter = m_balls.begin()->get();
+    auto iter = m_balls.begin();
     for (int i = 0; i < size; i++) {
-        position = iter->getSprite().getPosition();
-        velocity = iter->getVelocity();
+        position = (*iter)->getSprite().getPosition();
+        velocity = (*iter)->getVelocity();
         velocity.y = -velocity.y;
-        iter->setVelocity(velocity);
+        (*iter)->setVelocity(velocity);
         m_balls.push_back(std::make_shared<Ball>(position, sf::Vector2f(-90.3116f, -286.084f), m_objectCreator->getSprite("ball")));
         m_balls.push_back(std::make_shared<Ball>(position, sf::Vector2f(133.698f, -268.561f), m_objectCreator->getSprite("ball")));
+        ++iter;
     }
 }
 

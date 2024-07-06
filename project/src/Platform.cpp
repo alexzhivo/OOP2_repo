@@ -52,9 +52,24 @@ void Platform::setSticky(const bool state)
     m_sticky = state;
 }
 
+void Platform::splitSticky(sf::Sprite& sprite)
+{
+    if (getStickyBallsNum() != 1)
+        return;
+
+    float x_pos = m_sprite.getGlobalBounds().getPosition().x;
+    float y_pos = m_sprite.getGlobalBounds().getPosition().y;
+
+    m_stickyBalls.push_back(std::make_shared<Ball>(sf::Vector2f(x_pos + 35.f, y_pos - 20.f), sf::Vector2f(0.f, 0.f), sprite));
+    m_stickyBalls.push_back(std::make_shared<Ball>(sf::Vector2f(x_pos + 95.f, y_pos - 20.f), sf::Vector2f(0.f, 0.f), sprite));
+}
+
 int Platform::getStickyBallsNum() const
 {
-    return (int)m_stickyBalls.size();
+    if (!m_stickyBalls.empty()) {
+        return (int)m_stickyBalls.size();
+    }
+    return 0;
 }
 
 void Platform::initStickyBall(sf::Sprite& sprite)
@@ -66,13 +81,7 @@ void Platform::initStickyBall(sf::Sprite& sprite)
     m_stickyBalls.push_back(std::make_shared<Ball>(sf::Vector2f(x_pos + 65.f, y_pos - 20.f), sf::Vector2f(0.f, 0.f), sprite));
 }
 
-std::shared_ptr<Ball> Platform::releaseBall() 
+ void* Platform::getListOfStickyBalls()
 {
-    if (!m_stickyBalls.empty()) {
-        auto it = m_stickyBalls.begin();
-        std::shared_ptr<Ball> ball = *it;
-        m_stickyBalls.erase(it);
-        return ball;
-    }
-    return nullptr;
+     return &m_stickyBalls;
 }
