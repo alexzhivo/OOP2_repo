@@ -35,4 +35,5 @@ private:
     void render();
 
     void updateAtGameStart();
+    float getFPS(sf::Clock& clock) const;
 };

@@ -3,8 +3,8 @@
 HelpWindow::HelpWindow(sf::RenderWindow& window, ObjectCreator* objectCreator, SoundManager* soundManager)
     : Window(window,objectCreator,soundManager), m_currBackButton(false)
 {
-    m_title = objectCreator->createTextButton("Instructions:", 60, 'W', 200.f, 200.f);
-    m_backButton = objectCreator->createTextButton("<< BACK >>",20,'G',550.f,730.f);
+    m_title = objectCreator->createText("Instructions:", 60, "white", 200.f, 200.f);
+    m_backButton = objectCreator->createText("<< BACK >>",20,"dark_grey", 550.f, 730.f);
 }
 
 UserChoice HelpWindow::handleInput(sf::Event& event)

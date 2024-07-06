@@ -16,20 +16,20 @@ GameWindow::GameWindow(sf::RenderWindow& window, ObjectCreator* objectCreator, S
     srand(static_cast<unsigned int>(time(0)));
 
     // Set up element window
-    m_elementWindow = objectCreator->createRectangle(879.f, 800.f, 'D', 210.f, 60.f);
+    m_elementWindow = objectCreator->createRectangle(879.f, 800.f, "dark_blue", 210.f, 60.f);
 
     // Set up game text
-    m_levelText = objectCreator->createTextButton("", 20, 'W', 10.f, 10.f);
-    m_timeText = objectCreator->createTextButton("", 20, 'W', 550.f, 10.f);
-    m_scoreText = objectCreator->createTextButton("", 20, 'W', 10.f, 875.f);
-    m_bestScoreText = objectCreator->createTextButton("", 20, 'W', 900.f, 875.f);
+    m_levelText = objectCreator->createText("", 20, "white", 10.f, 10.f);
+    m_timeText = objectCreator->createText("", 20, "white", 550.f, 10.f);
+    m_scoreText = objectCreator->createText("", 20, "white", 10.f, 875.f);
+    m_bestScoreText = objectCreator->createText("", 20, "white", 900.f, 875.f);
 
     // Set up pause screen
-    m_pauseWindow = objectCreator->createRectangle(600.f, 750.f, 'M', 350.f, 100.f);
+    m_pauseWindow = objectCreator->createRectangle(600.f, 750.f, "black_t", 350.f, 100.f);
 
-    m_pauseText = objectCreator->createTextButton("PAUSED", 40, 'W', 480.f, 200.f);
-    m_returnToGameText = objectCreator->createTextButton("CONTINUE GAME", 30, 'W', 440.f, 400.f);
-    m_BackToMenuText = objectCreator->createTextButton("RETURN TO MENU", 30, 'W', 440.f, 500.f);
+    m_pauseText = objectCreator->createText("PAUSED", 40, "white", 480.f, 200.f);
+    m_returnToGameText = objectCreator->createText("CONTINUE GAME", 30, "white", 440.f, 400.f);
+    m_BackToMenuText = objectCreator->createText("RETURN TO MENU", 30, "white", 440.f, 500.f);
 
     initLevel(1);
 
@@ -376,11 +376,11 @@ void GameWindow::softReset()
 void GameWindow::updateHover()
 {
     if (m_pauseChoice == PauseChoice::GAME) {
-        m_returnToGameText.setFillColor(sf::Color::Red);
-        m_BackToMenuText.setFillColor(sf::Color::White);
+        m_returnToGameText.setFillColor(m_objectCreator->getColor("red"));
+        m_BackToMenuText.setFillColor(m_objectCreator->getColor("white"));
     }
     else {
-        m_returnToGameText.setFillColor(sf::Color::White);
-        m_BackToMenuText.setFillColor(sf::Color::Red);
+        m_returnToGameText.setFillColor(m_objectCreator->getColor("white"));
+        m_BackToMenuText.setFillColor(m_objectCreator->getColor("red"));
     }
 }

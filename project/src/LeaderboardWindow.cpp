@@ -3,8 +3,8 @@
 LeaderboardWindow::LeaderboardWindow(sf::RenderWindow& window, ObjectCreator* objectCreator, SoundManager* soundManager)
     : Window(window,objectCreator,soundManager), m_currBackButton(false)
 {
-    m_title = objectCreator->createTextButton("LEADERBOARD", 70, 'W', 300.f, 100.f);
-    m_backButton = objectCreator->createTextButton("<< BACK >>", 20, 'G', 600.f, 800.f);
+    m_title = objectCreator->createText("LEADERBOARD", 70, "white", 300.f, 100.f);
+    m_backButton = objectCreator->createText("<< BACK >>", 20, "dark_grey", 600.f, 800.f);
 
     // initilize leaderboard by reading from file
     inputFromFile("leaderboard.txt");
@@ -63,10 +63,10 @@ void LeaderboardWindow::drawLeaderboard()
 void LeaderboardWindow::updateHover()
 {
     if (m_currBackButton) {
-        m_backButton.setFillColor(sf::Color::White);
+        m_backButton.setFillColor(m_objectCreator->getColor("white"));
     }
     else {
-        m_backButton.setFillColor(sf::Color(100, 100, 100));
+        m_backButton.setFillColor(m_objectCreator->getColor("dark_grey"));
     }
 }
 
@@ -87,7 +87,7 @@ void LeaderboardWindow::insertValue(int score, std::string name)
     auto newEntry = std::make_shared<DataCell>();
     newEntry->m_playerName = name;
     newEntry->m_score = score;
-    newEntry->m_lineText = m_objectCreator->createTextButton("", 20, 'W',0.f,0.f);
+    newEntry->m_lineText = m_objectCreator->createText("", 20, "white", 0.f, 0.f);
 
     // Find the correct insertion point based on score (descending order)
     auto insertIt = std::find_if(m_data.begin(), m_data.end(),
@@ -190,7 +190,7 @@ bool LeaderboardWindow::handleLineInput(std::string& line, int lineNum)
         m_data.push_back(std::make_shared<DataCell>());
         m_data.back()->m_playerName = first_word;
         m_data.back()->m_score = lineScore;
-        m_data.back()->m_lineText = m_objectCreator->createTextButton(std::to_string(lineNum + 1) + ".\t" + first_word + '\t' + second_word, 20, 'W', 300.f, 250.f + (lineNum * 50));
+        m_data.back()->m_lineText = m_objectCreator->createText(std::to_string(lineNum + 1) + ".\t" + first_word + '\t' + second_word, 20, "white", 300.f, 250.f + (lineNum * 50));
     }
     else {
         return false;

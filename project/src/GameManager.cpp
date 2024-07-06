@@ -15,17 +15,21 @@ GameManager::GameManager()
 	m_windows.push_back(std::make_unique<FinishWindow>(m_window, &m_objectCreator, &m_soundManager));
 
 	// Set Framerate for Game
-	m_window.setFramerateLimit(120);
+	m_window.setFramerateLimit(60);
 };
 
 //	Main Game Loop : process -> update -> render.
 void GameManager::run() 
 {
-	sf::Clock clock;	// main game clock for delta-time
-
 	m_soundManager.playSound("theme_music", true);
 
+	sf::Clock clock;		// main game clock for delta-time
+	//sf::Clock fps_clock;	// (for fps count)
+
 	while (m_window.isOpen()) {
+		// (for fps count) print fps to terminal
+		//std::cout << "fps: " << getFPS(fps_clock) << '\n';
+
 		processEvents();
 		float dt = clock.restart().asSeconds();
 		update(dt);
@@ -129,4 +133,11 @@ void GameManager::updateAtGameStart()
 	
 	// update Best Score text in-game
 	gameWindow->updateBestScore(leadWindow->getBestScore());
+}
+// used for debug purpose and fps count
+float GameManager::getFPS(sf::Clock& clock) const
+{
+	float currentTime = clock.restart().asSeconds();
+	float fps = 1.0f / (currentTime);
+	return fps;
 }

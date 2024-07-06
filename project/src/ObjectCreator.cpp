@@ -21,27 +21,37 @@ ObjectCreator::ObjectCreator()
     loadTexture("power_lowscore");
     loadTexture("power_upscore");
 
+    // load colors
+    m_colors["white"] = sf::Color::White;
+    m_colors["black"] = sf::Color::Black;
+    m_colors["red"] = sf::Color::Red;
+    m_colors["green"] = sf::Color::Green;
+    m_colors["dark_grey"] = sf::Color(100, 100, 100);
+    m_colors["light_grey"] = sf::Color(200, 200, 200);
+    m_colors["black_t"] = sf::Color(0, 0, 0, 180);
+    m_colors["dark_blue"] = sf::Color(16, 44, 87);
+
 }
 
-sf::Text ObjectCreator::createTextButton(const std::string& text, const int charSize,
-    const char colorChar, const float pos_x , const float pos_y)
+sf::Text ObjectCreator::createText(const std::string& text, const int charSize,
+    const std::string& colorName, const float pos_x , const float pos_y)
 {
     sf::Text newText;
     newText.setFont(m_font);
     newText.setString(text);
     newText.setCharacterSize(charSize);
-    newText.setFillColor(getColor(colorChar));
+    newText.setFillColor(getColor(colorName));
     newText.setPosition(pos_x, pos_y);
 
     return newText;
 }
 
 sf::RectangleShape ObjectCreator::createRectangle(const float width, const float height,
-    const char colorChar, const float pos_x, const float pos_y)
+    const std::string& colorName, const float pos_x, const float pos_y)
 {
     sf::RectangleShape newShape;
     newShape.setSize(sf::Vector2f(width, height));
-    newShape.setFillColor(getColor(colorChar));
+    newShape.setFillColor(getColor(colorName));
     newShape.setPosition(sf::Vector2f(pos_x, pos_y));
 
     return newShape;
@@ -78,26 +88,35 @@ bool ObjectCreator::loadTexture(const std::string& name)
 }
 
 
-sf::Color ObjectCreator::getColor(const char colorChar)
+sf::Color& ObjectCreator::getColor(const std::string& name)
 {
-    switch (colorChar) {
-
-    case 'W':
-        // default color (white)
-        break;
-    case 'B':
-        return sf::Color::Black;
-    case 'G':
-        return sf::Color(100, 100, 100);
-    case 'C':
-        return sf::Color(200, 200, 200);
-    case 'M':
-        return sf::Color(0, 0, 0, 180);
-    case 'D':
-        return sf::Color(16, 44, 87);
-    default :
-        break;
+    auto it = m_colors.find(name);
+    if (it != m_colors.end()) {
+        return it->second;
     }
+    else {
+        std::cerr << "Color '" << name << "' not found in the map." << std::endl;
+    }
+    
+    
+    //switch (colorChar) {
 
-    return sf::Color::White;
+    //case 'W':
+    //    // default color (white)
+    //    break;
+    //case 'B':
+    //    return sf::Color::Black;
+    //case 'G':
+    //    return sf::Color(100, 100, 100);
+    //case 'C':
+    //    return sf::Color(200, 200, 200);
+    //case 'M':
+    //    return sf::Color(0, 0, 0, 180);
+    //case 'D':
+    //    return sf::Color(16, 44, 87);
+    //default :
+    //    break;
+    //}
+
+    //return sf::Color::White;
 }

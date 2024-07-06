@@ -3,8 +3,8 @@
 FinishWindow::FinishWindow(sf::RenderWindow& window, ObjectCreator* objectCreator, SoundManager* soundManager)
 	: Window(window,objectCreator, soundManager)
 {
-    m_title = objectCreator->createTextButton("", 50, 'W', 250.f, 200.f);
-    m_scoreText = objectCreator->createTextButton("", 50, 'W', 150.f, 300.f);
+    m_title = objectCreator->createText("", 50, "white", 250.f, 200.f);
+    m_scoreText = objectCreator->createText("", 50, "white", 150.f, 300.f);
 }
 
 UserChoice FinishWindow::handleInput(sf::Event& event)

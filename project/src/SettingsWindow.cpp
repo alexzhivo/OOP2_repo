@@ -22,12 +22,12 @@ SettingsWindow::SettingsWindow(sf::RenderWindow& window, ObjectCreator* objectCr
     , m_isEditName(false)
 {
     // default player name
-    m_playerName = "Challenger300624";
+    m_playerName = "NewPlayer";
 
-    m_title = objectCreator->createTextButton("SETTINGS", 80, 'W', 280.f, 200.f);
-    m_gameSoundText = objectCreator->createTextButton("Game Sound : ON", 30, 'G', 400.f, 400.f);
-    m_playerNameText = objectCreator->createTextButton("Player Name : " + m_playerName, 30, 'G', 250.f, 500.f);
-    m_backButtonText = objectCreator->createTextButton("<< BACK >>", 30, 'G', 400.f, 600.f);
+    m_title = objectCreator->createText("SETTINGS", 80, "white", 280.f, 200.f);
+    m_gameSoundText = objectCreator->createText("Game Sound : ON", 30, "dark_grey", 400.f, 400.f);
+    m_playerNameText = objectCreator->createText("Player Name : " + m_playerName, 30, "dark_grey", 250.f, 500.f);
+    m_backButtonText = objectCreator->createText("<< BACK >>", 30, "dark_grey", 400.f, 600.f);
 }
 
 UserChoice SettingsWindow::handleInput(sf::Event& event)
@@ -123,18 +123,18 @@ void SettingsWindow::updateHover()
     resetHover();
     switch (m_settingHover) {
     case Setting::GAMESOUND:
-        m_gameSoundText.setFillColor(sf::Color::White);
+        m_gameSoundText.setFillColor(m_objectCreator->getColor("white"));
         break;
     case Setting::PLAYERNAME:
         if (m_isEditName) {
-            m_playerNameText.setFillColor(sf::Color::Green);
+            m_playerNameText.setFillColor(m_objectCreator->getColor("green"));
         }
         else {
-            m_playerNameText.setFillColor(sf::Color::White);
+            m_playerNameText.setFillColor(m_objectCreator->getColor("white"));
         }
         break;
     case Setting::BACK:
-        m_backButtonText.setFillColor(sf::Color::White);
+        m_backButtonText.setFillColor(m_objectCreator->getColor("white"));
         break;
     case Setting::NONE:
         break;
@@ -143,9 +143,9 @@ void SettingsWindow::updateHover()
 
 void SettingsWindow::resetHover()
 {
-    m_gameSoundText.setFillColor(sf::Color(100, 100, 100));
-    m_playerNameText.setFillColor(sf::Color(100, 100, 100));
-    m_backButtonText.setFillColor(sf::Color(100, 100, 100));
+    m_gameSoundText.setFillColor(m_objectCreator->getColor("dark_grey"));
+    m_playerNameText.setFillColor(m_objectCreator->getColor("dark_grey"));
+    m_backButtonText.setFillColor(m_objectCreator->getColor("dark_grey"));
 }
 
 void SettingsWindow::updateGameSound()
