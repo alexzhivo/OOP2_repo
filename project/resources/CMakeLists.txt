@@ -22,6 +22,7 @@ configure_file ("media/images/platform_mid.png" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file ("media/images/platform_sm.png" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file ("media/images/power_upscore.png" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file ("media/images/power_lowscore.png" ${CMAKE_BINARY_DIR} COPYONLY)
+configure_file ("media/images/power_split.png" ${CMAKE_BINARY_DIR} COPYONLY)
 
 # - Sounds (MP3)
 configure_file ("media/sounds/stardust_music.mp3" ${CMAKE_BINARY_DIR} COPYONLY)

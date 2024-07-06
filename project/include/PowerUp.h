@@ -5,6 +5,7 @@
 enum class PowerType {
 	ADD_PTS,
 	DEC_PTS,
+	SPLIT,
 	EMPTY
 };
 

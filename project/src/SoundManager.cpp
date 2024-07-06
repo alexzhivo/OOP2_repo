@@ -10,7 +10,7 @@ SoundManager::SoundManager()
 void SoundManager::loadSounds()
 {
     addSound("theme_music", "stardust_music.mp3", 2.f);
-    addSound("game_music", "game_music.mp3", 0.5f);
+    addSound("game_music", "game_music.mp3", 1.f);
     addSound("select", "select_sound.mp3",2.f);
     addSound("add_pts", "collect_pts.mp3",1.f);
     addSound("game_start", "game_start.mp3",2.f);

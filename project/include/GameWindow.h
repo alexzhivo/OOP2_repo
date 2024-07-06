@@ -60,6 +60,9 @@ private:
 	void updateHover();
 	void softReset();
 
+	// special powers
+	void splitBalls();
+
 	// platform
 	Platform m_platform;
 
@@ -71,7 +74,6 @@ private:
 	sf::Text m_pauseText;
 	sf::Text m_returnToGameText;
 	sf::Text m_BackToMenuText;
-
 
 	// Clock
 	GameClock m_gameClock;

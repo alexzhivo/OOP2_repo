@@ -20,6 +20,7 @@ ObjectCreator::ObjectCreator()
     loadTexture("wallpaper");
     loadTexture("power_lowscore");
     loadTexture("power_upscore");
+    loadTexture("power_split");
 
     // load colors
     m_colors["white"] = sf::Color::White;
@@ -97,26 +98,5 @@ sf::Color& ObjectCreator::getColor(const std::string& name)
     else {
         std::cerr << "Color '" << name << "' not found in the map." << std::endl;
     }
-    
-    
-    //switch (colorChar) {
-
-    //case 'W':
-    //    // default color (white)
-    //    break;
-    //case 'B':
-    //    return sf::Color::Black;
-    //case 'G':
-    //    return sf::Color(100, 100, 100);
-    //case 'C':
-    //    return sf::Color(200, 200, 200);
-    //case 'M':
-    //    return sf::Color(0, 0, 0, 180);
-    //case 'D':
-    //    return sf::Color(16, 44, 87);
-    //default :
-    //    break;
-    //}
-
-    //return sf::Color::White;
+    return m_colors["white"];
 }

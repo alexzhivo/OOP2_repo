@@ -22,7 +22,7 @@ public:
 	void release(float radians);
 
 private:
-	sf::Sprite& m_sprite;
+	sf::Sprite m_sprite;
 
 	sf::Vector2f m_initVelocity;
 	sf::Vector2f m_lastVelocity;

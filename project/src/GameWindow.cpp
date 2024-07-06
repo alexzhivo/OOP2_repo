@@ -263,14 +263,18 @@ bool GameWindow::initLevel(int level)
 void GameWindow::chanceForGift(float pos_x, float pos_y)
 {
     double randomSpawn = static_cast<double>(rand()) / RAND_MAX;
-    auto randomPower = (PowerType)(rand() % 2);
-    if (randomSpawn < 0.2) {
+    auto randomPower = (PowerType)(rand() % 3);
+    if (randomSpawn < 0.9) {
         if (randomPower == PowerType::ADD_PTS) {
             m_powers.push_back(std::make_shared<PowerUp>(randomPower, sf::Vector2f(pos_x + 18, pos_y + 10), m_objectCreator->getSprite("power_upscore")));
             return;
         } 
         if (randomPower == PowerType::DEC_PTS) {
             m_powers.push_back(std::make_shared<PowerUp>(randomPower, sf::Vector2f(pos_x + 18, pos_y + 10), m_objectCreator->getSprite("power_lowscore")));
+            return;
+        }
+        if (randomPower == PowerType::SPLIT) {
+            m_powers.push_back(std::make_shared<PowerUp>(randomPower, sf::Vector2f(pos_x + 18, pos_y + 10), m_objectCreator->getSprite("power_split")));
             return;
         }
     }
@@ -315,6 +319,9 @@ void GameWindow::handleCollisions(float dt)
     case PowerType::DEC_PTS:
         m_score -= 1000;
         m_soundManager->playSound("lose_ball", false);
+        break;
+    case PowerType::SPLIT:
+        splitBalls();
         break;
     case PowerType::EMPTY:
         break;
@@ -371,6 +378,29 @@ void GameWindow::softReset()
     m_powers.clear();
     m_platform.reset(m_objectCreator->getSprite("ball"));
     m_gameClock.initTime(TIMER_IN_SEC);
+}
+
+void GameWindow::splitBalls()
+{
+    if (m_balls.empty())
+        return;
+
+    if (m_balls.size() > 10)
+        return;
+
+    sf::Vector2f position;
+    sf::Vector2f velocity;
+    
+    auto size = m_balls.size();
+    auto iter = m_balls.begin()->get();
+    for (int i = 0; i < size; i++) {
+        position = iter->getSprite().getPosition();
+        velocity = iter->getVelocity();
+        velocity.y = -velocity.y;
+        iter->setVelocity(velocity);
+        m_balls.push_back(std::make_shared<Ball>(position, sf::Vector2f(-90.3116f, -286.084f), m_objectCreator->getSprite("ball")));
+        m_balls.push_back(std::make_shared<Ball>(position, sf::Vector2f(133.698f, -268.561f), m_objectCreator->getSprite("ball")));
+    }
 }
 
 void GameWindow::updateHover()

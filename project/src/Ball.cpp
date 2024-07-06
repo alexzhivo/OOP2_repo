@@ -3,7 +3,7 @@
 #include <iostream>	// TEST
 
 Ball::Ball(sf::Vector2f position, sf::Vector2f velocity, sf::Sprite& sprite)
-	: m_initVelocity(velocity), m_sprite(sprite), m_speed(500.f)
+	: m_initVelocity(velocity), m_sprite(sprite), m_speed(300.f)
 {
 	m_sprite.setPosition(position);
 	m_sprite.setScale(2.5f, 2.5f);

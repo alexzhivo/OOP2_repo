@@ -39,6 +39,7 @@ void CollisionHandler::handleBallPlatform(std::list<std::shared_ptr<Ball>>& ball
 			newVelocity.y = -newVelocity.y; // Reverse vertical direction
 			
 			ball->setVelocity(newVelocity);
+
 			return;
 		}
 	}
