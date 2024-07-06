@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "ObjectCreator.h"
+#include "SoundManager.h"
 
 #include <cstdlib> // For rand() and srand()
 #include <ctime>   // For time()
@@ -35,8 +36,8 @@ struct UserChoice {
 
 class Window {
 public:
-    Window(sf::RenderWindow& window, ObjectCreator* objectCreator)
-        : m_window(window), m_objectCreator(objectCreator) {};
+    Window(sf::RenderWindow& window, ObjectCreator* objectCreator, SoundManager* soundManager)
+        : m_window(window), m_objectCreator(objectCreator) , m_soundManager(soundManager) {};
     virtual ~Window() = default;
 
     virtual UserChoice handleInput(sf::Event& event) = 0;
@@ -46,4 +47,5 @@ public:
 protected:
     sf::RenderWindow& m_window;
     ObjectCreator* m_objectCreator;
+    SoundManager* m_soundManager;
 };

@@ -6,6 +6,7 @@
 #include "iostream"              // TEST
 
 #include "ObjectCreator.h"
+#include "SoundManager.h"
 #include "Window.h"
 #include "StartWindow.h"
 #include "MenuWindow.h"
@@ -24,6 +25,7 @@ private:
     sf::RenderWindow m_window;
     WindowState m_currWindow;
     ObjectCreator m_objectCreator;
+    SoundManager m_soundManager;
 
     std::vector<std::unique_ptr<Window>> m_windows;
 

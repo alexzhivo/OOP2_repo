@@ -1,7 +1,7 @@
 #include "LeaderboardWindow.h"
 
-LeaderboardWindow::LeaderboardWindow(sf::RenderWindow& window, ObjectCreator* objectCreator)
-    : Window(window,objectCreator), m_currBackButton(false)
+LeaderboardWindow::LeaderboardWindow(sf::RenderWindow& window, ObjectCreator* objectCreator, SoundManager* soundManager)
+    : Window(window,objectCreator,soundManager), m_currBackButton(false)
 {
     m_title = objectCreator->createTextButton("LEADERBOARD", 70, 'W', 300.f, 100.f);
     m_backButton = objectCreator->createTextButton("<< BACK >>", 20, 'G', 600.f, 800.f);

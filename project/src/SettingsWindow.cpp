@@ -17,8 +17,8 @@ Setting& operator--(Setting& setting) {
     return setting;
 }
 
-SettingsWindow::SettingsWindow(sf::RenderWindow& window, ObjectCreator* objectCreator)
-    : Window(window,objectCreator), m_settingHover(Setting::NONE), m_isGameSoundOn(true)
+SettingsWindow::SettingsWindow(sf::RenderWindow& window, ObjectCreator* objectCreator, SoundManager* soundManager)
+    : Window(window,objectCreator,soundManager), m_settingHover(Setting::NONE), m_isGameSoundOn(true)
     , m_isEditName(false)
 {
     // default player name

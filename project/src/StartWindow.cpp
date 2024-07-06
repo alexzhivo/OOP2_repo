@@ -1,7 +1,7 @@
 #include "StartWindow.h"
 
-StartWindow::StartWindow(sf::RenderWindow& window, ObjectCreator* objectCreator)
-    : Window(window,objectCreator)
+StartWindow::StartWindow(sf::RenderWindow& window, ObjectCreator* objectCreator, SoundManager* soundManager)
+    : Window(window,objectCreator,soundManager)
 {
     m_wallpaper = objectCreator->getSprite("wallpaper");
     m_wallpaper.setScale(1.3f, 1.6f);

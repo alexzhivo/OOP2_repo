@@ -10,7 +10,7 @@ struct DataCell {
 
 class LeaderboardWindow : public Window {
 public:
-	LeaderboardWindow(sf::RenderWindow& window, ObjectCreator* objectCreator);
+	LeaderboardWindow(sf::RenderWindow& window, ObjectCreator* objectCreator, SoundManager* soundManager);
 
 	UserChoice handleInput(sf::Event& event);
 	void update(float dt);

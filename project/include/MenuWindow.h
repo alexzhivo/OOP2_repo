@@ -20,7 +20,7 @@ MenuButton& operator--(MenuButton& button);
 
 class MenuWindow : public Window {
 public:
-	MenuWindow(sf::RenderWindow& window, ObjectCreator* objectCreator);
+	MenuWindow(sf::RenderWindow& window, ObjectCreator* objectCreator, SoundManager* soundManager);
 
 	UserChoice handleInput(sf::Event& event);
 	void update(float dt);

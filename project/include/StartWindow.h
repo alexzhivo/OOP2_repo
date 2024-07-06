@@ -4,7 +4,7 @@
 
 class StartWindow : public Window {
 public:
-	StartWindow(sf::RenderWindow& window, ObjectCreator* objectCreator);
+	StartWindow(sf::RenderWindow& window, ObjectCreator* objectCreator, SoundManager* soundManager);
 
 	UserChoice handleInput(sf::Event& event);
 	void update(float dt);

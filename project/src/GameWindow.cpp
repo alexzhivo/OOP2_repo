@@ -1,7 +1,7 @@
 #include "GameWindow.h"
 
-GameWindow::GameWindow(sf::RenderWindow& window, ObjectCreator* objectCreator)
-    : Window(window, objectCreator),
+GameWindow::GameWindow(sf::RenderWindow& window, ObjectCreator* objectCreator, SoundManager* soundManager)
+    : Window(window, objectCreator, soundManager),
     m_gameState(GameState::NOT_ENDED),
     m_gamePaused(false),
     m_releasePressed(false),

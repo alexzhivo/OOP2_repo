@@ -4,7 +4,7 @@
 
 class FinishWindow : public Window {
 public:
-	FinishWindow(sf::RenderWindow& window, ObjectCreator* objectCreator);
+	FinishWindow(sf::RenderWindow& window, ObjectCreator* objectCreator, SoundManager* soundManager);
 
 	UserChoice handleInput(sf::Event& event);
 	void update(float dt);

@@ -20,8 +20,8 @@ MenuButton& operator--(MenuButton& button) {    // SCROLL UP
 }
 
 // MenuWindow Class
-MenuWindow::MenuWindow(sf::RenderWindow& window, ObjectCreator* objectCreator)
-	: Window(window,objectCreator), m_currHoverButton(MenuButton::NONE)
+MenuWindow::MenuWindow(sf::RenderWindow& window, ObjectCreator* objectCreator, SoundManager* soundManager)
+	: Window(window,objectCreator,soundManager), m_currHoverButton(MenuButton::NONE)
 {
     // title
     m_title = m_objectCreator->createTextButton("GAME MENU",90,'W',230.f,150.f);

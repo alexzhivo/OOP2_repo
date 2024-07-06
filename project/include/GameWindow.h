@@ -25,7 +25,7 @@ enum class GameState {
 
 class GameWindow : public Window {
 public:
-	GameWindow(sf::RenderWindow& window, ObjectCreator* objectCreator);
+	GameWindow(sf::RenderWindow& window, ObjectCreator* objectCreator, SoundManager* soundManager);
 
 	UserChoice handleInput(sf::Event& event);
 	void update(float dt);

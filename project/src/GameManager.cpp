@@ -6,13 +6,13 @@ GameManager::GameManager()
     : m_window(sf::VideoMode(1280, 920), "BrickBuster"), m_currWindow(WindowState::START)
 {
 	// Creating the Window Vector
-	m_windows.push_back(std::make_unique<StartWindow>(m_window, &m_objectCreator));
-	m_windows.push_back(std::make_unique<MenuWindow>(m_window, &m_objectCreator));
-	m_windows.push_back(std::make_unique<GameWindow>(m_window, &m_objectCreator));
-	m_windows.push_back(std::make_unique<LeaderboardWindow>(m_window, &m_objectCreator));
-	m_windows.push_back(std::make_unique<HelpWindow>(m_window, &m_objectCreator));
-	m_windows.push_back(std::make_unique<SettingsWindow>(m_window, &m_objectCreator));
-	m_windows.push_back(std::make_unique<FinishWindow>(m_window, &m_objectCreator));
+	m_windows.push_back(std::make_unique<StartWindow>(m_window, &m_objectCreator, &m_soundManager));
+	m_windows.push_back(std::make_unique<MenuWindow>(m_window, &m_objectCreator, &m_soundManager));
+	m_windows.push_back(std::make_unique<GameWindow>(m_window, &m_objectCreator, &m_soundManager));
+	m_windows.push_back(std::make_unique<LeaderboardWindow>(m_window, &m_objectCreator, &m_soundManager));
+	m_windows.push_back(std::make_unique<HelpWindow>(m_window, &m_objectCreator, &m_soundManager));
+	m_windows.push_back(std::make_unique<SettingsWindow>(m_window, &m_objectCreator, &m_soundManager));
+	m_windows.push_back(std::make_unique<FinishWindow>(m_window, &m_objectCreator, &m_soundManager));
 
 	// Set Framerate for Game
 	m_window.setFramerateLimit(120);
@@ -21,9 +21,10 @@ GameManager::GameManager()
 //	Main Game Loop : process -> update -> render.
 void GameManager::run() 
 {
-
 	sf::Clock clock;	// main game clock for delta-time
-	
+
+	m_soundManager.playMusic("theme_music", true);
+
 	while (m_window.isOpen()) {
 		processEvents();
 		float dt = clock.restart().asSeconds();
@@ -56,6 +57,9 @@ void GameManager::processEvents()
 
 	// waits for GameWindow to return Ended Signal
 	if (m_currWindow == WindowState::PLAY) {
+
+		m_soundManager.stopMusic("theme_music");
+
 		GameWindow* gameWindow = dynamic_cast<GameWindow*>(m_windows[(int)WindowState::PLAY].get());
 		FinishWindow* finishWindow = dynamic_cast<FinishWindow*>(m_windows[(int)WindowState::FINISH].get());
 		SettingsWindow* settingsWindow = dynamic_cast<SettingsWindow*>(m_windows[(int)WindowState::SETTINGS].get());

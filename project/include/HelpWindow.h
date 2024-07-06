@@ -4,7 +4,7 @@
 
 class HelpWindow : public Window {
 public:
-	HelpWindow(sf::RenderWindow& window, ObjectCreator* objectCreator);
+	HelpWindow(sf::RenderWindow& window, ObjectCreator* objectCreator, SoundManager* soundManager);
 
 	UserChoice handleInput(sf::Event& event);
 	void update(float dt);
