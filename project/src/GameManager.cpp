@@ -59,7 +59,7 @@ void GameManager::processEvents()
 					updateAtGameStart();
 				}
 				if (choice.nextWindow == WindowState::MENU) {
-					if (m_currWindow != WindowState::START)
+					if (m_currWindow == WindowState::FINISH || m_currWindow == WindowState::PLAY)
 						m_soundManager.playSound("theme_music", true);
 					m_soundManager.stopSound("game_music");
 				}
