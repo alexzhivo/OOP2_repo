@@ -22,13 +22,13 @@ SettingsWindow::SettingsWindow(sf::RenderWindow& window, ObjectCreator* objectCr
     , m_isEditName(false)
 {
     // default player name
-    m_playerName = "NewPlayer";
+    m_playerName = "UnnamedPlayer";
 
-    m_title = objectCreator->createText("SETTINGS", 80, "white", 280.f, 200.f);
-    m_gameSoundText = objectCreator->createText("Game Sound : ON", 30, "dark_grey", 400.f, 400.f);
-    m_gameMusicText = objectCreator->createText("Game Music : ON", 30, "dark_grey", 400.f, 500.f);
-    m_playerNameText = objectCreator->createText("Player Name : " + m_playerName, 30, "dark_grey", 250.f, 600.f);
-    m_backButtonText = objectCreator->createText("<< BACK >>", 30, "dark_grey", 400.f, 700.f);
+    m_title = objectCreator->createText("SETTINGS", 70, "white", 365.f, 180.f);
+    m_gameSoundText = objectCreator->createText("Game Sound : ON", 30, "dark_grey", 420.f, 350.f);
+    m_gameMusicText = objectCreator->createText("Game Music : ON", 30, "dark_grey", 420.f, 450.f);
+    m_playerNameText = objectCreator->createText("Player Name : " + m_playerName, 30, "dark_grey", 270.f, 550.f);
+    m_backButtonText = objectCreator->createText("<< BACK >>", 30, "dark_grey", 480.f, 700.f);
 }
 
 UserChoice SettingsWindow::handleInput(sf::Event& event)
