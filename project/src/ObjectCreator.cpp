@@ -19,6 +19,7 @@ ObjectCreator::ObjectCreator()
     loadTexture("ball");
     loadTexture("big_ball");
     loadTexture("wallpaper");
+    loadTexture("game_title");
     loadTexture("power_lowscore");
     loadTexture("power_upscore");
     loadTexture("power_split");

@@ -12,7 +12,7 @@ public:
 
 private:
 	sf::Sprite m_wallpaper;
-	sf::Text m_title;
+	sf::Sprite m_title;
 	sf::Text m_version;
 	sf::Text m_subtext;
 

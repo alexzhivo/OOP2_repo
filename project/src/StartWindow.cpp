@@ -5,8 +5,9 @@ StartWindow::StartWindow(sf::RenderWindow& window, ObjectCreator* objectCreator,
 {
     m_wallpaper = objectCreator->getSprite("wallpaper");
     m_wallpaper.setScale(1.3f, 1.6f);
-    m_title = objectCreator->createText("BRICKBUSTER", 90, "white", 160.f, 200.f);
-    m_version = objectCreator->createText("v1.0.0", 10, "white", 1100.f, 290.f);
+    m_title = objectCreator->getSprite("game_title");
+    m_title.setPosition(25.f, 0.f);
+    m_version = objectCreator->createText("v1.0.0", 10, "white", 1095.f, 335.f);
     m_subtext = objectCreator->createText(">> PRESS SPACE TO PLAY <<", 20, "white", 385.f, 650.f);
 }
 
