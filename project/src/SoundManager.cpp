@@ -14,8 +14,9 @@ void SoundManager::loadSounds()
     addSound("hover", "hover_sound.wav",2.f);
     addSound("add_pts", "collect_pts.mp3",2.f);
     addSound("game_start", "game_start.mp3",2.f);
-    addSound("not_break", "not_break.mp3",2.f);
     addSound("game_win", "game_win.wav",2.f);
+    addSound("game_lose", "game_lose.mp3", 2.f);
+    addSound("not_break", "not_break.mp3",2.f);
     addSound("level_up", "level_up.wav",2.f);
 }
 

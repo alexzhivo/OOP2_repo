@@ -341,7 +341,6 @@ void GameWindow::setupNextLevel()
 {
     if (!initLevel(m_currLevel + 1)) {
         m_gameState = GameState::ENDED_WIN;
-        m_soundManager->playSound("game_win", false);
     }
     else {
         m_currLevel++;

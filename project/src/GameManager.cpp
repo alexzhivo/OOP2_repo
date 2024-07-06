@@ -78,12 +78,15 @@ void GameManager::processEvents()
 			leaderboardWindow->insertValue(finalScore, settingsWindow->getPlayerName());
 			finishWindow->setTitle("YOU WON!");
 			finishWindow->setScore(finalScore);
+			m_soundManager.playSound("game_win", false);
 			break;
 		case GameState::ENDED_TIME:
 			finishWindow->setTitle("TIME IS UP..");
+			m_soundManager.playSound("game_lose", false);
 			break;
 		case GameState::ENDED_LIVE:
 			finishWindow->setTitle("Out Of Lives..");
+			m_soundManager.playSound("game_lose", false);
 			break;
 		case GameState::NOT_ENDED:
 			break;
