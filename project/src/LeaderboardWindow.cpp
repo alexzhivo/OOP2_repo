@@ -3,8 +3,8 @@
 LeaderboardWindow::LeaderboardWindow(sf::RenderWindow& window, ObjectCreator* objectCreator, SoundManager* soundManager)
     : Window(window,objectCreator,soundManager), m_currBackButton(false)
 {
-    m_title = objectCreator->createText("LEADERBOARD", 70, "white", 300.f, 100.f);
-    m_backButton = objectCreator->createText("<< BACK >>", 20, "dark_grey", 600.f, 800.f);
+    m_title = objectCreator->createText("LEADERBOARD", 70, "white", 270.f, 100.f);
+    m_backButton = objectCreator->createText("<< BACK >>", 20, "dark_grey", 540.f, 800.f);
 
     // initilize leaderboard by reading from file
     inputFromFile("leaderboard.txt");
@@ -53,9 +53,19 @@ void LeaderboardWindow::drawLeaderboard()
 {
     int index = 1;
     for (auto& line : m_data) {
-        std::string lineStr = std::to_string(index) + ".\t" + line->m_playerName + "\t\t" + std::to_string(line->m_score);
+        std::string lineStr;
+        if (index > 9) 
+            lineStr = std::to_string(index) + ".   " + line->m_playerName;
+        else
+            lineStr = std::to_string(index) + ".\t" + line->m_playerName;
         line->m_lineText.setString(lineStr);
         m_window.draw(line->m_lineText);
+        auto pos = line->m_lineText.getPosition();
+        lineStr = std::to_string(line->m_score);
+        line->m_lineText.setString(lineStr);
+        line->m_lineText.move(600.f, 0.f);
+        m_window.draw(line->m_lineText);
+        line->m_lineText.setPosition(pos);
         index++;
     }
 }
@@ -80,7 +90,6 @@ bool LeaderboardWindow::isScoreValidForBoard(int score) const
 void LeaderboardWindow::insertValue(int score, std::string name)
 {
     if (!isScoreValidForBoard(score)) {
-        std::cout << "Score is not high enough for leaderboard insertion.\n";
         return;
     }
 
