@@ -59,22 +59,29 @@ bool Platform::isLong() const
     return m_long;
 }
 
-bool Platform::makeShort()
+void Platform::makeShort(sf::Sprite& shortSprite, sf::Sprite& midSprite)
 {
+    auto currentWidth = m_sprite->getGlobalBounds().width;
+
     if (m_long) {
         m_long = false;
-        return false;
-    }    
-    m_short = true;
-    return true;
+        this->setSprite(midSprite);
+    }
+    else {
+        m_short = true;
+        this->setSprite(shortSprite);
+    }
+
+    auto offsetX = currentWidth - m_sprite->getGlobalBounds().width;
+    offsetX /= 2;
+    m_sprite->move(offsetX, 0.f);
 }
 
 void Platform::makeLong(const sf::RectangleShape& window, sf::Sprite& longSprite, sf::Sprite& midSprite)
 {
-    auto windowWidth = window.getGlobalBounds().width;
-    auto windowPos = window.getPosition().x;
-    float center = (windowWidth / 2 + windowPos);
     float currentWidth = m_sprite->getGlobalBounds().width;
+    float windowLeftPos = window.getPosition().x;
+    float windowRightPos = windowLeftPos + window.getGlobalBounds().width;
 
     if (m_short) {
         m_short = false;
@@ -85,8 +92,15 @@ void Platform::makeLong(const sf::RectangleShape& window, sf::Sprite& longSprite
         this->setSprite(longSprite);
     }
 
-    if (m_sprite->getPosition().x > center) {
-        m_sprite->move(currentWidth - m_sprite->getGlobalBounds().width,0.f);
+    auto offsetX = m_sprite->getGlobalBounds().width - currentWidth;
+    offsetX /= 2;
+    m_sprite->move(-offsetX, 0.f);
+
+    if (windowLeftPos > m_sprite->getPosition().x) {
+        m_sprite->move(offsetX, 0.f);
+    }
+    else if (windowRightPos < m_sprite->getPosition().x + m_sprite->getGlobalBounds().width) {
+        m_sprite->move(-offsetX, 0.f);
     }
 }
 

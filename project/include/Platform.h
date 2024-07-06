@@ -23,7 +23,7 @@ public:
 	bool isShort() const;
 	bool isLong() const;
 
-	bool makeShort();
+    void makeShort(sf::Sprite& shortSprite, sf::Sprite& midSprite);
 	void makeLong(const sf::RectangleShape& window, sf::Sprite& longSprite, sf::Sprite& midSprite);
 	void setSticky(const bool state);
 	void setSprite(sf::Sprite& sprite);

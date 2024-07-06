@@ -358,6 +358,9 @@ void GameWindow::handleCollisions(float dt)
         break;
     case PowerType::DEC_LIFE:
         m_life--;
+        if (m_life < 0) {
+            m_gameState = GameState::ENDED_LIVE;
+        }
         m_soundManager->playSound("lose_ball", false);
         break;
     case PowerType::STICKY:
@@ -367,10 +370,8 @@ void GameWindow::handleCollisions(float dt)
     case PowerType::SHORT:
         if (m_platform.isSticky())
             releaseBalls(dt);
-        if (m_platform.makeShort())
-            m_platform.setSprite(m_objectCreator->getSprite("platform_sm"));
-        else
-            m_platform.setSprite(m_objectCreator->getSprite("platform"));
+        m_platform.makeShort(m_objectCreator->getSprite("platform_sm"),
+            m_objectCreator->getSprite("platform"));
         m_soundManager->playSound("add_pts", false);
         break;
     case PowerType::LONG:
