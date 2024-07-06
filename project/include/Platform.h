@@ -24,7 +24,7 @@ public:
 	bool isLong() const;
 
 	bool makeShort();
-	bool makeLong();
+	void makeLong(const sf::RectangleShape& window, sf::Sprite& longSprite, sf::Sprite& midSprite);
 	void setSticky(const bool state);
 	void setSprite(sf::Sprite& sprite);
 	void splitSticky(sf::Sprite& sprite);

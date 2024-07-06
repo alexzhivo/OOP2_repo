@@ -365,6 +365,8 @@ void GameWindow::handleCollisions(float dt)
         m_soundManager->playSound("add_pts", false);
         break;
     case PowerType::SHORT:
+        if (m_platform.isSticky())
+            releaseBalls(dt);
         if (m_platform.makeShort())
             m_platform.setSprite(m_objectCreator->getSprite("platform_sm"));
         else
@@ -372,10 +374,9 @@ void GameWindow::handleCollisions(float dt)
         m_soundManager->playSound("add_pts", false);
         break;
     case PowerType::LONG:
-        if (m_platform.makeLong())
-            m_platform.setSprite(m_objectCreator->getSprite("platform_long"));
-        else
-            m_platform.setSprite(m_objectCreator->getSprite("platform"));
+        m_platform.makeLong(m_elementWindow,
+            m_objectCreator->getSprite("platform_long"),
+            m_objectCreator->getSprite("platform"));
         m_soundManager->playSound("add_pts", false);
         break;
     case PowerType::BIG_BALL:

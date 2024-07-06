@@ -6,8 +6,6 @@ Platform::Platform(sf::Sprite& sprite)
     // Platfrom Sprite
     m_sprite->setPosition(570.f, 800.f);
     m_sprite->setScale(2.3f,2.f);
-
-    std::cout << &m_sprite << std::endl;
 }
 
 void Platform::update(float dt)
@@ -71,14 +69,25 @@ bool Platform::makeShort()
     return true;
 }
 
-bool Platform::makeLong()
+void Platform::makeLong(const sf::RectangleShape& window, sf::Sprite& longSprite, sf::Sprite& midSprite)
 {
+    auto windowWidth = window.getGlobalBounds().width;
+    auto windowPos = window.getPosition().x;
+    float center = (windowWidth / 2 + windowPos);
+    float currentWidth = m_sprite->getGlobalBounds().width;
+
     if (m_short) {
         m_short = false;
-        return false;
+        this->setSprite(midSprite);
     }
-    m_long = true;
-    return true;
+    else {
+        m_long = true;
+        this->setSprite(longSprite);
+    }
+
+    if (m_sprite->getPosition().x > center) {
+        m_sprite->move(currentWidth - m_sprite->getGlobalBounds().width,0.f);
+    }
 }
 
 void Platform::setSprite(sf::Sprite& sprite)
