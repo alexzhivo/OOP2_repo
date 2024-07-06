@@ -15,12 +15,23 @@ void CollisionHandler::handleOutOfBoarder(std::list<std::shared_ptr<Ball>>& ball
 	}
 }
 
-void CollisionHandler::handleBallPlatform(std::list<std::shared_ptr<Ball>>& balls, const sf::FloatRect& platform_rect)
+void CollisionHandler::handleBallPlatform(std::list<std::shared_ptr<Ball>>& balls, Platform& platform)
 {
-	for (auto& ball : balls) {
-		if (platform_rect.intersects(ball->getSprite().getGlobalBounds())) {
+	auto platform_rect = platform.getRect();
 
-			float ballCenter = ball->getSprite().getPosition().x + ball->getSprite().getGlobalBounds().width / 2.0f;
+	for (auto iter = balls.begin() ; iter != balls.end() ; ++iter) {
+
+		if (platform_rect.intersects((*iter)->getSprite().getGlobalBounds())) {
+
+			if (platform.isSticky()) {
+				std::shared_ptr<Ball> ball = *iter;
+				platform.addSticky(ball);
+				ball->setVelocityZero();
+				balls.erase(iter);
+				return;
+			}
+
+			float ballCenter = (*iter)->getSprite().getPosition().x + (*iter)->getSprite().getGlobalBounds().width / 2.0f;
 			float platformLeft = platform_rect.getPosition().x;
 
 			float collisionPoint = ballCenter - platformLeft;
@@ -28,17 +39,17 @@ void CollisionHandler::handleBallPlatform(std::list<std::shared_ptr<Ball>>& ball
 			float normalizedCollisionPoint = (collisionPoint / platformWidth) - 0.5f; // Normalize between -0.5 and 0.5
 
 			// Calculate new velocity based on the collision point
-			sf::Vector2f newVelocity = ball->getVelocity();
+			sf::Vector2f newVelocity = (*iter)->getVelocity();
 
 			float angle = normalizedCollisionPoint * 2.0f * 50.0f; // Max bounce angle is 50 degrees
 			float radians = angle * 3.14159f / 180.0f;
-			float speed = ball->getSpeed();
+			float speed = (*iter)->getSpeed();
 
 			newVelocity.x = std::sin(radians) * speed;
 			newVelocity.y = speed * std::cos(radians);
 			newVelocity.y = -newVelocity.y; // Reverse vertical direction
 			
-			ball->setVelocity(newVelocity);
+			(*iter)->setVelocity(newVelocity);
 
 			return;
 		}

@@ -6,7 +6,7 @@ ObjectCreator::ObjectCreator()
     if (!m_font.loadFromFile("arcadefont.ttf"))
         m_font.loadFromFile("C:/Windows/Fonts/Arial.ttf");
 
-    // LOAD SPRITES
+    // load sprites
     loadTexture("platform_long");
     loadTexture("platform_sm");
     loadTexture("platform_mid");
@@ -21,6 +21,12 @@ ObjectCreator::ObjectCreator()
     loadTexture("power_lowscore");
     loadTexture("power_upscore");
     loadTexture("power_split");
+    loadTexture("power_sticky");
+    loadTexture("power_add_life");
+    loadTexture("power_dec_life");
+    loadTexture("power_long");
+    loadTexture("power_short");
+    loadTexture("power_inc_ball");
 
     // load colors
     m_colors["white"] = sf::Color::White;
@@ -31,7 +37,6 @@ ObjectCreator::ObjectCreator()
     m_colors["light_grey"] = sf::Color(200, 200, 200);
     m_colors["black_t"] = sf::Color(0, 0, 0, 180);
     m_colors["dark_blue"] = sf::Color(16, 44, 87);
-
 }
 
 sf::Text ObjectCreator::createText(const std::string& text, const int charSize,
@@ -66,8 +71,21 @@ sf::Sprite& ObjectCreator::getSprite(const std::string& name)
     }
     else {
         std::cerr << "Sprite not found: " << name << std::endl;
-        static sf::Sprite defaultSprite; // Return a default sprite if not found
+        static sf::Sprite defaultSprite; // Return a default if not found
         return defaultSprite;
+    }
+}
+
+sf::Texture& ObjectCreator::getTexture(const std::string& name)
+{
+    auto it = m_textures.find(name);
+    if (it != m_textures.end()) {
+        return it->second;
+    }
+    else {
+        std::cerr << "Texture not found: " << name << std::endl;
+        static sf::Texture defaultTexture; // Return a default if not found
+        return defaultTexture;
     }
 }
 

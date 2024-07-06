@@ -18,9 +18,9 @@ public:
 	sf::RectangleShape createRectangle(const float width, const float height,
 		const std::string& colorName, const float pos_x, const float pos_y);
 
-	// SPRITES
+	// sprites and textures
 	sf::Sprite& getSprite(const std::string& name);
-
+	sf::Texture& getTexture(const std::string& name);
 private:
 	bool loadTexture(const std::string& name);
 

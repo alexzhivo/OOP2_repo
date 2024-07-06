@@ -57,8 +57,10 @@ private:
 	void chanceForGift(float pos_x, float pos_y);
 	void handleCollisions(float dt);
 	void drawLives();
+	void drawPowers();
 	void updateHover();
 	void softReset();
+	void setBack();
 
 	// special powers
 	void splitBalls();
@@ -84,6 +86,7 @@ private:
 	int m_ballSpeed;
 	bool m_releasePressed;
 	bool m_gamePaused;
+	bool m_bigBall;
 	GameState m_gameState;
 	PauseChoice m_pauseChoice;
 };

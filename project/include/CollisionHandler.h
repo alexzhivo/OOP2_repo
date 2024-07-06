@@ -6,6 +6,7 @@
 #include "Ball.h"
 #include "Brick.h"
 #include "PowerUp.h"
+#include "Platform.h"
 
 enum class BrickCondition {
     NO_TOUCH,
@@ -22,7 +23,7 @@ struct BrickInfo {
 class CollisionHandler {
 public:
     void handleOutOfBoarder(std::list<std::shared_ptr<Ball>>& balls, sf::RectangleShape& window);
-    void handleBallPlatform(std::list<std::shared_ptr<Ball>>& balls, const sf::FloatRect& platform_rect);
+    void handleBallPlatform(std::list<std::shared_ptr<Ball>>& balls, Platform& platform);
     BrickInfo handleBallBrick(std::list<std::shared_ptr<Ball>>& balls, std::vector<std::shared_ptr<Brick>>& bricks);
     PowerType handlePowerPlatform(std::vector<std::shared_ptr<PowerUp>>& powers, const sf::FloatRect& platform_rect);
     void handlePowerUpWindow(std::vector<std::shared_ptr<PowerUp>>& powers, sf::RectangleShape& window);

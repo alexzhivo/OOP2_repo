@@ -10,7 +10,8 @@ GameWindow::GameWindow(sf::RenderWindow& window, ObjectCreator* objectCreator, S
     m_score(0),
     m_life(5),
     m_currLevel(1),
-    m_platform(objectCreator->getSprite("platform_mid"))
+    m_platform(objectCreator->getSprite("platform_mid")),
+    m_bigBall(false)
 {
     // Set up random seed
     srand(static_cast<unsigned int>(time(0)));
@@ -83,6 +84,7 @@ void GameWindow::update(float dt)
 
     if (m_balls.empty() && m_platform.getStickyBallsNum() == 0) {
         m_life--;
+        m_bigBall = false;
         m_soundManager->playSound("lose_ball", false);
         if (m_life < 0)
             m_gameState = GameState::ENDED_LIVE;
@@ -157,6 +159,7 @@ void GameWindow::render()
     m_window.draw(m_timeText);
     m_window.draw(m_levelText);
     drawLives();
+    drawPowers();
     m_window.draw(m_bestScoreText);
 
 
@@ -195,7 +198,7 @@ void GameWindow::updateBestScore(int score)
 }
 
 void GameWindow::releaseBalls(float dt)
-{
+{   
     auto list = m_platform.getListOfStickyBalls();
     auto stickyList = static_cast<std::list<std::shared_ptr<Ball>>*>(list);
 
@@ -210,6 +213,7 @@ void GameWindow::releaseBalls(float dt)
         std::shared_ptr<Ball> ball = *it;
         stickyList->erase(it);
         ball->release(scaled_num);
+        m_platform.setSticky(false);
         m_balls.push_back(ball);
     }
 }
@@ -268,18 +272,35 @@ bool GameWindow::initLevel(int level)
 void GameWindow::chanceForGift(float pos_x, float pos_y)
 {
     double randomSpawn = static_cast<double>(rand()) / RAND_MAX;
-    auto randomPower = (PowerType)(rand() % 3);
-    if (randomSpawn < 0.9) {
-        if (randomPower == PowerType::ADD_PTS) {
+    auto randomPower = (PowerType)(rand() % 9);
+    if (randomSpawn < 0.5) {
+        switch (randomPower) {
+        case PowerType::ADD_PTS:
             m_powers.push_back(std::make_shared<PowerUp>(randomPower, sf::Vector2f(pos_x + 18, pos_y + 10), m_objectCreator->getSprite("power_upscore")));
             return;
-        } 
-        if (randomPower == PowerType::DEC_PTS) {
+        case PowerType::DEC_PTS:
             m_powers.push_back(std::make_shared<PowerUp>(randomPower, sf::Vector2f(pos_x + 18, pos_y + 10), m_objectCreator->getSprite("power_lowscore")));
             return;
-        }
-        if (randomPower == PowerType::SPLIT) {
+        case PowerType::SPLIT:
             m_powers.push_back(std::make_shared<PowerUp>(randomPower, sf::Vector2f(pos_x + 18, pos_y + 10), m_objectCreator->getSprite("power_split")));
+            return;
+        case PowerType::ADD_LIFE:
+            m_powers.push_back(std::make_shared<PowerUp>(randomPower, sf::Vector2f(pos_x + 18, pos_y + 10), m_objectCreator->getSprite("power_add_life")));
+            return;
+        case PowerType::DEC_LIFE:
+            m_powers.push_back(std::make_shared<PowerUp>(randomPower, sf::Vector2f(pos_x + 18, pos_y + 10), m_objectCreator->getSprite("power_dec_life")));
+            return;
+        case PowerType::BIG_BALL:
+            m_powers.push_back(std::make_shared<PowerUp>(randomPower, sf::Vector2f(pos_x + 18, pos_y + 10), m_objectCreator->getSprite("power_inc_ball")));
+            return;
+        case PowerType::STICKY:
+            m_powers.push_back(std::make_shared<PowerUp>(randomPower, sf::Vector2f(pos_x + 18, pos_y + 10), m_objectCreator->getSprite("power_sticky")));
+            return;
+        case PowerType::SHORT:
+            m_powers.push_back(std::make_shared<PowerUp>(randomPower, sf::Vector2f(pos_x + 18, pos_y + 10), m_objectCreator->getSprite("power_short")));
+            return;
+        case PowerType::LONG:
+            m_powers.push_back(std::make_shared<PowerUp>(randomPower, sf::Vector2f(pos_x + 18, pos_y + 10), m_objectCreator->getSprite("power_long")));
             return;
         }
     }
@@ -287,7 +308,7 @@ void GameWindow::chanceForGift(float pos_x, float pos_y)
 
 void GameWindow::handleCollisions(float dt)
 {
-    m_collisionHandler.handleBallPlatform(m_balls, m_platform.getRect());
+    m_collisionHandler.handleBallPlatform(m_balls, m_platform);
     BrickInfo info = m_collisionHandler.handleBallBrick(m_balls, m_bricks);
     switch (info.cond) {
     case BrickCondition::HIT:
@@ -327,6 +348,39 @@ void GameWindow::handleCollisions(float dt)
         break;
     case PowerType::SPLIT:
         splitBalls();
+        m_soundManager->playSound("pop_once", false);
+        break;
+    case PowerType::ADD_LIFE:
+        if (m_life < 5) {
+            m_life++;
+        }
+        m_soundManager->playSound("add_pts", false);
+        break;
+    case PowerType::DEC_LIFE:
+        m_life--;
+        m_soundManager->playSound("lose_ball", false);
+        break;
+    case PowerType::STICKY:
+        m_platform.setSticky(true);
+        m_soundManager->playSound("add_pts", false);
+        break;
+    case PowerType::SHORT:
+        if (m_platform.makeShort())
+            m_platform.setSprite(m_objectCreator->getSprite("platform_sm"));
+        else
+            m_platform.setSprite(m_objectCreator->getSprite("platform_mid"));
+        m_soundManager->playSound("add_pts", false);
+        break;
+    case PowerType::LONG:
+        if (m_platform.makeLong())
+            m_platform.setSprite(m_objectCreator->getSprite("platform_long"));
+        else
+            m_platform.setSprite(m_objectCreator->getSprite("platform_mid"));
+        m_soundManager->playSound("add_pts", false);
+        break;
+    case PowerType::BIG_BALL:
+        m_bigBall = true;
+        m_soundManager->playSound("add_pts", false);
         break;
     case PowerType::EMPTY:
         break;
@@ -349,6 +403,40 @@ void GameWindow::drawLives()
             lifeSprite.setScale(3.f, 3.f);
             m_window.draw(lifeSprite);
         }
+    }
+}
+
+void GameWindow::drawPowers()
+{
+    sf::Sprite sprite;
+    sprite.setPosition(8.f, 80.f);
+    sprite.setScale(2.f, 2.f);
+
+    int powerCounter = 0;
+
+    if (m_platform.isShort()) {
+        sprite.setTexture(m_objectCreator->getTexture("power_short"));
+        sprite.move(40.f * powerCounter, 0.f);
+        m_window.draw(sprite);
+        powerCounter++;
+    }
+    if (m_platform.isLong()) {
+        sprite.setTexture(m_objectCreator->getTexture("power_long"));
+        sprite.move(40.f * powerCounter, 0.f);
+        m_window.draw(sprite);
+        powerCounter++;
+    }
+    if (m_platform.isSticky()) {
+        sprite.setTexture(m_objectCreator->getTexture("power_sticky"));
+        sprite.move(40.f * powerCounter, 0.f);
+        m_window.draw(sprite);
+        powerCounter++;
+    }
+    if (m_bigBall) {
+        sprite.setTexture(m_objectCreator->getTexture("power_inc_ball"));
+        sprite.move(40.f * powerCounter, 0.f);
+        m_window.draw(sprite);
+        powerCounter++;
     }
 }
 
@@ -382,7 +470,13 @@ void GameWindow::softReset()
     m_balls.clear();
     m_powers.clear();
     m_platform.reset(m_objectCreator->getSprite("ball"));
+    m_bigBall = false;
     m_gameClock.initTime(TIMER_IN_SEC);
+}
+
+void GameWindow::setBack()
+{
+
 }
 
 void GameWindow::splitBalls()

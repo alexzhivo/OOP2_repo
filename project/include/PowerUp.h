@@ -6,6 +6,12 @@ enum class PowerType {
 	ADD_PTS,
 	DEC_PTS,
 	SPLIT,
+	ADD_LIFE,
+	DEC_LIFE,
+	STICKY,
+	LONG,
+	SHORT,
+	BIG_BALL,
 	EMPTY
 };
 
