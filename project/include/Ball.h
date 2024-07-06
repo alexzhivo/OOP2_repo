@@ -17,9 +17,10 @@ public:
 	sf::Vector2f getVelocity() const;
 	void restoreVelocity();
 	float getSpeed() const;
-
+	int getPower() const;
 
 	void release(float radians);
+	void makeBig(sf::Sprite& sprite);
 
 private:
 	sf::Sprite m_sprite;
@@ -27,5 +28,6 @@ private:
 	sf::Vector2f m_initVelocity;
 	sf::Vector2f m_lastVelocity;
 	sf::Vector2f m_currVelocity;
-	float m_speed;
+	float		 m_speed;
+	int			 m_power;
 };

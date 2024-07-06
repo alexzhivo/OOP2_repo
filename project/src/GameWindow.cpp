@@ -99,6 +99,8 @@ void GameWindow::update(float dt)
     // BALLS
     if (!m_balls.empty()) {
         for (auto& ball : m_balls) {
+            if (m_bigBall && ball->getPower() == 1)
+                ball->makeBig(m_objectCreator->getSprite("big_ball"));
             ball->update(dt);
             if (m_gamePaused) {
                 ball->setVelocityZero();
@@ -470,7 +472,7 @@ void GameWindow::softReset()
 {
     m_balls.clear();
     m_powers.clear();
-    m_platform.reset(m_objectCreator->getSprite("ball"));
+    m_platform.reset(m_objectCreator->getSprite("ball"),m_objectCreator->getSprite("platform"),m_elementWindow);
     m_bigBall = false;
     m_gameClock.initTime(TIMER_IN_SEC);
 }

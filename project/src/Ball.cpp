@@ -3,7 +3,7 @@
 #include <iostream>	// TEST
 
 Ball::Ball(sf::Vector2f position, sf::Vector2f velocity, sf::Sprite& sprite)
-	: m_initVelocity(velocity), m_sprite(sprite), m_speed(300.f)
+	: m_initVelocity(velocity), m_sprite(sprite), m_speed(300.f), m_power(1)
 {
 	m_sprite.setPosition(position);
 	m_sprite.setScale(2.5f, 2.5f);
@@ -57,6 +57,11 @@ float Ball::getSpeed() const
 	return m_speed;
 }
 
+int Ball::getPower() const
+{
+	return m_power;
+}
+
 void Ball::move(float offsetX, float offsetY)
 {
 	m_sprite.move(offsetX, offsetY);
@@ -70,4 +75,12 @@ void Ball::release(float radians)
 	newVelocity.y = -newVelocity.y; // Reverse vertical direction
 
 	setVelocity(newVelocity);
+}
+
+void Ball::makeBig(sf::Sprite& sprite)
+{
+	m_power = 3;
+	sprite.setPosition(m_sprite.getPosition());
+	sprite.setScale(4.f,4.f);
+	m_sprite = sprite;
 }

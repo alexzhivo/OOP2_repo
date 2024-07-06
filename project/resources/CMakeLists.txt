@@ -14,6 +14,7 @@ configure_file ("media/images/wallpaper.png" ${CMAKE_BINARY_DIR} COPYONLY)
 
 # - Game Objects
 configure_file ("media/images/ball.png" ${CMAKE_BINARY_DIR} COPYONLY)
+configure_file ("media/images/big_ball.png" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file ("media/images/bar_grey.png" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file ("media/images/brick_blue.png" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file ("media/images/brick_green.png" ${CMAKE_BINARY_DIR} COPYONLY)

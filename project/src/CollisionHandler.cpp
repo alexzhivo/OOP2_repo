@@ -62,7 +62,8 @@ BrickInfo CollisionHandler::handleBallBrick(std::list<std::shared_ptr<Ball>>& ba
 	for (auto& ball : balls) {
 		for (auto it = bricks.begin(); it != bricks.end();) {
 			if (ball->getSprite().getGlobalBounds().intersects((*it)->getSprite().getGlobalBounds())) {
-				resolveBallBrick(*ball, **it);
+				if(ball->getPower() != 3)
+					resolveBallBrick(*ball, **it);
 				if ((*it)->hit(1)) {
 					info.cond = BrickCondition::BREAK;
 					info.pos_x = (*it)->getSprite().getPosition().x;

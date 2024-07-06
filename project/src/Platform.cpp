@@ -29,13 +29,18 @@ void Platform::move(float x, float y)
     }
 }
 
-void Platform::reset(sf::Sprite& sprite)
+void Platform::reset(sf::Sprite& ballSprite, sf::Sprite& platformSprite, sf::RectangleShape& window)
 {
-    m_sprite->setPosition(570.f, 800.f);
+    float centerWindow = (window.getPosition().x + (window.getGlobalBounds().width / 2));
+    float offsetPlatform = platformSprite.getGlobalBounds().width / 2;
+    float windowBottom = window.getPosition().y + window.getGlobalBounds().height;
+
     setSticky(false);
     m_long = false;
     m_short = false;
-    initStickyBall(sprite);
+    m_sprite = &platformSprite;
+    m_sprite->setPosition(centerWindow - offsetPlatform, windowBottom - 60.f);
+    initStickyBall(ballSprite);
 }
 
 

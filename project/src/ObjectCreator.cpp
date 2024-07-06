@@ -17,6 +17,7 @@ ObjectCreator::ObjectCreator()
     loadTexture("heart_blue");
     loadTexture("heart_red");
     loadTexture("ball");
+    loadTexture("big_ball");
     loadTexture("wallpaper");
     loadTexture("power_lowscore");
     loadTexture("power_upscore");

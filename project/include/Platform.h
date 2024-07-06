@@ -16,7 +16,9 @@ public:
 	sf::FloatRect getRect() const;
 
 	void move(float x, float y);
-	void reset(sf::Sprite& sprite);
+	void reset(sf::Sprite& ballSprite,
+			   sf::Sprite& platformSprite,
+			   sf::RectangleShape& window);
 
 	// sticky feature
 	bool isSticky() const;
