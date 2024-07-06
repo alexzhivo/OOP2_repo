@@ -17,6 +17,7 @@ UserChoice StartWindow::handleInput(sf::Event& event)
         if (event.key.code == sf::Keyboard::Space) {
             choice.isSelected = true;
             choice.nextWindow = WindowState::MENU;
+            m_soundManager->playSound("select",false);
         }
     }
     return choice;

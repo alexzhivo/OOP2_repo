@@ -43,12 +43,14 @@ UserChoice MenuWindow::handleInput(sf::Event& event)
             choice.nextWindow = WindowState::EXIT;
         }
         else if (event.key.code == sf::Keyboard::Up) {
+            m_soundManager->playSound("hover", false);
             if (currHoverButtonNum == NUM_OF_BUTTONS)
                 m_currHoverButton = MenuButton::PLAY;
             else
                 --m_currHoverButton;
         }
         else if (event.key.code == sf::Keyboard::Down) {
+            m_soundManager->playSound("hover", false);
             if (currHoverButtonNum == NUM_OF_BUTTONS)
                 m_currHoverButton = MenuButton::PLAY;
             else
@@ -56,6 +58,7 @@ UserChoice MenuWindow::handleInput(sf::Event& event)
         }
         else if (event.key.code == sf::Keyboard::Enter) {
             if (currHoverButtonNum != NUM_OF_BUTTONS) {
+                m_soundManager->playSound("select", false);
                 choice.isSelected = true;
                 if (currHoverButtonNum == (int)MenuButton::EXIT)
                     choice.nextWindow = WindowState::EXIT;

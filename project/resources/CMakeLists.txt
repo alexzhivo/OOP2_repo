@@ -23,6 +23,16 @@ configure_file ("media/images/platform_sm.png" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file ("media/images/power_upscore.png" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file ("media/images/power_lowscore.png" ${CMAKE_BINARY_DIR} COPYONLY)
 
-# - Sounds
+# - Sounds (MP3)
 configure_file ("media/sounds/stardust_music.mp3" ${CMAKE_BINARY_DIR} COPYONLY)
+configure_file ("media/sounds/collect_pts.mp3" ${CMAKE_BINARY_DIR} COPYONLY)
+configure_file ("media/sounds/game_start.mp3" ${CMAKE_BINARY_DIR} COPYONLY)
+configure_file ("media/sounds/not_break.mp3" ${CMAKE_BINARY_DIR} COPYONLY)
+configure_file ("media/sounds/select_sound.mp3" ${CMAKE_BINARY_DIR} COPYONLY)
+# - (WAV)
+configure_file ("media/sounds/game_win.wav" ${CMAKE_BINARY_DIR} COPYONLY)
+configure_file ("media/sounds/hover_sound.wav" ${CMAKE_BINARY_DIR} COPYONLY)
+configure_file ("media/sounds/level_up.wav" ${CMAKE_BINARY_DIR} COPYONLY)
+
+
 

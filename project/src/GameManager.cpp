@@ -23,7 +23,7 @@ void GameManager::run()
 {
 	sf::Clock clock;	// main game clock for delta-time
 
-	m_soundManager.playMusic("theme_music", true);
+	m_soundManager.playSound("theme_music", true);
 
 	while (m_window.isOpen()) {
 		processEvents();
@@ -57,8 +57,6 @@ void GameManager::processEvents()
 
 	// waits for GameWindow to return Ended Signal
 	if (m_currWindow == WindowState::PLAY) {
-
-		m_soundManager.stopMusic("theme_music");
 
 		GameWindow* gameWindow = dynamic_cast<GameWindow*>(m_windows[(int)WindowState::PLAY].get());
 		FinishWindow* finishWindow = dynamic_cast<FinishWindow*>(m_windows[(int)WindowState::FINISH].get());
