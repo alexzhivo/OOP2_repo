@@ -4,6 +4,7 @@
 
 enum class Setting {
 	GAMESOUND,
+	GAMEMUSIC,
 	PLAYERNAME,
 	BACK,
 	NONE
@@ -26,16 +27,16 @@ public:
 private:
 	sf::Text m_title;
 	sf::Text m_gameSoundText;
+	sf::Text m_gameMusicText;
 	sf::Text m_playerNameText;
 	sf::Text m_backButtonText;
 
 	Setting m_settingHover;
 	void resetWindow();
 	void updateHover();
-	void updateGameSound();
+	void updateGameSoundText();
 	void resetHover();
 
-	bool m_isGameSoundOn;
 	bool m_isEditName;
 	std::string m_playerName;
 

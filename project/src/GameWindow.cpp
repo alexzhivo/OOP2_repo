@@ -275,7 +275,7 @@ void GameWindow::chanceForGift(float pos_x, float pos_y)
 {
     double randomSpawn = static_cast<double>(rand()) / RAND_MAX;
     auto randomPower = (PowerType)(rand() % 9);
-    if (randomSpawn < 1) {
+    if (randomSpawn < 0.2) {
         switch (randomPower) {
         case PowerType::ADD_PTS:
             m_powers.push_back(std::make_shared<PowerUp>(randomPower, sf::Vector2f(pos_x + 18, pos_y + 10), m_objectCreator->getSprite("power_upscore")));

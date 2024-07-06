@@ -49,16 +49,18 @@ void GameManager::processEvents()
 
 		auto choice = m_windows[(int)m_currWindow]->handleInput(event);
 		if (choice.isSelected) {
-			m_soundManager.stopSound("theme_music");
 			if (choice.nextWindow == WindowState::EXIT)
 				m_window.close();
 			else {
 				if (choice.nextWindow == WindowState::PLAY) {
+					m_soundManager.stopSound("theme_music");
 					m_soundManager.playSound("game_start", false);
 					m_soundManager.playSound("game_music", true);
 					updateAtGameStart();
 				}
 				if (choice.nextWindow == WindowState::MENU) {
+					if (m_currWindow != WindowState::START)
+						m_soundManager.playSound("theme_music", true);
 					m_soundManager.stopSound("game_music");
 				}
 				m_currWindow = choice.nextWindow;
