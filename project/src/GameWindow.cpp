@@ -273,7 +273,7 @@ void GameWindow::chanceForGift(float pos_x, float pos_y)
 {
     double randomSpawn = static_cast<double>(rand()) / RAND_MAX;
     auto randomPower = (PowerType)(rand() % 9);
-    if (randomSpawn < 0.5) {
+    if (randomSpawn < 1) {
         switch (randomPower) {
         case PowerType::ADD_PTS:
             m_powers.push_back(std::make_shared<PowerUp>(randomPower, sf::Vector2f(pos_x + 18, pos_y + 10), m_objectCreator->getSprite("power_upscore")));
@@ -409,34 +409,33 @@ void GameWindow::drawLives()
 void GameWindow::drawPowers()
 {
     sf::Sprite sprite;
-    sprite.setPosition(8.f, 80.f);
     sprite.setScale(2.f, 2.f);
 
-    int powerCounter = 0;
+    int powerCount = 0;
 
     if (m_platform.isShort()) {
         sprite.setTexture(m_objectCreator->getTexture("power_short"));
-        sprite.move(40.f * powerCounter, 0.f);
+        sprite.setPosition(8.f + 40.f * powerCount, 80.f);
         m_window.draw(sprite);
-        powerCounter++;
+        powerCount++;
     }
     if (m_platform.isLong()) {
         sprite.setTexture(m_objectCreator->getTexture("power_long"));
-        sprite.move(40.f * powerCounter, 0.f);
+        sprite.setPosition(8.f + 40.f * powerCount, 80.f);
         m_window.draw(sprite);
-        powerCounter++;
+        powerCount++;
     }
     if (m_platform.isSticky()) {
         sprite.setTexture(m_objectCreator->getTexture("power_sticky"));
-        sprite.move(40.f * powerCounter, 0.f);
+        sprite.setPosition(8.f + 40.f * powerCount, 80.f);
         m_window.draw(sprite);
-        powerCounter++;
+        powerCount++;
     }
     if (m_bigBall) {
         sprite.setTexture(m_objectCreator->getTexture("power_inc_ball"));
-        sprite.move(40.f * powerCounter, 0.f);
+        sprite.setPosition(8.f + 40.f * powerCount, 80.f);
         m_window.draw(sprite);
-        powerCounter++;
+        powerCount++;
     }
 }
 
