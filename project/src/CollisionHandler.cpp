@@ -7,6 +7,7 @@ void CollisionHandler::handleOutOfBoarder(std::list<std::shared_ptr<Ball>>& ball
 	for (auto it = balls.begin(); it != balls.end(); ) {
 		if (keepBallInBoarder(*it, window)) { // Condition to delete the element
 			it = balls.erase(it); // Erase returns the iterator to the next element
+			break;
 		}
 		else {
 			++it; // Only increment the iterator if you don't erase

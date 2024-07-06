@@ -49,9 +49,14 @@ void GameManager::processEvents()
 			if (choice.nextWindow == WindowState::EXIT)
 				m_window.close();
 			else {
-				if (choice.nextWindow == WindowState::PLAY)
+				if (choice.nextWindow == WindowState::PLAY) {
 					m_soundManager.playSound("game_start", false);
+					m_soundManager.playSound("game_music", true);
 					updateAtGameStart();
+				}
+				if (choice.nextWindow == WindowState::MENU) {
+					m_soundManager.stopSound("game_music");
+				}
 				m_currWindow = choice.nextWindow;
 			}
 		}
@@ -94,6 +99,7 @@ void GameManager::processEvents()
 
 		if (currGameState != GameState::NOT_ENDED && currGameState != GameState::NEXT_LEVEL) 
 		{
+			m_soundManager.stopSound("game_music");
 			gameWindow->reset();
 			m_currWindow = WindowState::FINISH;
 		}

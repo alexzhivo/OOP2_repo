@@ -83,6 +83,7 @@ void GameWindow::update(float dt)
 
     if (m_balls.empty() && m_platform.getStickyBallsNum() == 0) {
         m_life--;
+        m_soundManager->playSound("lose_ball", false);
         if (m_life < 0)
             m_gameState = GameState::ENDED_LIVE;
         else {
@@ -281,10 +282,11 @@ void GameWindow::handleCollisions(float dt)
     BrickInfo info = m_collisionHandler.handleBallBrick(m_balls, m_bricks);
     switch (info.cond) {
     case BrickCondition::HIT:
-        m_soundManager->playSound("not_break",false);
+        m_soundManager->playSound("not_break", false);
         m_score += 75;
         break;
     case BrickCondition::BREAK:
+        m_soundManager->playSound("pop_once", false);
         m_score += 150;
         chanceForGift(info.pos_x, info.pos_y);
         break;
@@ -307,11 +309,12 @@ void GameWindow::handleCollisions(float dt)
 
     switch (m_collisionHandler.handlePowerPlatform(m_powers, m_platform.getRect())) {
     case PowerType::ADD_PTS:
-        m_soundManager->playSound("add_pts", false);
         m_score += 1000;
+        m_soundManager->playSound("add_pts", false);
         break;
     case PowerType::DEC_PTS:
         m_score -= 1000;
+        m_soundManager->playSound("lose_ball", false);
         break;
     case PowerType::EMPTY:
         break;
@@ -345,7 +348,7 @@ void GameWindow::setupNextLevel()
     else {
         m_currLevel++;
         softReset();
-        m_soundManager->playSound("level_up",false);
+        m_soundManager->playSound("level_up", false);
     }
 }
 
