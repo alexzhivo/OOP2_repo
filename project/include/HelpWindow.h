@@ -11,7 +11,7 @@ public:
 	void render();
 
 private:
-	sf::Text m_title;
+	sf::Sprite& m_helpSprite;
 	sf::Text m_backButton;
 
 	void resetWindow();

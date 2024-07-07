@@ -1,10 +1,12 @@
 #include "HelpWindow.h"
 
 HelpWindow::HelpWindow(sf::RenderWindow& window, ObjectCreator* objectCreator, SoundManager* soundManager)
-    : Window(window,objectCreator,soundManager), m_currBackButton(false)
+    : Window(window,objectCreator,soundManager),
+    m_currBackButton(false),
+    m_helpSprite(objectCreator->getSprite("help_text"))
 {
-    m_title = objectCreator->createText("Instructions:", 60, "white", 200.f, 200.f);
-    m_backButton = objectCreator->createText("<< BACK >>",20,"dark_grey", 550.f, 730.f);
+    m_backButton = objectCreator->createText("<< BACK >>",20,"dark_grey", 530.f, 800.f);
+    m_helpSprite.move(0.f, -100.f);
 }
 
 UserChoice HelpWindow::handleInput(sf::Event& event)
@@ -35,7 +37,7 @@ void HelpWindow::update(float dt)
 
 void HelpWindow::render()
 {
-    m_window.draw(m_title);
+    m_window.draw(m_helpSprite);
     m_window.draw(m_backButton);
 }
 
@@ -47,10 +49,9 @@ void HelpWindow::resetWindow()
 void HelpWindow::updateHover()
 {
     if (m_currBackButton) {
-        m_backButton.setFillColor(sf::Color::White);
+        m_backButton.setFillColor(m_objectCreator->getColor("white"));
     }
     else {
-        m_backButton.setFillColor(sf::Color(100,100,100));
-
+        m_backButton.setFillColor(m_objectCreator->getColor("dark_grey"));
     }
 }

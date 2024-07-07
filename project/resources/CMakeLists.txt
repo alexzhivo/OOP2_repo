@@ -9,9 +9,10 @@ configure_file ("levels/level_1.txt" ${CMAKE_BINARY_DIR} COPYONLY)
 #configure_file ("levels/level_2.txt" ${CMAKE_BINARY_DIR} COPYONLY)
 #configure_file ("levels/level_3.txt" ${CMAKE_BINARY_DIR} COPYONLY)
 
-# - Wallpaper + Title
+# - Wallpaper + Text
 configure_file ("media/images/wallpaper.png" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file ("media/images/game_title.png" ${CMAKE_BINARY_DIR} COPYONLY)
+configure_file ("media/images/help_text.png" ${CMAKE_BINARY_DIR} COPYONLY)
 
 # - Game Objects
 configure_file ("media/images/ball.png" ${CMAKE_BINARY_DIR} COPYONLY)
