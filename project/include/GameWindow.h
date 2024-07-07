@@ -8,7 +8,7 @@
 #include "Ball.h"
 #include "PowerUp.h"
 
-const int TIMER_IN_SEC = 120;
+const int TIMER_IN_SEC = 240;
 
 enum class PauseChoice {
 	GAME,

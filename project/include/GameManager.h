@@ -3,7 +3,6 @@
 #include <memory>
 #include <vector>
 #include <SFML/Graphics.hpp>
-#include "iostream"              // TEST
 
 #include "ObjectCreator.h"
 #include "SoundManager.h"

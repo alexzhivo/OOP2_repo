@@ -123,3 +123,7 @@ the files added inside resources directory:
 	- reconsider other STL containers
 	- better Collisions and Angles
 	- ESCAPE use in more windows
+	- Add more PowerUps like : add time, reduce time, reduce ball.
+	- Add timecounter for Powerups
+	- Add enemies
+	- increase ball speed each level

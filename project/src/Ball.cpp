@@ -1,7 +1,5 @@
 #include "Ball.h"
 
-#include <iostream>	// TEST
-
 Ball::Ball(sf::Vector2f position, sf::Vector2f velocity, sf::Sprite& sprite)
 	: m_initVelocity(velocity), m_sprite(sprite), m_speed(300.f), m_power(1)
 {

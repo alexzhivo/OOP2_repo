@@ -15,8 +15,6 @@
 #include <memory>   // for data
 #include <list>
 
-#include <iostream> // TEST
-
 enum class WindowState {
     START,
     MENU,
